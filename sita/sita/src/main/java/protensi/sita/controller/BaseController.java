@@ -17,5 +17,5 @@ public class BaseController {
     @GetMapping("/error")
     private String Error() {
         return "error";
-    }
+    }    
 }
