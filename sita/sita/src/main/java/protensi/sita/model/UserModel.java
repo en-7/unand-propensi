@@ -22,7 +22,7 @@ import java.util.Set;
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class UserModel {
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", updatable = false, nullable = false)
     private Integer idUser;
@@ -39,6 +39,11 @@ public class UserModel {
     private Set<EnumRole> roles;
 
     @NotNull
+    @Size(max = 50)
+    @Column(name = "role", nullable = false)
+    private String role;
+
+    @NotNull
     @Size(max = 100)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -52,5 +57,5 @@ public class UserModel {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private Timestamp created_at;
-    
+
 }
