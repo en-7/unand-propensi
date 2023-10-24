@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Tambahkan referensi Bootstrap CSS dan JavaScript -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!-- Tombol yang akan membuka popup form -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Buka Form</button>
+
+<!-- Modal (popup) -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Header Modal -->
+            <div class="modal-header">
+                <h4 class="modal-title">Input Nilai Seminar Proposal</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Isi Modal -->
+            <div class="modal-body">
+                <!-- Form untuk nilai -->
+                <div class="form-group">
+                    <label for="nilai">Nilai:</label>
+                    <input type="text" class="form-control" id="nilai">
+                </div>
+                <!-- Form untuk status (dropdown) -->
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select class="form-control" id="status">
+                        <option value="LULUS">LULUS</option>
+                        <option value="TIDAK LULUS">TIDAK LULUS</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="modal-footer">
+                <!-- Tombol untuk menyimpan data -->
+                <button class="btn btn-success" type="submit" name="save" data-dismiss="modal">Save</button>
+                <!-- Tombol untuk menutup modal -->
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Bac</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
