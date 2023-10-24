@@ -23,7 +23,7 @@ public class jadwalSidangSeminarServiceImpl implements jadwalSidangSeminarServic
     }
 
     @Override
-    public JadwalSidangModel getJadwalSidangById(Long id) {
+    public JadwalSidangModel getJadwalSidangById(long id) {
         Optional<JadwalSidangModel> jadwalSidangid = jadwalSeminarSidangDb.findById(id);
         if(jadwalSidangid.isPresent()){
             return jadwalSidangid.get();

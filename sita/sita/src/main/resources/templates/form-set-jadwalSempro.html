@@ -18,12 +18,17 @@
             <div class="justify-content-center">
                 <h2 class="text-center">Set Jadwal</h2>
                 <br>
-                <form th:action="@{/jadwalSidangProposal/setJadwal}" th:object="${setJadwalSempro}" method="POST">
+                <form th:action="@{/jadwalSidangProposal/setJadwal/{id}(id=${setJadwalSempro.idJadwalSidang})}" th:object="${setJadwalSempro}" method="POST">
 
                     <input type="hidden" th:field="*{idJadwalSidang}" />
                     <input type="hidden" th:field="*{ugb.idUgb}" />
-                    <input type="hidden" th:field="*{tanggalSemhas}" />
-                    <input type="hidden" th:field="*{tanggalSidangTa}" />
+<!--                    <input type="hidden" th:field="*{seminarHasil.idSeminarHasil}" />-->
+<!--                    <input type="hidden" th:field="*{seminarProposal.idSeminarProposal}" />-->
+<!--                    <input type="hidden" th:field="*{tugasAkhir.idTugasAkhir}" />-->
+
+
+<!--                    <input type="hidden" th:field="*{tanggalSemhas}" />-->
+<!--                    <input type="hidden" th:field="*{tanggalSidangTa}" />-->
 
                     Judul: <br>
                     <input class="form-control" type="text" name="judulUgb" th:value="*{ugb.judulUgb}" readonly/>

@@ -35,15 +35,15 @@ public class JadwalSidangModel {
     @JoinColumn(name = "id_ugb")
     private UgbModel ugb;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_seminar_proposal")
     private SeminarProposalModel seminarProposal;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_seminar_hasil")
     private SeminarHasilModel seminarHasil;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_tugas_akhir")
     private TugasAkhirModel tugasAkhir;
 }

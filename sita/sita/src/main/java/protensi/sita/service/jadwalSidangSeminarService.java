@@ -10,7 +10,7 @@ public interface jadwalSidangSeminarService {
     List<JadwalSidangModel> getListJadwalSidang();
 
     //Method getUserbyId
-    JadwalSidangModel getJadwalSidangById(Long id);
+    JadwalSidangModel getJadwalSidangById(long id);
 
 
     //set Jadwal Sempro

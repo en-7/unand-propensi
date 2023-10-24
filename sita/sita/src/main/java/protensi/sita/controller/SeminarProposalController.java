@@ -33,26 +33,18 @@ public class SeminarProposalController {
     }
 
     @GetMapping("/jadwalSidangProposal/setJadwal/{id}")
-    public String SetJadwalSidangProposalFormPage(@PathVariable Long id, Model model){
+    public String SetJadwalSidangProposalFormPage(@PathVariable("id") Long id, Model model){
         JadwalSidangModel setJadwalSempro = jadwalSidangSeminarService.getJadwalSidangById(id);
         model.addAttribute("setJadwalSempro", setJadwalSempro);
         return "form-set-jadwalSempro";
     }
 
-    //UpdateJadwalSempro
-    @PostMapping( value = "/jadwalSidangProposal/setJadwal", params = {"update"})
-    public String SetJadwalSidangProposalSubmitPage(@ModelAttribute JadwalSidangModel jadwalSempro, Model model){
+    @PostMapping("/jadwalSidangProposal/setJadwal/{id}")
+    public String SetJadwalSidangProposalSubmitPage(@PathVariable("id") Long id,
+                                                    @ModelAttribute JadwalSidangModel jadwalSempro){
+        jadwalSempro.setIdJadwalSidang(id);
         jadwalSidangSeminarService.setJadwalSidang(jadwalSempro);
-        model.addAttribute("id", jadwalSempro.getIdJadwalSidang());
-        return "update-jadwalSempro";
+        return "redirect:/jadwalSidangProposal";
     }
 
-//    @RequestMapping(value ="/jadwalSidangProposal/setJadwal/{id}")
-//    public String setJadwalSeminarProposal(@PathVariable(value= "id") Long id,
-//                                           Model model){
-//        JadwalSidangModel getJadwalSeminarProposal = jadwalSidangSeminarService.getJadwalSidangById(id);
-//
-//        return "";
-
-//    }
 }
