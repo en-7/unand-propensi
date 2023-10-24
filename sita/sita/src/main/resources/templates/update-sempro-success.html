@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SITA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="/logo/style.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+</head>
+<body>
+<nav th:replace="fragments/navbar :: navbar('/seminar-proposal')"></nav>
+<style>
+    .select2-container .select2-selection--single {
+        height: 40px !important;
+    }
+
+    .kuantitas-input{
+        height: 40px !important;
+    }
+
+    .container-content {
+        width: 850px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 80px;
+    }
+
+    .container-table {
+        width: 900px;
+        height: auto;
+        border-radius: 10px;
+        border-style: solid;
+        border-color: #2D89FF;
+    }
+
+    .header-container-table {
+        height: 60px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        background-color: #2D89FF;
+    }
+
+    .table {
+        margin-top: 20px;
+        width: 800px;
+        height: auto;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    td {
+        text-align: center;
+    }
+</style>
+    
+    <div class="container">
+        <div class="card m-4 p-4">
+            <div class="card-body">
+                <div class="justify-content-center">
+                    <h2 th:text="'Pendaftaran Seminar Proposal dengan id ' + ${id} + ' berhasil diupdate.'"></h2>
+                    <br>
+                    <a class="btn btn-primary" th:href="@{/seminar-proposal/viewall}">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    </body>
+    </html>

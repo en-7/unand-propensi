@@ -41,6 +41,10 @@ public class SeminarProposalModel {
     @Column(name = "status_dokumen")
     private String statusDokumen;
 
+    @Size(max = 100)
+    @Column(name = "status_seminar_proposal")
+    private String statusSeminarProposal;
+
     @Lob
     @Column(name = "catatan")
     private String catatan;
