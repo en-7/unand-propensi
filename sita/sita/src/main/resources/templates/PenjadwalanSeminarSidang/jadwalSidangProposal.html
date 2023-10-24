@@ -7,14 +7,11 @@
     <object th:include="fragments/fragment :: css" th:remove="tag"></object>
     <object th:include="fragments/fragment :: js" th:remove="tag"></object>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
-
 </head>
 
 <body>
 <!--navbar-->
 <div th:replace="fragments/fragment :: navbar"></div>
-<!--navbar-->
-
 
 <!--body-->
 <br>
@@ -45,14 +42,22 @@
                     </thead>
                     <tbody>
                     <tr th:each="jadwalSidangSeminar, iterationStatus : ${listjadwalSidangSeminar}"
-                        th:style="${iterationStatus.even} ? 'font-weight:bold;'">
-                        <td th:text="${iterationStatus.count}"></td>
-                        <td th:text="${jadwalSidangSeminar.ugb.judulUgb}"></td>
-                        <td th:text="${jadwalSidangSeminar.ugb.mahasiswa.nama}"></td>
-                        <td th:text="${jadwalSidangSeminar.ugb.penguji}"></td>
-                        <td th:text="${jadwalSidangSeminar.tanggalSempro}"></td>
+                        th:style="${iterationStatus.even} ? 'font-weight:bold;' ">
+                        <td style="text-align: center" th:text="${iterationStatus.count}"></td>
+                        <td style="text-align: center" th:text="${jadwalSidangSeminar.ugb.judulUgb}"></td>
+                        <td style="text-align: center" th:text="${jadwalSidangSeminar.ugb.mahasiswa.nama}"></td>
+                        <td>
+                            <ul th:each="penguji, iterationStatus2 : ${jadwalSidangSeminar.ugb.penguji}">
+                                <li style="text-align: center" th:text="${penguji.nama}"></li>
+                            </ul>
+                        </td>
+                        <td>
+                            <a style="text-align: center" th:text="${#temporals.format(jadwalSidangSeminar.tanggalSempro, 'dd MMMM yyyy')}"></a>
+                            <br>
+                            <a th:style="ce" th:text="${#temporals.format(jadwalSidangSeminar.tanggalSempro, ' HH:mm')}"></a>
                         <td>
                             <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangProposal/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
+                            <br>
                             <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangProposal/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
                         </td>
                     </tr>

@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface jadwalSeminarSidangDb extends JpaRepository<JadwalSidangModel, Long>{
 
-    Optional<JadwalSidangModel> findById(Long id);
+//    Optional<JadwalSidangModel> findById(Long id);
 }

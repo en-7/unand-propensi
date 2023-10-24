@@ -28,14 +28,13 @@ public class jadwalSidangSeminarServiceImpl implements jadwalSidangSeminarServic
         if(jadwalSidangid.isPresent()){
             return jadwalSidangid.get();
         }
-        else{
-            return null;
-        }
+        return null;
     }
 
     @Override
-    public void setJadwalSidang(JadwalSidangModel sempro) {
-        jadwalSeminarSidangDb.save(sempro);
+    public JadwalSidangModel setJadwalSidang(JadwalSidangModel jadwalSidangSeminar) {
+        jadwalSeminarSidangDb.save(jadwalSidangSeminar);
+        return jadwalSidangSeminar;
     }
 
     @Override

@@ -18,17 +18,10 @@
             <div class="justify-content-center">
                 <h2 class="text-center">Set Jadwal</h2>
                 <br>
-                <form th:action="@{/jadwalSidangProposal/setJadwal/{id}(id=${setJadwalSempro.idJadwalSidang})}" th:object="${setJadwalSempro}" method="POST">
 
+                <form th:action="@{/jadwalSidangProposal/setJadwal}" th:object="${setJadwalSempro}" method="POST">
                     <input type="hidden" th:field="*{idJadwalSidang}" />
                     <input type="hidden" th:field="*{ugb.idUgb}" />
-<!--                    <input type="hidden" th:field="*{seminarHasil.idSeminarHasil}" />-->
-<!--                    <input type="hidden" th:field="*{seminarProposal.idSeminarProposal}" />-->
-<!--                    <input type="hidden" th:field="*{tugasAkhir.idTugasAkhir}" />-->
-
-
-<!--                    <input type="hidden" th:field="*{tanggalSemhas}" />-->
-<!--                    <input type="hidden" th:field="*{tanggalSidangTa}" />-->
 
                     Judul: <br>
                     <input class="form-control" type="text" name="judulUgb" th:value="*{ugb.judulUgb}" readonly/>
@@ -43,12 +36,10 @@
                     <br><br>
 
                     Jadwal: <br>
-                    <input required class="form-control" type="datetime-local" name="tanggal_sempro" th:value="*{tanggalSempro}"/>
-<!--                    <input required class="form-control" type="datetime-local" name="tanggal_sempro" th:value="*{#dates.format(tanggalSempro, 'yyyy-MM-ddTHH:mm')}" />-->
+                    <input required class="form-control" type="datetime-local" name="tanggalSempro" th:value="*{tanggalSempro}"/>
                     <br><br>
 
                     <button class="btn btn-primary float-right "type="submit" name="update">Submit</button>
-
                     <a class="btn btn-secondary" href="/jadwalSidangProposal">Kembali</a>
                 </form>
             </div>

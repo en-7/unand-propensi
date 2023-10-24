@@ -13,10 +13,10 @@ public interface jadwalSidangSeminarService {
     JadwalSidangModel getJadwalSidangById(long id);
 
 
-    //set Jadwal Sempro
-    void setJadwalSidang(JadwalSidangModel sempro);
+    //Method set Jadwal Sempro
+    JadwalSidangModel setJadwalSidang(JadwalSidangModel jadwalSidangSeminar);
 
-    //delete penjadwalan Sempro
+    //Method delete penjadwalan Sempro
     void deletesJadwalSidangSeminar(Long id);
 
 }
