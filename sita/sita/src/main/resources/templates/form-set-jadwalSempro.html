@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+
+</head>
+
+<body>
+<div th:replace="fragments/fragment :: navbar"></div>
+<!--body-->
+<div class="container">
+    <div class="card m-4 p-4">
+        <div class="card-body">
+            <div class="justify-content-center">
+                <h2 class="text-center">Set Jadwal</h2>
+                <br>
+                <form th:action="@{/jadwalSidangProposal/setJadwal}" th:object="${setJadwalSempro}" method="POST">
+
+                    <input type="hidden" th:field="*{idJadwalSidang}" />
+                    <input type="hidden" th:field="*{ugb.idUgb}" />
+                    <input type="hidden" th:field="*{tanggalSemhas}" />
+                    <input type="hidden" th:field="*{tanggalSidangTa}" />
+
+                    Judul: <br>
+                    <input class="form-control" type="text" name="judulUgb" th:value="*{ugb.judulUgb}" readonly/>
+                    <br><br>
+
+                    Mahasiswa: <br>
+                    <input class="form-control" type="text" name="mahasiswa" th:value="*{ugb.mahasiswa.nama}" readonly/>
+                    <br><br>
+
+                    Dosen Penguji: <br>
+                    <input required class="form-control" type="text" name="dosenPenguji" th:value="*{ugb.penguji}" readonly/>
+                    <br><br>
+
+                    Jadwal: <br>
+                    <input required class="form-control" type="datetime-local" name="tanggal_sempro" th:value="*{tanggalSempro}"/>
+<!--                    <input required class="form-control" type="datetime-local" name="tanggal_sempro" th:value="*{#dates.format(tanggalSempro, 'yyyy-MM-ddTHH:mm')}" />-->
+                    <br><br>
+
+                    <button class="btn btn-primary float-right "type="submit" name="update">Submit</button>
+
+                    <a class="btn btn-secondary" href="/jadwalSidangProposal">Kembali</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--body-->
+</body>
+</html>

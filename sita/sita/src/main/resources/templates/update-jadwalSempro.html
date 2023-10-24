@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+  <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+  <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+
+</head>
+
+<body>
+<div th:replace="fragments/fragment :: navbar"></div>
+<!--body-->
+<div class="container">
+  <div class="card m-4 p-4">
+    <div class="card-body">
+      <div class="justify-content-center">
+        <h2>OK</h2>
+
+        <br>
+        <a class="btn btn-primary" href="/jadwalSidangProposal">back</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!--body-->
+</body>
+</html>

@@ -7,15 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class BaseController {
 
     @GetMapping("/")
-    private String log_in_out(){
+    private String log_in_out() {
         return "log_in_out";
     }
+
     @GetMapping("/home")
-    private String home(){
+    private String home() {
         return "home";
     }
-    @GetMapping("/error")
-    private String Error() {
-        return "error";
-    }    
+
+//    @GetMapping("/error")
+//    private String Error() {
+//        return "error";
+//    }
 }
