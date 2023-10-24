@@ -18,9 +18,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Entity
 @PrimaryKeyJoinColumn(name = "id_user")
-@Table(name = "Pembimbing")
+@Table(name = "Penguji")
 
-public class PembimbingModel extends UserModel {
+public class PengujiModel extends UserModel {
     @NotNull
     @Column(name = "kuota", nullable = false)
     private Long kuota;
