@@ -2,31 +2,28 @@ package protensi.sita.controller;
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.service.SeminarProposalServiceImpl;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Map;
 
-@Slf4j
 @Controller
 public class SeminarProposalController {
 
@@ -47,13 +44,12 @@ public class SeminarProposalController {
             @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
             @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
             Model model) {
-    
         try {
             // Mengambil data file yang diunggah
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
-
+    
             // Mengatur data file dalam entitas SeminarProposalModel
             seminarProposal.setDraftProposalTa(draftProposalTaBytes);
             seminarProposal.setBuktiKrs(buktiKrsBytes);
@@ -69,6 +65,7 @@ public class SeminarProposalController {
             */
             // Mengatur tahap mahasiswa menjadi "SEMPRO"
             //seminarProposal.getUgb().getMahasiswa().setTahap("SEMPRO");
+            seminarProposal.setStatusDokumen("SUBMITTED");
 
             seminarProposalService.addSempro(seminarProposal);
             
@@ -96,9 +93,9 @@ public class SeminarProposalController {
 
     @PostMapping("/seminar-proposal/update")
     public String updateSemproSubmitPage(@ModelAttribute SeminarProposalModel seminarProposal,
-            @RequestParam("draftProposalTaFile") MultipartFile draftProposalTaFile,
-            @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
-            @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
+            @RequestPart("draftProposalTaFile") MultipartFile draftProposalTaFile,
+            @RequestPart("buktiKrsFile") MultipartFile buktiKrsFile,
+            @RequestPart("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
             Model model) {
     
         try {
@@ -127,33 +124,89 @@ public class SeminarProposalController {
         model.addAttribute("listSempro", listSempro);
         return "viewall-sempro";
     }
-    
-    @GetMapping("/seminar-proposal/input-nilai/{idSeminarProposal}")
-    public String inputNilaiFormPage(@PathVariable Long idSeminarProposal, Model model) {
-        SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-        model.addAttribute("seminarProposal", seminarProposal);
-        return "input-nilai-sempro-form";
+
+    @GetMapping("/seminar-proposal/filter")
+    public String filterByStatus(Model model, @RequestParam String status) {
+        // Proses data seminar proposal berdasarkan status dokumen yang diterima
+        List<SeminarProposalModel> filteredSempro = seminarProposalService.findSemproByStatusDokumen(status);
+        model.addAttribute("listSempro", filteredSempro);
+        return "viewall-sempro"; // Kembalikan tampilan yang sesuai
     }
 
     @PostMapping("/seminar-proposal/input-nilai/{idSeminarProposal}")
-    public String inputNilaiSubmotPage(
-        @ModelAttribute SeminarProposalModel seminarProposal,
-        @RequestParam("nilai") Long nilai, 
-        @RequestParam("status") String status, Model model) {
-        
-        seminarProposal.setNilai(nilai);
-        seminarProposal.setStatusSeminarProposal(status);
-        // Setelah data disimpan, Anda dapat mengembalikan tampilan yang sesuai.
-        return "redirect:/seminar-proposal/viewall";
+    public String inputNilai(@PathVariable Long idSeminarProposal, @RequestBody Map<String, Object> data) {
+        Long nilai = ((Integer) data.get("nilai")).longValue();
+        String statusSempro = (String) data.get("statusSeminarProposal");
+        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal, nilai, statusSempro);
+        if (updatedSeminarProposal != null) {
+            return "detail-sempro";
+        } else {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
     }
 
-    
+    @PostMapping("/seminar-proposal/update-nilai/{idSeminarProposal}")
+    public String updateNilai(@PathVariable Long idSeminarProposal, @RequestBody Map<String, Object> data) {
+        Long nilai = ((Integer) data.get("nilai")).longValue();
+        String statusSempro = (String) data.get("statusSeminarProposal");
+        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal, nilai, statusSempro);
+        if (updatedSeminarProposal != null) {
+            System.out.println("=====Id Seminar Proposal:"+idSeminarProposal);
+            return "detail-sempro";
+        } else {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
+    }
+  
     @GetMapping("/seminar-proposal/detail/{idSeminarProposal}")
     public String viewDetailSemproPage(@PathVariable Long idSeminarProposal, Model model) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
         model.addAttribute("seminarProposal", seminarProposal);
         return "detail-sempro";
 
+    }
+    
+    @PostMapping("/seminar-proposal/approve/{idSeminarProposal}")
+    public String approveSeminarProposal(@PathVariable Long idSeminarProposal, Model model) {
+        try {
+            // Temukan SeminarProposalModel berdasarkan ID
+            SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
+            
+            // Ubah status dokumen menjadi "APPROVED"
+            seminarProposal.setStatusDokumen("APPROVED");
+            
+            // Simpan perubahan ke database
+            seminarProposalService.updateSempro(seminarProposal);
+            
+            model.addAttribute("seminarProposal", seminarProposal);
+        return "detail-sempro";
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
+    }
+
+    @PostMapping("/seminar-proposal/deny/{idSeminarProposal}")
+    public String denySeminarProposal(@PathVariable Long idSeminarProposal, @RequestParam("catatan") String catatan, Model model) {
+        try {
+            // Temukan SeminarProposalModel berdasarkan ID
+            SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
+            
+            // Ubah status dokumen menjadi "APPROVED"
+            seminarProposal.setStatusDokumen("DENY");
+            seminarProposal.setCatatan(catatan);
+            
+            // Simpan perubahan ke database
+            seminarProposalService.updateSempro(seminarProposal);
+            
+            model.addAttribute("seminarProposal", seminarProposal);
+        return "detail-sempro";
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
     }
 
     @GetMapping("/seminar-proposal/download/{idSeminarProposal}/{documentType}")
@@ -197,38 +250,5 @@ public class SeminarProposalController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
-    /* 
-    @GetMapping("/mitra/update/{idMitra}")
-    public String updateMitraFormPage(@PathVariable Long idMitra, Model model, Authentication authentication) {
-        try {
-            MitraModel mitra = mitraService.findMitraById(idMitra);
-            model.addAttribute("mitra", mitra);
-            log.info(authentication.getName() + " accessed updateMitraFormPage.");
-            return "update-mitra-form";
-        } catch (NoSuchElementException e) {
-            log.info("Mitra with id: " + idMitra + " not found.");
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "Mitra with id: " + idMitra + " not found.");
-        }
-
-    }
-
-    @PostMapping("/mitra/update")
-    public String updateMitraSubmitPage(@ModelAttribute MitraModel mitra, Model model, BindingResult bindingResult,
-            Authentication authentication) {
-        if (bindingResult.hasFieldErrors()) {
-            log.info("Model has invalid type or missing field when updating Mitra.");
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Model Attribute has invalid type or missing field.");
-        } else {
-            MitraModel updateMitra = mitraService.updateMitra(mitra);
-            model.addAttribute("nama", updateMitra.getNama());
-            log.info(authentication.getName() + " updated new mitra: " + mitra.getNama() + ".");
-            return "update-mitra-success";
-        }
-    }
-    */
 
 }

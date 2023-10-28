@@ -35,4 +35,18 @@ public class SeminarProposalServiceImpl implements SeminarProposalService {
             return sempro.get();
         } else return null;
     }
+
+    public List<SeminarProposalModel> findSemproByStatusDokumen(String statusDokumen) {
+        return seminarProposalDb.findAllByStatusDokumen(statusDokumen);
+    }
+    
+    public SeminarProposalModel saveNilaiAndStatus(Long idSeminarProposal, Long nilai, String statusSeminarProposal) {
+        SeminarProposalModel seminarProposal = seminarProposalDb.findByIdSeminarProposal(idSeminarProposal).orElse(null);
+        if (seminarProposal != null) {
+            seminarProposal.setNilai(nilai);
+            seminarProposal.setStatusSeminarProposal(statusSeminarProposal);
+            return seminarProposalDb.save(seminarProposal);
+        }
+        return null;
+    }
 }
