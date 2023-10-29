@@ -9,4 +9,6 @@ public interface SeminarProposalService {
     SeminarProposalModel updateSempro(SeminarProposalModel seminarProposal);
     List<SeminarProposalModel> findAllSempro();
     SeminarProposalModel findSemproById(Long idSeminarProposal);
+
+
 }

@@ -4,6 +4,8 @@ package protensi.sita.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import protensi.sita.model.JadwalSidangModel;
+import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.repository.SeminarProposalDb;
 import protensi.sita.repository.jadwalSeminarSidangDb;
 
 import javax.transaction.Transactional;
@@ -16,6 +18,9 @@ public class jadwalSidangSeminarServiceImpl implements jadwalSidangSeminarServic
 
     @Autowired
     jadwalSeminarSidangDb jadwalSeminarSidangDb;
+
+    @Autowired
+    SeminarProposalDb seminarProposalDb;
 
     @Override
     public List<JadwalSidangModel> getListJadwalSidang() {
@@ -40,5 +45,21 @@ public class jadwalSidangSeminarServiceImpl implements jadwalSidangSeminarServic
     @Override
     public void deletesJadwalSidangSeminar(Long id) {
         jadwalSeminarSidangDb.deleteById(id);
+    }
+
+    @Override
+    public void addJadwalSidangSeminar(JadwalSidangModel jadwalSidangSeminar) {
+//        System.out.println(jadwalSidangSeminar.getTanggalSempro());
+        System.out.println(jadwalSidangSeminar.getSeminarProposal());
+        SeminarProposalModel semprobyId = seminarProposalDb.findByIdSeminarProposal(jadwalSidangSeminar.getSeminarProposal().getIdSeminarProposal()).get();
+        semprobyId.setJadwalSidang(jadwalSidangSeminar);
+        seminarProposalDb.save(semprobyId);
+//        System.out.println(jadwalSidangSeminar.getUgb());
+        jadwalSeminarSidangDb.save(jadwalSidangSeminar);
+    }
+
+    @Override
+    public void saverid(JadwalSidangModel jadwalSidangModel) {
+
     }
 }

@@ -16,10 +16,10 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2 class="text-center">Set Jadwal Seminar Proposal</h2>
+                <h2 class="text-center">Set Jadwal Seminar Hasil</h2>
                 <br>
 
-                <form th:action="@{/jadwalSidangProposal/setJadwal}" th:object="${setJadwalSempro}" method="POST">
+                <form th:action="@{/jadwalSidangHasil/setJadwal}" th:object="${setJadwalSemhas}" method="POST">
                     <input type="hidden" th:field="*{idJadwalSidang}" />
                     <input type="hidden" th:field="*{ugb.idUgb}" />
 
@@ -36,11 +36,11 @@
                     <br><br>
 
                     Jadwal: <br>
-                    <input required class="form-control" type="datetime-local" name="tanggalSempro" th:value="*{tanggalSempro}"/>
+                    <input required class="form-control" type="datetime-local" name="tanggalSemhas" th:value="*{tanggalSemhas}"/>
                     <br><br>
 
-                    <button class="btn btn-primary float-right" type="submit" name="update">Submit</button>
-                    <a class="btn btn-secondary" href="/jadwalSidangProposal">Kembali</a>
+                    <button class="btn btn-primary float-right "type="submit" name="update">Submit</button>
+                    <a class="btn btn-secondary" href="/jadwalSidangHasil">Kembali</a>
                 </form>
             </div>
         </div>

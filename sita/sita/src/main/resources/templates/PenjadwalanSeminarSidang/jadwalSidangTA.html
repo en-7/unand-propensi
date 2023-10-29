@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+</head>
+
+<body>
+<!--navbar-->
+<div th:replace="fragments/fragment :: navbar"></div>
+
+<!--body-->
+<br>
+<h2 class="text-center font-weight-bold text-light">Penjadwalan Sidang Tugas Akhir</h2>
+<div class="container">
+    <div class="card m-4 p-4">
+        <div class="card-body">
+            <div class="justify-content-center">
+
+                <!--button back-->
+                <div class="text-right">
+                    <a class="btn btn-success" href="/home">Back</a>
+                </div>
+                <!--Table-->
+                <br>
+                <div th:if="*{listjadwalSidangTA.size() != 0}">
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="text-align: center">No</th>>
+                            <th style="text-align: center">Judul</th>
+                            <th style="text-align: center">Mahasiswa</th>
+                            <th style="text-align: center">Dosen Penguji</th>
+                            <th style="text-align: center">Jadwal</th>
+<!--                            <th style="text-align: center">Action</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="jadwalSidangSeminar, iterationStatus : ${listjadwalSidangTA}"
+                            th:style="${iterationStatus.even} ? 'font-weight:bold;' ">
+                            <td  th:text="${iterationStatus.count}"></td>
+                            <td  th:text="${jadwalSidangSeminar.ugb.judulUgb}"></td>
+                            <td  th:text="${jadwalSidangSeminar.ugb.mahasiswa.nama}"></td>
+                            <td>
+                                <ul th:each="penguji, iterationStatus2 : ${jadwalSidangSeminar.ugb.penguji}">
+                                    <li th:text="${penguji.nama}"></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSidangTa, 'dd MMMM yyyy')}"></a>
+                                <br>
+                                <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSidangTa, 'HH:mm')}"></a>
+                            <td>
+                                <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangTugasAkhir/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
+                                <br>
+                                <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangTugasAkhir/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div th:unless="*{listjadwalSidangTA.size() !=0}">
+                    <h3 class="text-center" th:text="'Tidak ada Mahasiswa yang Mendaftar Seminar Proposal'"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--body-->
+</body>
+</html>

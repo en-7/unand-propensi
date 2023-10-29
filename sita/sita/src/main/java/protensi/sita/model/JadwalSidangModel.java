@@ -22,18 +22,31 @@ public class JadwalSidangModel {
     private Long idJadwalSidang;
 
     @Column(name = "tanggal_sempro")
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime tanggalSempro;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime tanggalSempro;            
 
     @Column(name = "tanggal_semhas")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime tanggalSemhas;
 
     @Column(name = "tanggal_sidang_ta")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime tanggalSidangTa;
 
-    @OneToOne
-    @JoinColumn(name = "id_ugb")
-    private UgbModel ugb;
+    @Column(name= "tempat_sempro")
+    private String tempatSempro;
+
+    @Column(name= "tempat_semhas")
+    private String tempatSemhas;
+
+    @Column(name= "tempat_sidang_ta")
+    private String tempatSidangTA;
+
+
+
+//    @OneToOne
+//    @JoinColumn(name = "id_ugb")
+//    private UgbModel ugb;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_seminar_proposal")

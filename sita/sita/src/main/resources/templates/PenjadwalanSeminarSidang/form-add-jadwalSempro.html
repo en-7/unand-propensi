@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+
+</head>
+
+<body>
+<div th:replace="fragments/fragment :: navbar"></div>
+<!--body-->
+<div class="container">
+    <div class="card m-4 p-4">
+        <div class="card-body">
+            <div class="justify-content-center">
+                <h2 class="text-center">Add Jadwal Seminar Proposal</h2>
+                <br>
+                <div th:object="${addJadwalSempro}">
+                    Judul: <br>
+                    <input class="form-control" type="text" name="judulUgb" th:value="*{seminarProposal.ugb.judulUgb}" readonly/>
+                    <br><br>
+
+                    Mahasiswa: <br>
+                    <input class="form-control" type="text" name="mahasiswa" th:value="*{seminarProposal.ugb.mahasiswa.nama}" readonly/>
+                    <br><br>
+
+                    Dosen Penguji: <br>
+                    <input required class="form-control" type="text" name="dosenPenguji" th:value="*{seminarProposal.ugb.penguji}" readonly/>
+                    <br><br>
+
+                    Status : <br>
+                    <input required class="form-control" type="text" name="statusSeminarProposal" th:value="*{seminarProposal.statusSeminarProposal}" readonly/>
+                    <br><br>
+                </div>
+
+
+                <form th:action="@{/jadwalSidangProposal/create}" th:object="${addJadwalSempro}" method="POST">
+                    <input class="form-control" type="text" th:field="*{seminarProposal.idSeminarProposal}" hidden />
+<!--                    <input class="form-control" type="text" th:field="*{ugb.idUgb}" hidden />-->
+
+<!--                    idSempro : <br>-->
+<!--                    <input class="form-control" type="text" th:value="*{seminarProposal.idSeminarProposal}" readonly/>-->
+<!--                    <br><br>-->
+
+<!--                    idUgb :<br>-->
+<!--                    <input class="form-control" type="text" th:value="*{ugb.idUgb}" readonly/>-->
+<!--                    <br><br>-->
+
+                    Jadwal: <br>
+                    <input required class="form-control" type="datetime-local" name="tanggalSempro" th:value="*{tanggalSempro}"/>
+                    <br><br>
+
+                    <button class="btn btn-primary float-right" type="submit">Submit</button>
+                    <a class="btn btn-secondary" href="/jadwalSidangProposal">Kembali</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--body-->
+</body>
+</html>
