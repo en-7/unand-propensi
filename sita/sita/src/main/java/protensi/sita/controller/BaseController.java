@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class BaseController {
-    @GetMapping("/")
-    private String log_in_out() {
-        return "log_in_out";
-    }
+//    @GetMapping("/")
+//    private String log_in_out() {
+//        return "log_in_out";
+//    }
 
     @GetMapping("/home")
     private String home() {
