@@ -44,10 +44,10 @@
                     <tr th:each="jadwalSidangSeminar, iterationStatus : ${listjadwalSidangSeminar}"
                         th:style="${iterationStatus.even} ? 'font-weight:bold;' ">
                         <td  th:text="${iterationStatus.count}"></td>
-                        <td  th:text="${jadwalSidangSeminar.ugb.judulUgb}"></td>
-                        <td  th:text="${jadwalSidangSeminar.ugb.mahasiswa.nama}"></td>
+                        <td  th:text="${jadwalSidangSeminar.seminarProposal.ugb.judulUgb}"></td>
+                        <td  th:text="${jadwalSidangSeminar.seminarProposal.ugb.mahasiswa.nama}"></td>
                         <td>
-                            <ul th:each="penguji, iterationStatus2 : ${jadwalSidangSeminar.ugb.penguji}">
+                            <ul th:each="penguji, iterationStatus2 : ${jadwalSidangSeminar.seminarProposal.ugb.penguji}">
                                 <li th:text="${penguji.nama}"></li>
                             </ul>
                         </td>

@@ -1,5 +1,6 @@
 package protensi.sita.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "jadwal_sidang")
+//@JsonIgnoreProperties(value={"listPenyelenggara"}, allowSetters = true)
 public class JadwalSidangModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,12 +45,11 @@ public class JadwalSidangModel {
     private String tempatSidangTA;
 
 
-
 //    @OneToOne
 //    @JoinColumn(name = "id_ugb")
 //    private UgbModel ugb;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "id_seminar_proposal")
     private SeminarProposalModel seminarProposal;
 

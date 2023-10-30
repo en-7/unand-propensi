@@ -21,18 +21,18 @@
 
                 <form th:action="@{/jadwalSidangProposal/setJadwal}" th:object="${setJadwalSempro}" method="POST">
                     <input type="hidden" th:field="*{idJadwalSidang}" />
-                    <input type="hidden" th:field="*{ugb.idUgb}" />
+                    <input type="hidden" th:field="*{seminarProposal.idSeminarProposal}" />
 
                     Judul: <br>
-                    <input class="form-control" type="text" name="judulUgb" th:value="*{ugb.judulUgb}" readonly/>
+                    <input class="form-control" type="text" name="judulUgb" th:value="*{seminarProposal.ugb.judulUgb}" readonly/>
                     <br><br>
 
                     Mahasiswa: <br>
-                    <input class="form-control" type="text" name="mahasiswa" th:value="*{ugb.mahasiswa.nama}" readonly/>
+                    <input class="form-control" type="text" name="mahasiswa" th:value="*{seminarProposal.ugb.mahasiswa.nama}" readonly/>
                     <br><br>
 
                     Dosen Penguji: <br>
-                    <input required class="form-control" type="text" name="dosenPenguji" th:value="*{ugb.penguji}" readonly/>
+                    <input required class="form-control" type="text" name="dosenPenguji" th:value="*{seminarProposal.ugb.penguji}" readonly/>
                     <br><br>
 
                     Jadwal: <br>
