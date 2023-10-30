@@ -36,71 +36,8 @@ public class PageController {
         return "login";
     }
 
-    @GetMapping("/error")
-    private String Error() {
-        return "error";
-    }
-
-    // validate username and password login
-    @GetMapping("/validate-ticket")
-    public ModelAndView adminLoginSSO(
-            @RequestParam(value = "ticket", required = false) String ticket,
-            HttpServletRequest request) {
-
-        // // Memasukkan data dummy dari Idol dan sublabel
-        // dummyService.createDummySublabelAndIdol();
-
-        var serviceResponse = this.webClient.get().uri(
-                String.format(
-                        Setting.SERVER_VALIDATE_TICKET,
-                        ticket,
-                        Setting.CLIENT_LOGIN))
-                .retrieve().bodyToMono(ServiceResponse.class).block();
-
-        assert serviceResponse != null;
-        var attributes = serviceResponse.getAuthenticationSuccess().getAttributes();
-        String username = serviceResponse.getAuthenticationSuccess().getUser();
-
-        // UserModel user = userService.getUserByUsername(username);
-
-        var admin = new AdminModel();
-        admin.setIdUser(1);
-        admin.setNama(attributes.getNama());
-        admin.setRole("Admin");
-        admin.setEmail(username + "@ui.ac.id");
-        admin.setPassword("SITA");
-
-        // if (user == null) {
-        // var admin = new AdminModel();
-        // admin.setEmail(username + "@ui.ac.id");
-        // admin.setNama(attributes.getNama());
-        // admin.setPassword("AdverStar");
-        // admin.setUsername(username);
-        // admin.setRole("Admin");
-        // userService.addAdmin(admin);
-
-        // }
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(username, "SITA");
-
-        var securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(authentication);
-        var httpSession = request.getSession(true);
-        httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
-        return new ModelAndView("redirect:/");
-    }
-
-    @GetMapping(value = "/login-sso")
-    public ModelAndView loginSSO() {
-        return new ModelAndView("redirect:" + Setting.SERVER_LOGIN + Setting.CLIENT_LOGIN);
-    }
-
-    @GetMapping(value = "/logout-sso")
-    public ModelAndView logoutSSO(Principal principal) {
-        // UserModel user = userService.getUserByUsername(principal.getName());
-        // if (!(user.getRole().equals("Admin"))) {
-        // return new ModelAndView("redirect:/logout");
-        // }
-        return new ModelAndView("redirect:" + Setting.SERVER_LOGOUT + Setting.CLIENT_LOGOUT);
-    }
+    // @GetMapping("/error")
+    // private String Error() {
+    // return "error";
+    // }
 }

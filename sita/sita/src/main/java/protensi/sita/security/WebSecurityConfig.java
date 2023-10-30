@@ -21,11 +21,6 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/js/**").permitAll()
-                .antMatchers("/login-sso", "/validate-ticket").permitAll()
-                .antMatchers(
-                        "/",
-                        "/error")
-                .hasAuthority("Admin")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -39,6 +34,15 @@ public class WebSecurityConfig {
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .passwordEncoder(encoder())
+                .withUser("daffa")
+                .password(encoder().encode("legend"))
+                .roles("ADMIN");
     }
 
     // @Autowired

@@ -14,5 +14,8 @@
     <div th:replace="fragments/navbar :: navbar"></div>
     <!--body-->
     <!--body-->
+    <div class="d-flex justify-content-center">
+        <h2 th:text="'Hello '+${#httpServletRequest.remoteUser}+'!'">Login as</h2>
+    </div>
 </body>
 </html>
