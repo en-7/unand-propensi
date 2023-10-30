@@ -32,16 +32,16 @@ public class UserModel {
     private String nama;
 
     @NotNull
+    @Size(max = 50)
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+
+    @NotNull
     @ElementCollection(targetClass = EnumRole.class)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "id_user"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Set<EnumRole> roles;
-
-    @NotNull
-    @Size(max = 50)
-    @Column(name = "role", nullable = false)
-    private String role;
 
     @NotNull
     @Size(max = 100)
