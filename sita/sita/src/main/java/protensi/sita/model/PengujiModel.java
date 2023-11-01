@@ -11,7 +11,6 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,7 +20,5 @@ import javax.validation.constraints.NotNull;
 @Table(name = "Penguji")
 
 public class PengujiModel extends UserModel {
-    @NotNull
-    @Column(name = "kuota", nullable = false)
-    private Long kuota;
+
 }

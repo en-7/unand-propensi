@@ -11,12 +11,28 @@
 </head>
 
 <body>
-    <div th:replace="fragments/fragment :: navbar(${'/'})"></div>
-    <!--body-->
-    <h1>HOME</h1>
-    <!--body-->
-    <div class="d-flex justify-content-center">
-        <h2 th:text="'Hello '+${#httpServletRequest.remoteUser}+'!'">Login as</h2>
+    <nav th:replace="fragments/fragment :: navbar (${'/'})"></nav>
+    <div class="d-flex justify-content-center align-items-center">
+        <div div class="m-4">
+            <div class="d-flex justify-content-center">
+                <h2 th:text=" 'Hello '+${#httpServletRequest.remoteUser}+'!'">Login as</h2>
+            </div>
+            <br>
+                <h2>Welcome To SITA</h2>
+            </br>
+            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
+                <a th:href="@{/mahasiswa/viewall}" class="mx-2 btn btn-outline-success">List Mahasiswa</a>
+            </div>
+            <!-- <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
+                <a th:href="@{/dokter/viewall}" class="mx-2 btn btn-outline-success" >List Dokter</a>
+            </div>
+            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
+                <a th:href="@{/apoteker/viewall}" class="mx-2 btn btn-outline-success" >List Apoteker</a>
+            </div> -->
+            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
+                <a th:href="@{/whitelist/add}" class="mx-2 btn btn-outline-success" >Tambah Whitelist</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -37,25 +37,33 @@ public class UserModel {
     private String username;
 
     @NotNull
-    @ElementCollection(targetClass = EnumRole.class)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "id_user"))
-    @Enumerated(EnumType.STRING)
+    @Lob
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    // @NotNull
+    // @ElementCollection(targetClass = EnumRole.class)
+    // @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name =
+    // "id_user"))
+    // @Enumerated(EnumType.STRING)
+    // @Column(name = "role", nullable = false)
+    // private Set<EnumRole> roles;
+
     @Column(name = "role", nullable = false)
-    private Set<EnumRole> roles;
+    @Enumerated(EnumType.STRING)
+    private EnumRole role;
 
     @NotNull
     @Size(max = 100)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @NotNull
-    @Lob
-    @Column(name = "password", nullable = false)
-    private String password;
+    // @NotNull
+    // @CreationTimestamp
+    // @Column(name = "created_at", nullable = false)
+    // private Timestamp created_at;
 
     @NotNull
-    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private Timestamp created_at;
-
+    private String created_at;
 }
