@@ -1,10 +1,12 @@
 package protensi.sita.repository;
 
-import protensi.sita.model.MahasiswaModel;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface MahasiswaDb extends JpaRepository<MahasiswaModel, String> {
+import protensi.sita.model.MahasiswaModel;
+import java.util.Optional;
+
+public interface MahasiswaDb extends JpaRepository<MahasiswaModel, Long> {
+    Optional<MahasiswaModel> findByIdUser(Integer idUser);
+
     MahasiswaModel findByUsername(String username);
 }

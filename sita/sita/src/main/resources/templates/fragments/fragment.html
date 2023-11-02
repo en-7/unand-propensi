@@ -22,13 +22,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav ml-auto">
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" th:classappend="${page == '/ugb'} ? active : ''">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         UGB
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Pendaftaran</a>
-                        <a class="dropdown-item" href="#">Daftar Peserta</a>
+                        <a class="dropdown-item" href="/ugb/add">Pendaftaran</a>
+                        <a class="dropdown-item" href="/ugb/viewall">Daftar Peserta</a>
                     </div>
                 </li>
 

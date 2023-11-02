@@ -13,8 +13,6 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @PrimaryKeyJoinColumn(name = "id_user")
 @Table(name = "Admin")

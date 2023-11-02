@@ -63,7 +63,15 @@ public class UserModel {
     // @Column(name = "created_at", nullable = false)
     // private Timestamp created_at;
 
-    @NotNull
-    @Column(name = "created_at", nullable = false)
-    private String created_at;
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Timestamp created_at;
+
+    public UserModel(String nama, EnumRole role, String username, String password, String email) {
+        this.nama = nama;
+        this.role = role;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }
