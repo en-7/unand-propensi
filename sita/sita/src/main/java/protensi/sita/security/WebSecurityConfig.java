@@ -23,7 +23,6 @@ public class WebSecurityConfig {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/login-sso", "/validate-ticket").permitAll()
                 .antMatchers("/create-dummy").permitAll()
-                .antMatchers("/create-dummy-whitelist").permitAll()
                 // .antMatchers("/obat/viewall").hasAnyRole( "ADMIN", "APOTEKER")
                 // .antMatchers("/resep/viewall").hasAnyRole( "ADMIN", "APOTEKER")
                 // .antMatchers("/appointment/viewall").not().hasRole("APOTEKER")

@@ -61,11 +61,6 @@ public class AuthController {
     @GetMapping(value = "/create-dummy")
     public String addDummy() {
         userService.addDummy();
-        return "login";
-    }
-
-    @GetMapping(value = "/create-dummy-whitelist")
-    public String addDummyWhitelist() {
         userService.addWhitelist();
         return "login";
     }
