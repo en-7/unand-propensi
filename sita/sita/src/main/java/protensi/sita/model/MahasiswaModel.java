@@ -18,10 +18,10 @@ import javax.validation.constraints.NotNull;
 @Entity
 @PrimaryKeyJoinColumn(name = "id_user")
 @Table(name = "Mahasiswa")
-public class MahasiswaModel extends UserModel{
+public class MahasiswaModel extends UserModel {
     @NotNull
     @Column(name = "nim", nullable = false)
-    private String nim;
+    private Integer nim;
 
     @NotNull
     @Column(name = "tahap", nullable = false)

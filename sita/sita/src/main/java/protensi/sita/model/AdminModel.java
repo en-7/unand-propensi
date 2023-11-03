@@ -13,11 +13,10 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "Pembimbing")
-public class PembimbingModel extends UserModel {
-    @NotNull
-    private Long kuota;
+@PrimaryKeyJoinColumn(name = "id_user")
+@Table(name = "Admin")
+
+public class AdminModel extends UserModel {
+
 }
