@@ -47,8 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.
         authorizeRequests().antMatchers(
-            "/",
-            "/registration**",
             "/js/**",
             "/css/**",
             "/images/**",
