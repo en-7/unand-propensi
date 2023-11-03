@@ -1,6 +1,7 @@
 package protensi.sita.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,8 +30,15 @@ public class UgbModel {
     private Long idUgb;
 
     @NotNull
+    @Length(max = 500)  
     @Column(name = "judul_ugb", nullable = false)
     private String judulUgb;
+
+    @Transient
+    private Integer idPembimbing1;
+
+    @Transient
+    private Integer idPembimbing2;
 
     @Lob
     @Column(name = "bukti_kp", nullable = false)

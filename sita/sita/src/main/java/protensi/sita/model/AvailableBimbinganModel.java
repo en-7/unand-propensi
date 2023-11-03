@@ -19,7 +19,7 @@ public class AvailableBimbinganModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_available_bimbingan", updatable = false, nullable = false)
-    private Integer idAvailableBimbingan;
+    private Long idAvailableBimbingan;
 
     @ElementCollection
     @CollectionTable(name = "available_bimbingan_times", joinColumns = @JoinColumn(name = "id_available_bimbingan"))
