@@ -8,4 +8,5 @@ public interface AvailableBimbinganService {
     List<AvailableBimbinganModel> findAll();
     AvailableBimbinganModel save(AvailableBimbinganModel availableBimbingan);
     void delete(Long idAvailableBimbingan);
+    void add(AvailableBimbinganModel availableBimbingan);
 }
