@@ -113,13 +113,23 @@
             </tr>
             <tr>
                 <th>Draft Proposal TA</th>
+                <td>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/draftProposalTa'}" target="_blank">Draft Proposal TA</a>
+                </td>
+
             </tr>
             <tr>
                 <th>Bukti KRS</th>
+                <td>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
+                </td>
             </tr>
             <tr>
                 <th>Persetujuan Pembimbing</th>
-            </tr>
+                <td>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/persetujuanPembimbing'}" target="_blank">Persetujuan Pembimbing</a>
+                </td>
+            </tr>            
         </table>
         <br><br>
         <div class="pb-2 d-flex justify-content-center">
