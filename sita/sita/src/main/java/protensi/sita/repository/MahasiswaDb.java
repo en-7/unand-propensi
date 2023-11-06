@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface MahasiswaDb extends JpaRepository<MahasiswaModel, Long> {
     Optional<MahasiswaModel> findByIdUser(Integer idUser);
+
     MahasiswaModel findByUsername(String username);
 }
