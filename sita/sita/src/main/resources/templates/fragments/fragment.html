@@ -37,9 +37,9 @@
                         Seminar Proposal
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/seminar-proposal/add">Pendaftaran</a>
-                        <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>
-                        <a class="dropdown-item" href="#">Jadwal Sidang</a>
+                            <a class="dropdown-item" href="/seminar-proposal/add">Pendaftaran</a>
+                            <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>
+                            <a class="dropdown-item" href="#">Jadwal Sidang</a>
                     </div>
                 </li>
 
@@ -64,9 +64,14 @@
                         <a class="dropdown-item" href="#">Jadwal Sidang</a>
                     </div>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Bimbingan</a>
+                <li class="nav-item dropdown" th:classappend="${page == '/bimbingan'} ? active : ''">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Bimbingan
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/bimbingan/atur-jadwal">Atur Jadwal</a>
+                            <a class="dropdown-item" href="/bimbingan/viewall">Jadwal Bimbingan</a>
+                    </div>
                 </li>
             </ul>
         </div>
