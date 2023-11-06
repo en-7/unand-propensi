@@ -16,29 +16,14 @@ import protensi.sita.security.UserDetailsServiceImpl;
 
 @Controller
 public class BaseController {
-<<<<<<< HEAD
-//    @GetMapping("/")
-//    private String log_in_out() {
-//        return "log_in_out";
-//    }
-
-    @GetMapping("/home")
-=======
     @Autowired
     public UserDetailsServiceImpl userDetailsService;
 
     @GetMapping("/")
->>>>>>> e66b4b69b422d9d35932bc651cbec452ee18383f
     private String home() {
         return "home";
     }
 
-<<<<<<< HEAD
-//    @GetMapping("/error")
-//    private String Error() {
-//        return "error";
-//    }
-=======
     @RequestMapping("/login")
     public String login() {
         return "login";
@@ -58,5 +43,5 @@ public class BaseController {
         userDetailsService.addDummy();
         return "login";
     }
->>>>>>> e66b4b69b422d9d35932bc651cbec452ee18383f
+
 }
