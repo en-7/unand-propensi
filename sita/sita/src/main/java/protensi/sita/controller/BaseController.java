@@ -14,19 +14,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import protensi.sita.security.UserDetailsServiceImpl;
 
-
 @Controller
 public class BaseController {
     @Autowired
     public UserDetailsServiceImpl userDetailsService;
 
     @GetMapping("/")
-    private String home(){
+    private String home() {
         return "home";
     }
 
     @RequestMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 
@@ -39,13 +38,9 @@ public class BaseController {
         return "redirect:/";
     }
 
-    @GetMapping(value="/create-dummy")
-    public String addDummy(){
+    @GetMapping(value = "/create-dummy")
+    public String addDummy() {
         userDetailsService.addDummy();
         return "login";
     }
-    /*@GetMapping("/error")
-    private String Error() {
-        return "error";
-    }*/    
 }

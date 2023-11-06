@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class MahasiswaServiceImpl implements MahasiswaService{
+public class MahasiswaServiceImpl implements MahasiswaService {
     @Autowired
     MahasiswaDb mahasiswaDb;
 
@@ -25,7 +25,7 @@ public class MahasiswaServiceImpl implements MahasiswaService{
             return mahasiswa.get();
         } else
             return null;
-    }  
+    }
 
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -45,4 +45,3 @@ public class MahasiswaServiceImpl implements MahasiswaService{
         return mahasiswaDb.findByUsername(username);
     }
 }
-
