@@ -82,4 +82,5 @@ public class SeminarHasilModel {
     @OneToOne(mappedBy = "seminarHasil")
     private JadwalSidangModel jadwalSidang;
     
+
 }

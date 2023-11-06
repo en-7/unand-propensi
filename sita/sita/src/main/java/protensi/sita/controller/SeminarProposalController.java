@@ -1,4 +1,5 @@
 package protensi.sita.controller;
+
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.service.SeminarProposalServiceImpl;
 
@@ -49,30 +50,30 @@ public class SeminarProposalController {
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
-    
+
             // Mengatur data file dalam entitas SeminarProposalModel
             seminarProposal.setDraftProposalTa(draftProposalTaBytes);
             seminarProposal.setBuktiKrs(buktiKrsBytes);
             seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
-            
+
             // Mengatur idUgb dalam entitas SeminarProposalModel
             /*
-                - ambil nama mahasiswa yang login ke sistem
-                - ambil id dari nama mahasiswa tersebut
-                - cek apakah ugb.mahasiswa ada yang id nya tersebut
-                - jika ada ambil idUgb nya
-                - set pada seminarProposal.setUgb("idUgb")
-            */
+             * - ambil nama mahasiswa yang login ke sistem
+             * - ambil id dari nama mahasiswa tersebut
+             * - cek apakah ugb.mahasiswa ada yang id nya tersebut
+             * - jika ada ambil idUgb nya
+             * - set pada seminarProposal.setUgb("idUgb")
+             */
             // Mengatur tahap mahasiswa menjadi "SEMPRO"
-            //seminarProposal.getUgb().getMahasiswa().setTahap("SEMPRO");
+            // seminarProposal.getUgb().getMahasiswa().setTahap("SEMPRO");
             seminarProposal.setStatusDokumen("SUBMITTED");
 
             seminarProposalService.addSempro(seminarProposal);
-            
+
             // jika ugb sudah diset, maka
             /*
-            model.addAttribute("seminarProposal", seminarProposal);
-            return "detail-sempro";
+             * model.addAttribute("seminarProposal", seminarProposal);
+             * return "detail-sempro";
              */
 
             // karena ugb blm bisa diset, maka sementara
@@ -80,7 +81,7 @@ public class SeminarProposalController {
             return "add-sempro-success";
         } catch (IOException e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
@@ -97,7 +98,7 @@ public class SeminarProposalController {
             @RequestPart("buktiKrsFile") MultipartFile buktiKrsFile,
             @RequestPart("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
             Model model) {
-    
+
         try {
             // Mengambil data file yang diunggah
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
@@ -108,13 +109,13 @@ public class SeminarProposalController {
             seminarProposal.setDraftProposalTa(draftProposalTaBytes);
             seminarProposal.setBuktiKrs(buktiKrsBytes);
             seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
-            
+
             seminarProposalService.updateSempro(seminarProposal);
             model.addAttribute("id", seminarProposal.getIdSeminarProposal());
             return "update-sempro-success";
         } catch (IOException e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
@@ -137,12 +138,13 @@ public class SeminarProposalController {
     public String inputNilai(@PathVariable Long idSeminarProposal, @RequestBody Map<String, Object> data) {
         Long nilai = ((Integer) data.get("nilai")).longValue();
         String statusSempro = (String) data.get("statusSeminarProposal");
-        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal, nilai, statusSempro);
+        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal,
+                nilai, statusSempro);
         if (updatedSeminarProposal != null) {
             return "detail-sempro";
         } else {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
@@ -150,16 +152,17 @@ public class SeminarProposalController {
     public String updateNilai(@PathVariable Long idSeminarProposal, @RequestBody Map<String, Object> data) {
         Long nilai = ((Integer) data.get("nilai")).longValue();
         String statusSempro = (String) data.get("statusSeminarProposal");
-        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal, nilai, statusSempro);
+        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal,
+                nilai, statusSempro);
         if (updatedSeminarProposal != null) {
-            System.out.println("=====Id Seminar Proposal:"+idSeminarProposal);
+            System.out.println("=====Id Seminar Proposal:" + idSeminarProposal);
             return "detail-sempro";
         } else {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
-  
+
     @GetMapping("/seminar-proposal/detail/{idSeminarProposal}")
     public String viewDetailSemproPage(@PathVariable Long idSeminarProposal, Model model) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
@@ -167,84 +170,87 @@ public class SeminarProposalController {
         return "detail-sempro";
 
     }
-    
+
     @PostMapping("/seminar-proposal/approve/{idSeminarProposal}")
     public String approveSeminarProposal(@PathVariable Long idSeminarProposal, Model model) {
         try {
             // Temukan SeminarProposalModel berdasarkan ID
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            
+
             // Ubah status dokumen menjadi "APPROVED"
             seminarProposal.setStatusDokumen("APPROVED");
-            
+
             // Simpan perubahan ke database
             seminarProposalService.updateSempro(seminarProposal);
-            
+
             model.addAttribute("seminarProposal", seminarProposal);
-        return "detail-sempro";
+            return "detail-sempro";
         } catch (Exception e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
     @PostMapping("/seminar-proposal/deny/{idSeminarProposal}")
-    public String denySeminarProposal(@PathVariable Long idSeminarProposal, @RequestParam("catatan") String catatan, Model model) {
+    public String denySeminarProposal(@PathVariable Long idSeminarProposal, @RequestParam("catatan") String catatan,
+            Model model) {
         try {
             // Temukan SeminarProposalModel berdasarkan ID
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            
+
             // Ubah status dokumen menjadi "APPROVED"
             seminarProposal.setStatusDokumen("DENY");
             seminarProposal.setCatatan(catatan);
-            
+
             // Simpan perubahan ke database
             seminarProposalService.updateSempro(seminarProposal);
-            
+
             model.addAttribute("seminarProposal", seminarProposal);
-        return "detail-sempro";
+            return "detail-sempro";
         } catch (Exception e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
     @GetMapping("/seminar-proposal/download/{idSeminarProposal}/{documentType}")
-    public ResponseEntity<byte[]> downloadDocument(@PathVariable Long idSeminarProposal, @PathVariable String documentType) {
+    public ResponseEntity<byte[]> downloadDocument(@PathVariable Long idSeminarProposal,
+            @PathVariable String documentType) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-    
+
         byte[] documentData = null;
         String fileName = "DraftProposalTA.pdf";
-    
+
         if ("draftProposalTa".equals(documentType)) {
             documentData = seminarProposal.getDraftProposalTa();
         }
-    
+
         if (documentData != null) {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
             headers.setContentDispositionFormData("attachment", fileName);
-    
+
             return new ResponseEntity<>(documentData, headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     @GetMapping("/seminar-proposal/preview/{idSeminarProposal}/{documentType}")
-    public ResponseEntity<byte[]> previewDocument(@PathVariable Long idSeminarProposal, @PathVariable String documentType) {
+    public ResponseEntity<byte[]> previewDocument(@PathVariable Long idSeminarProposal,
+            @PathVariable String documentType) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-    
+
         byte[] documentData = null;
-    
+
         if ("draftProposalTa".equals(documentType)) {
             documentData = seminarProposal.getDraftProposalTa();
         }
-    
+
         if (documentData != null) {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-    
+
             return new ResponseEntity<>(documentData, headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

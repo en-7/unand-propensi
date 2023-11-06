@@ -11,17 +11,13 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@PrimaryKeyJoinColumn(name = "id_user")
 @Table(name = "Pembimbing")
-
 public class PembimbingModel extends UserModel {
     @NotNull
-    @Column(name = "kuota", nullable = false)
     private Long kuota;
 }
