@@ -34,7 +34,6 @@ import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.service.ManageUserService;
 import protensi.sita.service.ManageUserServiceImpl;
 
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +109,5 @@ public class UGBController {
         model.addAttribute("listUgb", listUgb);
         return "viewall-ugb";
     }
-    
-    
+
 }
