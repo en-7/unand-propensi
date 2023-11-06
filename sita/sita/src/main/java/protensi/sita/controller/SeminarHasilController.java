@@ -3,7 +3,7 @@ package protensi.sita.controller;
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.UgbModel;
-// import protensi.sita.service.UgbServiceImpl;
+import protensi.sita.model.SeminarHasilModel;
 import protensi.sita.model.UserModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +29,14 @@ import protensi.sita.service.UgbServiceImpl;
 import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.service.ManageUserService;
 import protensi.sita.service.ManageUserServiceImpl;
+import protensi.sita.service.SeminarHasilServiceImpl;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-public class UGBController {
-
-    // @Autowired
-    // private UgbServiceImpl ugbService;
+public class SeminarHasilController {
 
     @Autowired
     private MahasiswaServiceImpl mahasiswaService;
@@ -47,44 +45,43 @@ public class UGBController {
     private ManageUserServiceImpl userService;
 
     @Autowired
-    private UgbServiceImpl ugbService;
+    private SeminarHasilServiceImpl seminarHasilService;
 
-    // @GetMapping("/ugb/add")
-    // public String addUgbFormPage(Model model){
-    //     UgbModel ugbModel = new UgbModel();
+    @GetMapping("/seminar-hasil/add")
+    public String addSeminarHasilFormPage(Model model) {
+        SeminarHasilModel seminarHasilModel = new SeminarHasilModel();
 
-    //     EnumRole enumRole = EnumRole.PEMBIMBING;
-    //     List<UserModel> listPembimbing = userService.findUserByRoles(enumRole);
+        model.addAttribute("ugb", seminarHasilModel);
 
-    //     model.addAttribute("ugb", ugbModel);
-    //     model.addAttribute("listPembimbing", listPembimbing);
-
-    //     return "add-ugb-form";
-    // }
-
-    @PostMapping("/ugb/add")
-    public String addUgbSubmitPage(@ModelAttribute UgbModel ugb,
-            @RequestParam("bukti_kp") MultipartFile bukti_kp,
-            @RequestParam("transcript") MultipartFile transcript,
-            @RequestParam("file_khs") MultipartFile file_khs,
-            @RequestParam("file_ugb") MultipartFile file_ugb,
-            Model model) throws IOException {
-        ugb.setBuktiKp(bukti_kp.getBytes());
-        ugb.setTranskrip(transcript.getBytes());
-        ugb.setFileKhs(file_khs.getBytes());
-        ugb.setFileUgb(file_ugb.getBytes());
-        ugb.setStatusDokumen("SUBMITTED");
-        ugb.setMahasiswa(mahasiswaService.findMahasiswaById(3));
-        ugbService.addUgb(ugb);
-
-        return "add-ugb-success";
+        return "add-semhas-form";
     }
 
-    @GetMapping("/ugb/viewall")
-    public String listUgb(Model model) {
-        List<UgbModel> listUgb = ugbService.findAllUgb();
-        model.addAttribute("listUgb", listUgb);
-        return "viewall-ugb";
+    @PostMapping("/seminar-hasil/add")
+    public String addSeminarHasilSubmitPage(@ModelAttribute SeminarHasilModel seminarHasil,
+            @RequestParam("acc_pembimbing") MultipartFile acc_pembimbing,
+            @RequestParam("bukti_kp") MultipartFile bukti_kp,
+            @RequestParam("risalah_sempro") MultipartFile risalah_sempro,
+            @RequestParam("notes_sempro") MultipartFile notes_sempro,
+            @RequestParam("form_saps") MultipartFile form_saps,
+            @RequestParam("draft_TA") MultipartFile draft_TA,
+            Model model) throws IOException {
+        seminarHasil.setPersetujuanPembimbing(acc_pembimbing.getBytes());
+        seminarHasil.setLaporanKP(bukti_kp.getBytes());
+        seminarHasil.setRisalahSempro(risalah_sempro.getBytes());
+        seminarHasil.setCatatanSempro(notes_sempro.getBytes());
+        seminarHasil.setSaps(form_saps.getBytes());
+        seminarHasil.setDraftLaporanTa(draft_TA.getBytes());
+        seminarHasil.setStatusDokumen("SUBMITTED");
+        seminarHasilService.addSeminarHasil(seminarHasil);
+
+        return "add-semhas-success";
+    }
+
+    @GetMapping("/seminar-hasil/viewall")
+    public String listSeminarHasil(Model model) {
+        List<SeminarHasilModel> listSeminarHasil = seminarHasilService.findAllSeminarHasil();
+        model.addAttribute("listSeminarHasil", listSeminarHasil);
+        return "viewall-semhas";
     }
 
 }

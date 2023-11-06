@@ -51,13 +51,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public void addDummy(){
         UserModel koordinator = new UserModel("koordinator", EnumRole.KOORDINATOR, "koordinator", passwordEncoder.encode("koordinator"), "koordinator@gmail.com");
         userDb.save(koordinator);
-        UserModel admin = new UserModel("admin", EnumRole.ADMIN, "admin", passwordEncoder.encode("admin"), "admin@gmail.com");
+        UserModel admin = new UserModel("admin", EnumRole.ADMIN, "admin", passwordEncoder.encode("admin"),
+                "admin@gmail.com");
         userDb.save(admin);
-        UserModel pembimbing = new UserModel("pembimbing", EnumRole.PEMBIMBING, "pembimbing", passwordEncoder.encode("pembimbing"), "pembimbing@gmail.com");
+        UserModel pembimbing = new UserModel("pembimbing", EnumRole.PEMBIMBING, "pembimbing",
+                passwordEncoder.encode("pembimbing"), "pembimbing@gmail.com");
         userDb.save(pembimbing);
-        UserModel penguji = new UserModel("penguji", EnumRole.PENGUJI, "penguji", passwordEncoder.encode("penguji"), "penguji@gmail.com");
+        UserModel penguji = new UserModel("penguji", EnumRole.PENGUJI, "penguji", passwordEncoder.encode("penguji"),
+                "penguji@gmail.com");
         userDb.save(penguji);
-        UserModel mahasiswa = new UserModel("mahasiswa", EnumRole.MAHASISWA, "mahasiswa", passwordEncoder.encode("mahasiswa"), "mahasiswa@gmail.com");
+        UserModel mahasiswa = new UserModel("mahasiswa", EnumRole.MAHASISWA, "mahasiswa",
+                passwordEncoder.encode("mahasiswa"), "mahasiswa@gmail.com");
         userDb.save(mahasiswa);
     }
 */

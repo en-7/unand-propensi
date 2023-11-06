@@ -1,4 +1,5 @@
 package protensi.sita.controller;
+
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.service.SeminarProposalServiceImpl;
 
@@ -59,21 +60,21 @@ public class SeminarProposalController {
             seminarProposal.setDraftProposalTa(draftProposalTaBytes);
             seminarProposal.setBuktiKrs(buktiKrsBytes);
             seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
-            
+
             // Mengatur idUgb dalam entitas SeminarProposalModel
             /*
-                - ambil nama mahasiswa yang login ke sistem
-                - ambil id dari nama mahasiswa tersebut
-                - cek apakah ugb.mahasiswa ada yang id nya tersebut
-                - jika ada ambil idUgb nya
-                - set pada seminarProposal.setUgb("idUgb")
-            */
+             * - ambil nama mahasiswa yang login ke sistem
+             * - ambil id dari nama mahasiswa tersebut
+             * - cek apakah ugb.mahasiswa ada yang id nya tersebut
+             * - jika ada ambil idUgb nya
+             * - set pada seminarProposal.setUgb("idUgb")
+             */
             // Mengatur tahap mahasiswa menjadi "SEMPRO"
-            //seminarProposal.getUgb().getMahasiswa().setTahap("SEMPRO");
+            // seminarProposal.getUgb().getMahasiswa().setTahap("SEMPRO");
             seminarProposal.setStatusDokumen("SUBMITTED");
 
             seminarProposalService.addSempro(seminarProposal);
-            
+
             // jika ugb sudah diset, maka
             /*
             model.addAttribute("seminarProposal", seminarProposal);
@@ -85,7 +86,7 @@ public class SeminarProposalController {
             return "add-sempro-success";
         } catch (IOException e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
@@ -119,7 +120,7 @@ public class SeminarProposalController {
             return "update-sempro-success";
         } catch (IOException e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }    
 
@@ -151,7 +152,7 @@ public class SeminarProposalController {
             return "detail-sempro";
         } else {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
@@ -166,7 +167,7 @@ public class SeminarProposalController {
             return "detail-sempro";
         } else {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
   
@@ -182,17 +183,17 @@ public class SeminarProposalController {
         try {
             // Temukan SeminarProposalModel berdasarkan ID
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            
+
             // Ubah status dokumen menjadi "APPROVED"
             seminarProposal.setStatusDokumen("APPROVED");
             // Simpan perubahan ke database
             seminarProposalService.updateSempro(seminarProposal);
-            
+
             model.addAttribute("seminarProposal", seminarProposal);
-        return "detail-sempro";
+            return "detail-sempro";
         } catch (Exception e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
@@ -201,19 +202,19 @@ public class SeminarProposalController {
         try {
             // Temukan SeminarProposalModel berdasarkan ID
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            
+
             // Ubah status dokumen menjadi "APPROVED"
             seminarProposal.setStatusDokumen("DENY");
             seminarProposal.setCatatan(catatan);
-            
+
             // Simpan perubahan ke database
             seminarProposalService.updateSempro(seminarProposal);
-            
+
             model.addAttribute("seminarProposal", seminarProposal);
-        return "detail-sempro";
+            return "detail-sempro";
         } catch (Exception e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
     

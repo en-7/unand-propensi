@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-
 @Getter
 @Setter
 @Entity
