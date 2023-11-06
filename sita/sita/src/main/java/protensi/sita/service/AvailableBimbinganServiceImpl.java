@@ -8,15 +8,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class AvailableBimbinganServiceImpl implements AvailableBimbinganService {
-
-    private final AvailableBimbinganDb availableBimbinganDb;
-
     @Autowired
-    public AvailableBimbinganServiceImpl(AvailableBimbinganDb availableBimbinganDb) {
-        this.availableBimbinganDb = availableBimbinganDb;
-    }
+    AvailableBimbinganDb availableBimbinganDb;
 
     @Override
     public AvailableBimbinganModel findById(Long idAvailableBimbingan) {
@@ -37,5 +35,10 @@ public class AvailableBimbinganServiceImpl implements AvailableBimbinganService 
     @Override
     public void delete(Long idAvailableBimbingan) {
         availableBimbinganDb.deleteById(idAvailableBimbingan);
+    }
+
+    @Override
+    public void add(AvailableBimbinganModel availableBimbingan) {
+        availableBimbinganDb.save(availableBimbingan);
     }
 }

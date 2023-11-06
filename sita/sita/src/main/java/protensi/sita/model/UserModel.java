@@ -16,7 +16,6 @@ import java.util.Set;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
@@ -25,7 +24,7 @@ public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user", updatable = false, nullable = false)
-    private Integer idUser;
+    private Long idUser;
 
     @NotNull
     @Column(name = "nama", nullable = false)
@@ -41,35 +40,25 @@ public class UserModel {
     @Column(name = "password", nullable = false)
     private String password;
 
-    // @NotNull
-    // @ElementCollection(targetClass = EnumRole.class)
-    // @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name =
-    // "id_user"))
-    // @Enumerated(EnumType.STRING)
-    // @Column(name = "role", nullable = false)
-    // private Set<EnumRole> roles;
-
-    @Column(name = "role", nullable = false)
+    @ElementCollection(targetClass = EnumRole.class)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "id_user"))
     @Enumerated(EnumType.STRING)
-    private EnumRole role;
+    @Column(name = "role", nullable = false)
+    private Set<EnumRole> roles;
 
     @NotNull
     @Size(max = 100)
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    // @NotNull
-    // @CreationTimestamp
-    // @Column(name = "created_at", nullable = false)
-    // private Timestamp created_at;
-
+    @NotNull
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Timestamp created_at;
 
-    public UserModel(String nama, EnumRole role, String username, String password, String email) {
+    public UserModel(String nama, Set<EnumRole> roles, String username, String password, String email) {
         this.nama = nama;
-        this.role = role;
+        this.roles = roles;
         this.username = username;
         this.password = password;
         this.email = email;
