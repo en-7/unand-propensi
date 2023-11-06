@@ -38,13 +38,14 @@ public class BaseController {
         }
         return "redirect:/";
     }
-
+    /*
     @GetMapping(value="/create-dummy")
     public String addDummy(){
         userDetailsService.addDummy();
         return "login";
     }
-    /*@GetMapping("/error")
+    
+    @GetMapping("/error")
     private String Error() {
         return "error";
     }*/    

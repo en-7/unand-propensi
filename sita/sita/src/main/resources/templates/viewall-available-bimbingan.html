@@ -159,7 +159,6 @@
 </body>
 </html>
 <script>
-// Hapus jadwal available bimbingan
 document.querySelectorAll(".delete-button").forEach(function(button) {
     button.addEventListener("click", function() {
         var availableBimbinganId = this.getAttribute("data-id");
@@ -185,7 +184,6 @@ document.getElementById("confirmDeleteButton").addEventListener("click", functio
 });
 </script>
 <script>
-//Booking jadwal bimbingan
     document.querySelectorAll(".booking-button").forEach(function(button) {
         button.addEventListener("click", function() {
             var availableBimbinganId = this.getAttribute("data-id");
@@ -201,7 +199,6 @@ document.getElementById("confirmDeleteButton").addEventListener("click", functio
         .then(function(response) {
             if (response.ok) {
                 $("#bookinghConfirmationModal").modal("hide");
-                // Atau lakukan tindakan lain yang sesuai
                 window.location.href = "/bimbingan/atur-jadwal";
             } else {
                 alert("Gagal memesan jadwal bimbingan.");
@@ -213,7 +210,6 @@ document.getElementById("confirmDeleteButton").addEventListener("click", functio
     });
 </script>
 <script>
-//Cancel jadwal Bimbingan
     document.querySelectorAll(".cancel-button").forEach(function(button) {
         button.addEventListener("click", function() {
             var availableBimbinganId = this.getAttribute("data-id");

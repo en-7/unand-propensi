@@ -67,7 +67,7 @@
         }
 
         .filter-bar button.active {
-            border-bottom: 3px solid #000000; /* Menambahkan garis bawah pada tombol yang aktif */
+            border-bottom: 3px solid #000000; 
         }
 
         .filter-bar button:hover {
@@ -75,12 +75,9 @@
         }
 
         .table-row-hidden {
-            display: none; /* Sembunyikan baris */
+            display: none; 
         }
     </style>
-    <script th:inline="javascript">
-        var listSempro = /*[[${listSempro}]]*/ [];
-    </script>
 </head>
 <body>
 <nav th:replace="fragments/fragment :: navbar (${'/seminar-proposal'})"></nav>
@@ -158,7 +155,7 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
+<!-- Popup Input Nilai -->
 <div class="modal fade" id="inputNilaiModal" tabindex="-1" role="dialog" aria-labelledby="inputNilaiModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -189,7 +186,7 @@
     </div>
 </div>
 
-<!-- Modal Update Nilai -->
+<!-- Popup Update Nilai -->
 <div class="modal fade" id="updateNilaiModal" tabindex="-1" role="dialog" aria-labelledby="updateNilaiModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -224,7 +221,6 @@
 </html>
 
 <script>
-// Menangani klik tombol "Input Nilai" pada modal
 document.querySelectorAll(".btn-success").forEach(function(button) {
     button.addEventListener("click", function() {
         var seminarProposalId = this.getAttribute("data-id");
@@ -232,27 +228,22 @@ document.querySelectorAll(".btn-success").forEach(function(button) {
     });
 });
 
-// Menangani klik tombol "Simpan" pada modal input nilai
 document.getElementById("simpanNilai").addEventListener("click", function () {
-    // Mendapatkan data yang diperlukan dari modal
     var seminarProposalId = this.getAttribute("data-id");
     var nilai = document.getElementById("nilai").value;
     var statusSeminarProposal = document.getElementById("statusSeminarProposal").value;
 
-    // Validasi apakah nilai adalah angka dan tidak kosong
     if (isNaN(parseFloat(nilai)) || nilai === "") {
         alert("Nilai harus berupa angka.");
         return;
     }
 
-    // Membuat objek data yang akan dikirim
     var data = {
         idSeminarProposal: seminarProposalId,
         nilai: parseFloat(nilai),
         statusSeminarProposal: statusSeminarProposal
     };
 
-    // Lakukan permintaan AJAX untuk menyimpan nilai
     fetch("/seminar-proposal/input-nilai/" + seminarProposalId, {
         method: "POST",
         headers: {
@@ -262,9 +253,7 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
     })
     .then(function (response) {
         if (response.ok) {
-            // Setelah berhasil, Anda dapat menutup modal
             $("#inputNilaiModal").modal("hide");
-            // Atau lakukan tindakan lain yang sesuai
             window.location.href = "/seminar-proposal/viewall";
         } else {
             alert("Gagal menyimpan nilai.");
@@ -277,42 +266,34 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
 
 </script>
 <script>
-// Menangani klik tombol "Update Nilai" pada modal
 document.querySelectorAll(".btn-success").forEach(function(button) {
     button.addEventListener("click", function() {
         var seminarProposalId = this.getAttribute("data-id");
         var nilai = this.getAttribute("data-nilai");
         var statusSeminarProposal = this.getAttribute("data-status");
 
-        // Mengisi nilai ke dalam elemen input
         document.getElementById("updateNilai").value = nilai;
         document.getElementById("updateStatusSeminarProposal").value = statusSeminarProposal;
-
-        document.getElementById("simpanUpdateNilai").setAttribute("data-id", seminarProposalId); // Menambahkan data-id ke tombol "Simpan"
+        document.getElementById("simpanUpdateNilai").setAttribute("data-id", seminarProposalId);
     });
 });
 
-// Menangani klik tombol "Simpan" pada modal update nilai
 document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
-    // Mendapatkan data yang diperlukan dari modal update nilai
     var seminarProposalId = this.getAttribute("data-id");
     var nilai = document.getElementById("updateNilai").value;
     var statusSeminarProposal = document.getElementById("updateStatusSeminarProposal").value;
 
-    // Validasi apakah nilai adalah angka dan tidak kosong
     if (isNaN(parseFloat(nilai)) || nilai === "") {
         alert("Nilai harus berupa angka.");
         return;
     }
 
-    // Membuat objek data yang akan dikirim
     var data = {
         idSeminarProposal: seminarProposalId,
         nilai: parseFloat(nilai),
         statusSeminarProposal: statusSeminarProposal
     };
 
-    // Lakukan permintaan AJAX untuk menyimpan nilai
     fetch("/seminar-proposal/update-nilai/" + seminarProposalId, {
         method: "POST",
         headers: {
@@ -322,9 +303,7 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
     })
     .then(function (response) {
         if (response.ok) {
-            // Setelah berhasil, Anda dapat menutup modal
             $("#updateNilaiModal").modal("hide");
-            // Atau lakukan tindakan lain yang sesuai
             window.location.href = "/seminar-proposal/viewall";
         } else {
             alert("Gagal menyimpan nilai.");
@@ -352,27 +331,18 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
             }
         });
     }
-
-    // Menangani klik tombol "Approve"
     document.getElementById("filterApprove").addEventListener("click", function () {
         filterDaftar("SUBMITTED");
         window.location.href = "/seminar-proposal/filter?status=SUBMITTED";
     });
-
-
-    // Menangani klik tombol "Approved"
     document.getElementById("filterApproved").addEventListener("click", function () {
         filterDaftar("APPROVED");
         window.location.href = "/seminar-proposal/filter?status=APPROVED";
     });
-
-    // Menangani klik tombol "Denied"
     document.getElementById("filterDenied").addEventListener("click", function () {
         filterDaftar("DENY");
         window.location.href = "/seminar-proposal/filter?status=DENY";
     });
-
-    // Menangani klik tombol "Show All"
     document.getElementById("filterAll").addEventListener("click", function () {
         filterDaftar("ALL");
         window.location.href = "/seminar-proposal/viewall";

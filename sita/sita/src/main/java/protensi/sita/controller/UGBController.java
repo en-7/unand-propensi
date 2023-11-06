@@ -50,18 +50,18 @@ public class UGBController {
     @Autowired
     private UgbServiceImpl ugbService;
 
-    @GetMapping("/ugb/add")
-    public String addUgbFormPage(Model model){
-        UgbModel ugbModel = new UgbModel();
+    // @GetMapping("/ugb/add")
+    // public String addUgbFormPage(Model model){
+    //     UgbModel ugbModel = new UgbModel();
 
-        EnumRole enumRole = EnumRole.PEMBIMBING;
-        List<UserModel> listPembimbing = userService.findUserByRole(enumRole);
+    //     EnumRole enumRole = EnumRole.PEMBIMBING;
+    //     List<UserModel> listPembimbing = userService.findUserByRoles(enumRole);
 
-        model.addAttribute("ugb", ugbModel);
-        model.addAttribute("listPembimbing", listPembimbing);
+    //     model.addAttribute("ugb", ugbModel);
+    //     model.addAttribute("listPembimbing", listPembimbing);
 
-        return "add-ugb-form";
-    }
+    //     return "add-ugb-form";
+    // }
 
     @PostMapping("/ugb/add")
     public String addUgbSubmitPage(@ModelAttribute UgbModel ugb, 
