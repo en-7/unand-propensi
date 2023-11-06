@@ -1,17 +1,21 @@
 package protensi.sita.controller;
 
 import protensi.sita.model.EnumRole;
+import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.UgbModel;
 // import protensi.sita.service.UgbServiceImpl;
 import protensi.sita.model.UserModel;
 
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +49,7 @@ public class UGBController {
     private MahasiswaServiceImpl mahasiswaService;
 
     @Autowired
-    private ManageUserServiceImpl userService;
+    private ManageUserServiceImpl manageUserService;
 
     @Autowired
     private UgbServiceImpl ugbService;
@@ -55,7 +59,7 @@ public class UGBController {
         UgbModel ugbModel = new UgbModel();
 
         EnumRole enumRole = EnumRole.PEMBIMBING;
-        List<UserModel> listPembimbing = userService.findUserByRole(enumRole);
+        List<UserModel> listPembimbing = manageUserService.findUserByRole(enumRole);
 
         model.addAttribute("ugb", ugbModel);
         model.addAttribute("listPembimbing", listPembimbing);
@@ -63,21 +67,40 @@ public class UGBController {
         return "add-ugb-form";
     }
 
+    // @PostMapping("/ugb/add")
+    // public String addUgbSubmitPage(@ModelAttribute UgbModel ugb, 
+    //                             @RequestParam("bukti_kp") MultipartFile bukti_kp,
+    //                             @RequestParam("transcript") MultipartFile transcript,
+    //                             @RequestParam("file_khs") MultipartFile file_khs,
+    //                             @RequestParam("file_ugb") MultipartFile file_ugb,
+    //                             Authentication authentication,
+    //                             Model model) throws IOException{
+    //     ugb.setBuktiKp(bukti_kp.getBytes());
+    //     ugb.setTranskrip(transcript.getBytes());
+    //     ugb.setFileKhs(file_khs.getBytes());
+    //     ugb.setFileUgb(file_ugb.getBytes());
+    //     ugb.setStatusDokumen("SUBMITTED");
+
+        
+    //     String uname = authentication.getUsername();
+    //     MahasiswaModel user = mahasiswaDb.getUserByUsername(uname);
+    //     ugb.setMahasiswa(user);
+    //     ugbService.addUgb(ugb);
+        
+    //     return "add-ugb-success";
+    // }
+
     @PostMapping("/ugb/add")
     public String addUgbSubmitPage(@ModelAttribute UgbModel ugb, 
                                 @RequestParam("bukti_kp") MultipartFile bukti_kp,
                                 @RequestParam("transcript") MultipartFile transcript,
                                 @RequestParam("file_khs") MultipartFile file_khs,
                                 @RequestParam("file_ugb") MultipartFile file_ugb,
-                                Model model) throws IOException{
-        ugb.setBuktiKp(bukti_kp.getBytes());
-        ugb.setTranskrip(transcript.getBytes());
-        ugb.setFileKhs(file_khs.getBytes());
-        ugb.setFileUgb(file_ugb.getBytes());
-        ugb.setStatusDokumen("SUBMITTED");
-        ugb.setMahasiswa(mahasiswaService.findMahasiswaById(3));
-        ugbService.addUgb(ugb);
-        
+                                Authentication authentication,
+                                Model model) {
+
+        String result = ugbService.addUgb(ugb, bukti_kp, transcript, file_khs, file_ugb);
+   
         return "add-ugb-success";
     }
 
