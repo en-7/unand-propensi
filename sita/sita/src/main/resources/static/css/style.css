@@ -10,3 +10,10 @@ body{
 .table tr th {
     vertical-align: middle;
 }
+.f-l {
+    float: left;
+}
+
+.f-r {
+    float: right;
+}

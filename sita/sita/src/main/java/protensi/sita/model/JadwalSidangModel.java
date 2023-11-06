@@ -44,16 +44,11 @@ public class JadwalSidangModel {
     @Column(name= "tempat_sidang_ta")
     private String tempatSidangTA;
 
-
-//    @OneToOne
-//    @JoinColumn(name = "id_ugb")
-//    private UgbModel ugb;
-
     @OneToOne
     @JoinColumn(name = "id_seminar_proposal")
     private SeminarProposalModel seminarProposal;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "id_seminar_hasil")
     private SeminarHasilModel seminarHasil;
 

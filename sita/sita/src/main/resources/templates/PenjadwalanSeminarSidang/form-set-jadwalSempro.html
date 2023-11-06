@@ -18,22 +18,37 @@
             <div class="justify-content-center">
                 <h2 class="text-center">Set Jadwal Seminar Proposal</h2>
                 <br>
+                <div th:object="${setJadwalSempro}">
+                    Judul :
+                    <span class="font-weight-bold" th:text="*{seminarProposal.ugb.judulUgb}" />
+                    <br><br>
+
+                    Mahasiswa :
+                    <span class="font-weight-bold" th:text="*{seminarProposal.ugb.mahasiswa.nama}" />
+                    <br><br>
+
+                    Dosen Penguji :<br><br>
+                    <ul th:each="penguji2: ${getPengujiSet}">
+                        <li class="font-weight-bold" th:text="${penguji2.nama}"></li>
+                    </ul>
+
+                </div>
 
                 <form th:action="@{/jadwalSidangProposal/setJadwal}" th:object="${setJadwalSempro}" method="POST">
                     <input type="hidden" th:field="*{idJadwalSidang}" />
                     <input type="hidden" th:field="*{seminarProposal.idSeminarProposal}" />
 
-                    Judul: <br>
-                    <input class="form-control" type="text" name="judulUgb" th:value="*{seminarProposal.ugb.judulUgb}" readonly/>
-                    <br><br>
+<!--                    Judul: <br>-->
+<!--                    <input class="form-control" type="text" name="judulUgb" th:value="*{seminarProposal.ugb.judulUgb}" readonly/>-->
+<!--                    <br><br>-->
 
-                    Mahasiswa: <br>
-                    <input class="form-control" type="text" name="mahasiswa" th:value="*{seminarProposal.ugb.mahasiswa.nama}" readonly/>
-                    <br><br>
+<!--                    Mahasiswa: <br>-->
+<!--                    <input class="form-control" type="text" name="mahasiswa" th:value="*{seminarProposal.ugb.mahasiswa.nama}" readonly/>-->
+<!--                    <br><br>-->
 
-                    Dosen Penguji: <br>
-                    <input required class="form-control" type="text" name="dosenPenguji" th:value="*{seminarProposal.ugb.penguji}" readonly/>
-                    <br><br>
+<!--                    Dosen Penguji: <br>-->
+<!--                    <input required class="form-control" type="text" name="dosenPenguji" th:value="*{seminarProposal.ugb.penguji}" readonly/>-->
+<!--                    <br><br>-->
 
                     Jadwal: <br>
                     <input required class="form-control" type="datetime-local" name="tanggalSempro" th:value="*{tanggalSempro}"/>

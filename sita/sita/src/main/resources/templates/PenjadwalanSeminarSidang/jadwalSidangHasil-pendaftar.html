@@ -16,12 +16,13 @@
 <!--body-->
 <br>
 <h2 class="text-center font-weight-bold text-light">Penjadwalan Seminar Hasil</h2>
+<br>
 
 <div class="container">
     <div class="card m-4 p-4">
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group" role="group" aria-label="First group">
-                <a role="button" class="btn btn-secondary" href="/jadwalSidangHasil-pendaftar">Pendaftar</a>
+                <a role="button" class="btn btn-secondary" href="/jadwalSidangHasil">Jadwal</a>
             </div>
             <div class="input-group">
                 <a role="button" class="btn btn-success" href="/home">Back</a>
@@ -29,9 +30,10 @@
         </div>
         <div class="card-body">
             <div class="justify-content-center">
+                <h3 class="font-weight-bold">PENDAFTAR</h3>
                 <!--Table-->
                 <br>
-                <div th:if="*{listjadwalSidangSeminarHasil.size() != 0}">
+                <div th:if="*{listdaftarSempro.size() != 0}">
                     <br>
                     <table class="table">
                         <thead>
@@ -40,36 +42,32 @@
                             <th style="text-align: center">Judul</th>
                             <th style="text-align: center">Mahasiswa</th>
                             <th style="text-align: center">Dosen Penguji</th>
-                            <th style="text-align: center">Jadwal</th>
+                            <th style="text-align: center">STATUS</th>
                             <th style="text-align: center">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="jadwalSidangSeminar, iterationStatus : ${listjadwalSidangSeminarHasil}"
+                        <tr th:each="pendaftarSempro, iterationStatus : ${listdaftarSempro}"
                             th:style="${iterationStatus.even} ? 'font-weight:bold;' ">
+
                             <td  th:text="${iterationStatus.count}"></td>
-                            <td  th:text="${jadwalSidangSeminar.ugb.judulUgb}"></td>
-                            <td  th:text="${jadwalSidangSeminar.ugb.mahasiswa.nama}"></td>
+                            <td  th:text="${pendaftarSempro.ugb.judulUgb}"></td>
+                            <td  th:text="${pendaftarSempro.ugb.mahasiswa.nama}"></td>
                             <td>
-                                <ul th:each="penguji, iterationStatus2 : ${jadwalSidangSeminar.ugb.penguji}">
+                                <ul th:each="penguji, iterationStatus2 : ${pendaftarSempro.ugb.penguji}">
                                     <li th:text="${penguji.nama}"></li>
                                 </ul>
                             </td>
+                            <td th:text="${pendaftarSempro.statusSeminarProposal}"></td>
                             <td>
-                                <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSemhas, 'dd MMMM yyyy')}"></a>
-                                <br>
-                                <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSemhas, 'HH:mm')}"></a>
-                            <td>
-                                <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangHasil/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
-                                <br>
-                                <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangHasil/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                                <a class="btn btn-sm btn-primary" th:href="@{/jadwalSidangProposal/create/} + ${pendaftarSempro.idSeminarProposal}">Create</a>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <br>
-                <div th:unless="*{listjadwalSidangSeminarHasil.size() !=0}">
+                <div th:unless="*{listdaftarSempro.size() !=0}">
                     <h3 class="text-center" th:text="'Tidak ada Mahasiswa yang Mendaftar Seminar Proposal'"></h3>
                 </div>
             </div>

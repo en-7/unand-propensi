@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.*;
 import protensi.sita.model.JadwalSidangModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import protensi.sita.model.SeminarHasilModel;
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.service.SeminarProposalService;
 import protensi.sita.service.jadwalSidangSeminarService;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Controller
 public class PenjadwalanSeminarSidang {
@@ -22,62 +24,48 @@ public class PenjadwalanSeminarSidang {
     private SeminarProposalService seminarProposalService;
 
 
-    ///SEMINAR PROPOSAL///
+    ///////////////////////////SEMINAR PROPOSAL///////////////////////////
 
     //method add jadwalsempro
     @GetMapping("/jadwalSidangProposal/create/{id}")
     public String addJadwalSidangProposalForm(@PathVariable("id") Long id, Model model){
         JadwalSidangModel jadwalSidang = new JadwalSidangModel();
         SeminarProposalModel getSeminarProposalById = seminarProposalService.findSemproById(id);
-
         jadwalSidang.setSeminarProposal(getSeminarProposalById);
-//        jadwalSidang.setUgb(getSeminarProposalById.getUgb());
 
-//        jadwalSidangSeminarService.saverid(jadwalSidang);
-//
-//        jadwalSidang.getSeminarProposal().setIdSeminarProposal(id);
-//        jadwalSidang.getUgb().setIdUgb(getSeminarProposalById.getUgb().getIdUgb());
-
-
-
-//        //save id sempro sama id ugb ke database
-//        jadwalSidangSeminarService.saverid(jadwalSidang);
-        System.out.println(jadwalSidang.getSeminarProposal().getIdSeminarProposal());
-//        System.out.println(jadwalSidang.getUgb().getIdUgb());
         model.addAttribute("addJadwalSempro", jadwalSidang);
+        model.addAttribute("getPenguji", jadwalSidang.getSeminarProposal().getUgb().getPenguji());
         return "PenjadwalanSeminarSidang/form-add-jadwalSempro";
 
     }
 
     @PostMapping("/jadwalSidangProposal/create")
     public String addJadwalSidangProposalSubmitPage (@ModelAttribute JadwalSidangModel jadwalSidangSeminar, Model model){
-        System.out.println("postMapping");
-//        System.out.println(jadwalSidangSeminar.getTanggalSempro());
-//        System.out.println(jadwalSidangSeminar.getSeminarProposal().getJadwalSidang());
-//        System.out.println(jadwalSidangSeminar.getUgb());
-
         jadwalSidangSeminarService.addJadwalSidangSeminar(jadwalSidangSeminar);
         return "redirect:/jadwalSidangProposal";
     }
 
-
-    //controller viewall JadwalSempro
+    //method viewall JadwalSempro
 
     @GetMapping("/jadwalSidangProposal")
     public String jadwalSidangProposalForm(Model model){
         List<JadwalSidangModel> listJadwalSidangSeminar = jadwalSidangSeminarService.getListJadwalSidang();
+        model.addAttribute("listjadwalSidangSeminar", listJadwalSidangSeminar);
+        return "PenjadwalanSeminarSidang/jadwalSidangProposal";
+    }
+
+    @GetMapping("/jadwalSidangProposal-pendaftar")
+    public String jadwalSidangProposalPendafta(Model model){
         List<SeminarProposalModel> listPendaftarSempro = seminarProposalService.findAllSempro();
-        List<JadwalSidangModel> getListJadwalSempro = new ArrayList<>();
-        for(JadwalSidangModel i : listJadwalSidangSeminar){
-            if (i.getTanggalSempro() !=null){
-                getListJadwalSempro.add(i);
+        List<SeminarProposalModel> newListPendaftarSempro = new ArrayList<SeminarProposalModel>();
+        for(SeminarProposalModel i : listPendaftarSempro){
+            if(i.getJadwalSidang() == null){
+                newListPendaftarSempro.add(i);
             }
         }
+        model.addAttribute("listdaftarSempro", newListPendaftarSempro);
 
-
-        model.addAttribute("listjadwalSidangSeminar", getListJadwalSempro);
-        model.addAttribute("listdaftarSempro", listPendaftarSempro);
-        return "PenjadwalanSeminarSidang/jadwalSidangProposal";
+        return "PenjadwalanSeminarSidang/jadwalSidangProposal-pendaftar";
     }
 
     //controller delete sempro
@@ -92,7 +80,7 @@ public class PenjadwalanSeminarSidang {
     public String SetJadwalSidangProposalFormPage(@PathVariable("id") Long id, Model model){
         JadwalSidangModel setJadwalSempro = jadwalSidangSeminarService.getJadwalSidangById(id);
         model.addAttribute("setJadwalSempro", setJadwalSempro);
-//        System.out.println(setJadwalSempro.getTanggalSempro());
+        model.addAttribute("getPengujiSet", setJadwalSempro.getSeminarProposal().getUgb().getPenguji());
         return "PenjadwalanSeminarSidang/form-set-jadwalSempro";
     }
 
@@ -104,7 +92,7 @@ public class PenjadwalanSeminarSidang {
 
     }
 
-    ///SEMINAR Hasil///
+    ///////////////////////////SEMINAR HASIL///////////////////////////
 
     //controller viewall jadwal semhas
     @GetMapping("/jadwalSidangHasil")
