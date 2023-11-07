@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import protensi.sita.security.UserDetailsServiceImpl;
+import protensi.sita.service.UserServiceImpl;
 
 @Controller
 public class BaseController {
     @Autowired
-    public UserDetailsServiceImpl userDetailsService;
+    public UserServiceImpl userServiceImpl;
 
     @GetMapping("/")
     private String home() {
@@ -40,7 +40,7 @@ public class BaseController {
 
     @GetMapping(value = "/create-dummy")
     public String addDummy() {
-        userDetailsService.addDummy();
+        userServiceImpl.addDummy();
         return "login";
     }
 }
