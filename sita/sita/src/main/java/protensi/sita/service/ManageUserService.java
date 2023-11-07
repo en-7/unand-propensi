@@ -12,5 +12,5 @@ public interface ManageUserService {
 
     UserModel findUserById(Integer idUser);
 
-    List<UserModel> findUserByRole(EnumRole role);
+    List<UserModel> findUserByRoles(EnumRole roles);
 }

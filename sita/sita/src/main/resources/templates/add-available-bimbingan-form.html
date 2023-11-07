@@ -59,45 +59,27 @@
     </style>
 </head>
 <body>
-    <div th:replace="fragments/fragment :: navbar(${'/seminar-hasil'})"></div>
-
-<div class="container">
-    <div class="card m-4 p-4">
-        <div class="card-body">
-            <div class="justify-content-center">
-                <h2>Pendaftaran Seminar Hasil</h2>
-                <br>
-                <form th:action="@{/seminar-hasil/add}" th:object="${seminarHasil}" method="POST" enctype="multipart/form-data">
-
-                    File Persetujuan Pembimbing (PDF):
-                    <input required class="form-control" type="file" name="persetujuanPembimbingFile" accept=".pdf" />
+    <div th:replace="fragments/fragment :: navbar(${'/bimbingan'})"></div>
+    <div class="container">
+        <div class="card m-4 p-4">
+            <div class="card-body">
+                <div class="justify-content-center">
+                    <h2>Form Available Bimbingan</h2>
+                    <br>
+                    <form th:action="@{/bimbingan/atur-jadwal}" th:object="${availableBimbingan}" method="POST" enctype="multipart/form-data">
+    
+                    Tanggal Bimbingan: <br>
+                    <input required class="form-control" type="datetime-local" name="availableBimbingan" />
                     <br><br>
-
-                    Tanda Terima Laporan KP (PDF):
-                    <input required class="form-control" type="file" name="persetujuanPembimbingFile" accept=".pdf" />
-                    <br><br>
-
-                    Risalah Seminar Proposal (PDF):
-                    <input required class="form-control" type="file" name="persetujuanPembimbingFile" accept=".pdf" />
-                    <br><br>
-
-                    Form SAPS (PDF):
-                    <input required class="form-control" type="file" name="buktiKrsFile" accept=".pdf" />
-                    <br><br>
+    
+                        <div class="pb-2 d-flex justify-content-center">
+                            <button class="btn btn-primary" type="submit" name="save">Save</button>
+                        </div>
+                    </form>
                     
-                    Draft Proposal TA (PDF):
-                    <input required class="form-control" type="file" name="draftProposalTaFile" accept=".pdf" />
-                    <br><br>
-
-                    <div class="pb-2 d-flex justify-content-center">
-                        <button class="btn btn-primary" type="submit" name="save">Submit</button>
-                    </div>
-                </form>
-                
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 </body>
 </html>

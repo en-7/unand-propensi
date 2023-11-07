@@ -29,7 +29,7 @@ public class MahasiswaController {
     @GetMapping("/mahasiswa/add")
     public String addMahasiswaFormPage(Model model) {
         MahasiswaModel mahasiswa = new MahasiswaModel();
-        mahasiswa.setRole(EnumRole.MAHASISWA);
+        //mahasiswa.setRole(EnumRole.MAHASISWA); Aldin nanti ini di benerin ya set role nya yang sesuai karena roles nya kan Set<EnumRole>
         model.addAttribute("mahasiswa", mahasiswa);
         return "user/mahasiswa-add-form";
     }
