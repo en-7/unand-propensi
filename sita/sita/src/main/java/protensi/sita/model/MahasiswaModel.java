@@ -26,9 +26,4 @@ public class MahasiswaModel extends UserModel {
     @NotNull
     @Column(name = "tahap", nullable = false)
     private String tahap;
-
-    public MahasiswaModel(Integer nim, String tahap) {
-        this.nim = nim;
-        this.tahap = tahap;
-    }
 }
