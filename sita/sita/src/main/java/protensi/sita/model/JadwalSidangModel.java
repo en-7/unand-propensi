@@ -52,7 +52,7 @@ public class JadwalSidangModel {
     @JoinColumn(name = "id_seminar_hasil")
     private SeminarHasilModel seminarHasil;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "id_tugas_akhir")
     private TugasAkhirModel tugasAkhir;
 }

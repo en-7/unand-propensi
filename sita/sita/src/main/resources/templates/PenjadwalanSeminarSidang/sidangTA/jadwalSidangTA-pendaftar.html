@@ -12,33 +12,33 @@
 
 <body>
 <!--navbar-->
-<div th:replace="fragments/fragment :: navbar(${'/seminar-proposal'})"></div>
+<div th:replace="fragments/fragment :: navbar(${'/tugas-akhir'})"></div>
 
 <!--body-->
 <br>
-<h2 class="text-center font-weight-bold text-light">Penjadwalan Seminar Proposal</h2>
+<h2 class="text-center font-weight-bold text-light">Penjadwalan Sidang Tugas Akhir</h2>
 <br>
 
 <div class="container">
     <div class="card m-4 p-4">
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group" role="group" aria-label="First group">
-                <a role="button" class="btn btn-secondary" href="/jadwalSidangProposal">Jadwal</a>
+                <a role="button" class="btn btn-secondary" href="/jadwalSidangTugasAkhir">Jadwal</a>
             </div>
             <div class="input-group">
-                <a role="button" class="btn btn-success" href="/home">Back</a>
+                <a role="button" class="btn btn-success" href="/">Back</a>
             </div>
         </div>
         <div class="card-body">
             <div class="justify-content-center">
                 <h3 class="font-weight-bold text-center ">PENDAFTAR</h3>
                 <!--Table-->
-                <div th:if="*{listdaftarSempro.size() != 0}">
+                <div th:if="*{listdaftarSidangTA.size() != 0}">
                     <br>
                     <table class="table">
                         <thead>
                         <tr class="table-success">
-                            <th style="text-align: center">No</th>>
+                            <th style="text-align: center">No</th>
                             <th style="text-align: center">Judul</th>
                             <th style="text-align: center">Mahasiswa</th>
                             <th style="text-align: center">Dosen Penguji</th>
@@ -47,28 +47,27 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="pendaftarSempro, iterationStatus : ${listdaftarSempro}"
+                        <tr th:each="pendaftarTA, iterationStatus : ${listdaftarSidangTA}"
                             th:style="${iterationStatus.even} ? '' ">
-
                             <td  th:text="${iterationStatus.count}"></td>
-                            <td  th:text="${pendaftarSempro.ugb.judulUgb}"></td>
-                            <td  th:text="${pendaftarSempro.ugb.mahasiswa.nama}"></td>
+                            <td  th:text="${pendaftarTA.ugb.judulUgb}"></td>
+                            <td  th:text="${pendaftarTA.ugb.mahasiswa.nama}"></td>
                             <td>
-                                <ul th:each="penguji, iterationStatus2 : ${pendaftarSempro.ugb.penguji}">
+                                <ul th:each="penguji, iterationStatus2 : ${pendaftarTA.ugb.penguji}">
                                     <li th:text="${penguji.nama}"></li>
                                 </ul>
                             </td>
-                            <td class="text-success" th:text="${pendaftarSempro.statusSeminarProposal}"></td>
+                            <td class="text-success" th:text="${pendaftarTA.statusTa}"></td>
                             <td>
-                                <a class="btn btn-sm btn-primary" th:href="@{/jadwalSidangProposal/create/} + ${pendaftarSempro.idSeminarProposal}">Create</a>
+                                <a class="btn btn-sm btn-primary" th:href="@{/jadwalSidangTugasAkhir/create/} + ${pendaftarTA.idTugasAkhir}">Create</a>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <br>
-                <div th:unless="*{listdaftarSempro.size() !=0}">
-                    <h3 class="text-center" th:text="'Tidak ada Mahasiswa yang Mendaftar Seminar Proposal'"></h3>
+                <div th:unless="*{listdaftarSidangTA.size() !=0}">
+                    <h3 class="text-center" th:text="'Tidak ada Mahasiswa yang Mendaftar Sidang TA'"></h3>
                 </div>
             </div>
         </div>

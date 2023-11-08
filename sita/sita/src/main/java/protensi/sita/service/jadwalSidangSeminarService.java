@@ -19,9 +19,17 @@ public interface jadwalSidangSeminarService {
     //Method delete penjadwalan Sempro
     void deletesJadwalSidangSeminar(Long id);
 
+
+    //add-sempro
     void addJadwalSidangSeminar(JadwalSidangModel jadwalSidangSeminar);
 
     void saverid(JadwalSidangModel jadwalSidangModel);
+
+    //add-semhas
+    void addJadwalSemhas(JadwalSidangModel jadwalSidangSemhas);
+
+    //add-sidang
+    void addJadwalSidangTa(JadwalSidangModel jadwalSidangTa);
 
 }
 

@@ -40,7 +40,7 @@
                 <table class="table">
                     <thead>
                     <tr class="table-success">
-                        <th style="text-align: center">No</th>>
+                        <th style="text-align: center">No</th>
                         <th style="text-align: center">Judul</th>
                         <th style="text-align: center">Mahasiswa</th>
                         <th style="text-align: center">Dosen Penguji</th>
@@ -65,9 +65,10 @@
                             <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSempro, 'HH:mm')}"></a>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangProposal/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
-                            <br>
-                            <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangProposal/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                            <div class="btn btn-group">
+                                <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangProposal/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
+                                <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangProposal/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                            </div>
                         </td>
                     </tr>
                     </tbody>

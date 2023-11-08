@@ -17,3 +17,30 @@ body{
 .f-r {
     float: right;
 }
+
+.filter-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 1100px;
+    margin: 20px auto 0;
+    background-color: #2D89FF;
+    padding: 0 0;
+}
+
+.filter-bar button {
+    color: #ffffff;
+    border: none;
+    padding: 10px 0;
+    cursor: pointer;
+    text-align: center;
+    background-color: #2D89FF;
+    width: 100%;
+}
+
+.filter-bar button.active {
+    border-bottom: 3px solid #000000;
+}
+
+.filter-bar button:hover {
+    background-color: #1E6EBC;
+}

@@ -109,5 +109,8 @@ public class TugasAkhirModel {
     @OneToOne
     @JoinColumn(name = "id_seminar_hasil")
     private SeminarHasilModel seminarHasil;
+
+    @OneToOne(mappedBy = "tugasAkhir")
+    private JadwalSidangModel jadwalSidang;
     
 }

@@ -1,13 +1,17 @@
 package protensi.sita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import protensi.sita.model.JadwalSidangModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import protensi.sita.model.SeminarHasilModel;
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.TugasAkhirModel;
+import protensi.sita.service.SeminarHasilServiceImpl;
 import protensi.sita.service.SeminarProposalService;
+import protensi.sita.service.TugasAkhirService;
 import protensi.sita.service.jadwalSidangSeminarService;
 
 import java.util.ArrayList;
@@ -23,6 +27,13 @@ public class PenjadwalanSeminarSidang {
     @Autowired
     private SeminarProposalService seminarProposalService;
 
+    @Autowired
+    private SeminarHasilServiceImpl seminarHasilService;
+
+    @Autowired
+    private TugasAkhirService tugasAkhirService;
+
+
 
     ///////////////////////////SEMINAR PROPOSAL///////////////////////////
 
@@ -35,7 +46,7 @@ public class PenjadwalanSeminarSidang {
 
         model.addAttribute("addJadwalSempro", jadwalSidang);
         model.addAttribute("getPenguji", jadwalSidang.getSeminarProposal().getUgb().getPenguji());
-        return "PenjadwalanSeminarSidang/form-add-jadwalSempro";
+        return "PenjadwalanSeminarSidang/seminarProposal/form-add-jadwalSempro";
 
     }
 
@@ -46,16 +57,21 @@ public class PenjadwalanSeminarSidang {
     }
 
     //method viewall JadwalSempro
-
     @GetMapping("/jadwalSidangProposal")
     public String jadwalSidangProposalForm(Model model){
-        List<JadwalSidangModel> listJadwalSidangSeminar = jadwalSidangSeminarService.getListJadwalSidang();
-        model.addAttribute("listjadwalSidangSeminar", listJadwalSidangSeminar);
-        return "PenjadwalanSeminarSidang/jadwalSidangProposal";
+        List<JadwalSidangModel> listJadwalSempro = jadwalSidangSeminarService.getListJadwalSidang();
+        List<JadwalSidangModel> getListSidangProposal = new ArrayList<>();
+        for(JadwalSidangModel i : listJadwalSempro){
+            if(i.getSeminarProposal() != null){
+                getListSidangProposal.add(i);
+            }
+        }
+        model.addAttribute("listjadwalSidangSeminar", getListSidangProposal);
+        return "PenjadwalanSeminarSidang/seminarProposal/jadwalSidangProposal";
     }
 
     @GetMapping("/jadwalSidangProposal-pendaftar")
-    public String jadwalSidangProposalPendafta(Model model){
+    public String jadwalSidangProposalPendaftar(Model model){
         List<SeminarProposalModel> listPendaftarSempro = seminarProposalService.findAllSempro();
         List<SeminarProposalModel> newListPendaftarSempro = new ArrayList<SeminarProposalModel>();
         for(SeminarProposalModel i : listPendaftarSempro){
@@ -65,14 +81,14 @@ public class PenjadwalanSeminarSidang {
         }
         model.addAttribute("listdaftarSempro", newListPendaftarSempro);
 
-        return "PenjadwalanSeminarSidang/jadwalSidangProposal-pendaftar";
+        return "PenjadwalanSeminarSidang/seminarProposal/jadwalSidangProposal-pendaftar";
     }
 
     //controller delete sempro
     @GetMapping(value = "/jadwalSidangProposal/delete/{id}")
     public String deleteSempro(@PathVariable Long id, Model model){
         jadwalSidangSeminarService.deletesJadwalSidangSeminar(id);
-        return "PenjadwalanSeminarSidang/deleteSempro";
+        return "PenjadwalanSeminarSidang/seminarProposal/deleteSempro";
     }
 
     //controller update sempro
@@ -81,7 +97,7 @@ public class PenjadwalanSeminarSidang {
         JadwalSidangModel setJadwalSempro = jadwalSidangSeminarService.getJadwalSidangById(id);
         model.addAttribute("setJadwalSempro", setJadwalSempro);
         model.addAttribute("getPengujiSet", setJadwalSempro.getSeminarProposal().getUgb().getPenguji());
-        return "PenjadwalanSeminarSidang/form-set-jadwalSempro";
+        return "PenjadwalanSeminarSidang/seminarProposal/form-set-jadwalSempro";
     }
 
     @PostMapping("/jadwalSidangProposal/setJadwal")
@@ -94,25 +110,58 @@ public class PenjadwalanSeminarSidang {
 
     ///////////////////////////SEMINAR HASIL///////////////////////////
 
+    //method add jadwalSemhas
+    @GetMapping("/jadwalSidangHasil/create/{id}")
+    public String addJadwalSeminarHasilForm(@PathVariable("id") Long id, Model model){
+        JadwalSidangModel jadwalSidangSemhas = new JadwalSidangModel();
+        SeminarHasilModel getSeminarHasilById = seminarHasilService.findSemhasById(id);
+        jadwalSidangSemhas.setSeminarHasil(getSeminarHasilById);
+
+        model.addAttribute("addJadwalSemhas", jadwalSidangSemhas);
+        model.addAttribute("getPenguji", jadwalSidangSemhas.getSeminarHasil().getUgb().getPenguji());
+
+        return "PenjadwalanSeminarSidang/seminarHasil/form-add-jadwalSemhas";
+
+    }
+
+    @PostMapping("/jadwalSidangHasil/create")
+    public String addJadwalSeminarHasilSubmitPage(@ModelAttribute JadwalSidangModel jadwalSemhas, Model model){
+        jadwalSidangSeminarService.addJadwalSemhas(jadwalSemhas);
+        return "redirect:/jadwalSidangHasil";
+    }
+
+
     //controller viewall jadwal semhas
     @GetMapping("/jadwalSidangHasil")
     public String jadwalSidangHasilForm(Model model){
         List<JadwalSidangModel> listJadwalSidangSeminarHasil = jadwalSidangSeminarService.getListJadwalSidang();
         List<JadwalSidangModel> getListSidangHasil = new ArrayList<>();
         for(JadwalSidangModel i :  listJadwalSidangSeminarHasil){
-            if (i.getTanggalSemhas() != null){
+            if (i.getSeminarHasil() != null){
                 getListSidangHasil.add(i);
             }
         }
         model.addAttribute("listjadwalSidangSeminarHasil", getListSidangHasil);
-        return "PenjadwalanSeminarSidang/jadwalSidangHasil";
+        return "PenjadwalanSeminarSidang/seminarHasil/jadwalSidangHasil";
+    }
+    @GetMapping("/jadwalSidangHasil-pendaftar")
+    public String jadwalSidangHasilPendaftar(Model model){
+        List<SeminarHasilModel> listPedaftarSemhas = seminarHasilService.findAllSeminarHasil();
+        List<SeminarHasilModel> newLisPendaftarSemhas = new ArrayList<>();
+        for(SeminarHasilModel j : listPedaftarSemhas){
+            if(j.getJadwalSidang() == null){
+                newLisPendaftarSemhas.add(j);
+            }
+        }
+        model.addAttribute("listdaftarSemhas", newLisPendaftarSemhas);
+        return "PenjadwalanSeminarSidang/seminarHasil/jadwalSidangHasil-pendaftar";
     }
 
     //controller delete jadwal semhas
     @GetMapping(value = "/jadwalSidangHasil/delete/{id}")
     public String deleteSemhas(@PathVariable Long id, Model model){
         jadwalSidangSeminarService.deletesJadwalSidangSeminar(id);
-        return "PenjadwalanSeminarSidang/deleteSemhas";
+        return "PenjadwalanSeminarSidang/seminarHasil/deleteSemhas";
     }
 
     //controller update semhas
@@ -120,7 +169,8 @@ public class PenjadwalanSeminarSidang {
     public String SetJadwalSidangHasilFormPage(@PathVariable("id") Long id, Model model){
         JadwalSidangModel setJadwalSemhas = jadwalSidangSeminarService.getJadwalSidangById(id);
         model.addAttribute("setJadwalSemhas", setJadwalSemhas);
-        return "PenjadwalanSeminarSidang/form-set-jadwalSemhas";
+        model.addAttribute("getPengujiSemhas", setJadwalSemhas.getSeminarHasil().getUgb().getPenguji());
+        return "PenjadwalanSeminarSidang/seminarHasil/form-set-jadwalSemhas";
     }
 
     @PostMapping("/jadwalSidangHasil/setJadwal")
@@ -134,25 +184,57 @@ public class PenjadwalanSeminarSidang {
 
     //SIDANG TUGAS AKHIR///
 
+    //method add jadwalSidangTA
+    @GetMapping("/jadwalSidangTugasAkhir/create/{id}")
+    public String addJadwalSidangTAForm(@PathVariable("id") Long id, Model model){
+        JadwalSidangModel jadwalSidangTa = new JadwalSidangModel();
+        TugasAkhirModel getSidangTaById = tugasAkhirService.findTugasAkhirById(id);
+        jadwalSidangTa.setTugasAkhir(getSidangTaById);
+
+        model.addAttribute("addJadwalSidangTa", jadwalSidangTa);
+        model.addAttribute("getPengujiTa", jadwalSidangTa.getTugasAkhir().getUgb().getPenguji());
+        return "PenjadwalanSeminarSidang/sidangTA/form-add-jadwalSidangTA";
+    }
+
+    @PostMapping("/jadwalSidangTugasAkhir/create")
+    public String addJadwalSidangTASubmit(@ModelAttribute JadwalSidangModel tugasAkhir){
+        jadwalSidangSeminarService.addJadwalSidangTa(tugasAkhir);
+        return "redirect:/jadwalSidangTugasAkhir";
+    }
+
     //viewall jadwal Sidang Tugas Akhir
     @GetMapping("/jadwalSidangTugasAkhir")
-    public String jadwalSidangProposal(Model model){
+    public String jadwalSidangTugasAkhir(Model model){
         List<JadwalSidangModel> listJadwalSidangSeminar = jadwalSidangSeminarService.getListJadwalSidang();
         List<JadwalSidangModel> getListJadwalSidangTA = new ArrayList<>();
         for(JadwalSidangModel i : listJadwalSidangSeminar){
-            if (i.getTanggalSidangTa() !=null){
+            if (i.getTugasAkhir() !=null){
                 getListJadwalSidangTA.add(i);
             }
         }
         model.addAttribute("listjadwalSidangTA", getListJadwalSidangTA);
-        return "PenjadwalanSeminarSidang/jadwalSidangTA";
+        return "PenjadwalanSeminarSidang/sidangTA/jadwalSidangTA";
+    }
+
+    @GetMapping("/jadwalSidangTugasAkhir-pendaftar")
+    public String jadwalSidangTugasAkhirPendaftar(Model model){
+        List<TugasAkhirModel> listPendaftarTugasAkhir = tugasAkhirService.findAllTugasAkhir();
+        List<TugasAkhirModel> newListPendaftarTugasAkhir = new ArrayList<>();
+        for(TugasAkhirModel k : listPendaftarTugasAkhir){
+            if(k.getJadwalSidang() == null){
+                newListPendaftarTugasAkhir.add(k);
+            }
+        }
+        model.addAttribute("listdaftarSidangTA", newListPendaftarTugasAkhir);
+        return "PenjadwalanSeminarSidang/sidangTA/jadwalSidangTA-pendaftar";
+
     }
 
     //controller delete sempro
     @GetMapping(value = "/jadwalSidangTugasAkhir/delete/{id}")
     public String deleteSidangTA(@PathVariable Long id, Model model){
         jadwalSidangSeminarService.deletesJadwalSidangSeminar(id);
-        return "PenjadwalanSeminarSidang/deleteTA";
+        return "PenjadwalanSeminarSidang/sidangTA/deleteTA";
     }
 
 
@@ -161,7 +243,8 @@ public class PenjadwalanSeminarSidang {
     public String SetJadwalSidangTAFormPage(@PathVariable("id") Long id, Model model){
         JadwalSidangModel setJadwalSidangTA = jadwalSidangSeminarService.getJadwalSidangById(id);
         model.addAttribute("setJadwalSidangTA", setJadwalSidangTA);
-        return "PenjadwalanSeminarSidang/form-set-jadwalSidangTA";
+        model.addAttribute("getPengujiTa", setJadwalSidangTA.getTugasAkhir().getUgb().getPenguji());
+        return "PenjadwalanSeminarSidang/sidangTA/form-set-jadwalSidangTA";
     }
 
     @PostMapping("/jadwalSidangTugasAkhir/setJadwal")
@@ -172,7 +255,5 @@ public class PenjadwalanSeminarSidang {
         return "redirect:/jadwalSidangTugasAkhir";
 
     }
-
-
 
 }
