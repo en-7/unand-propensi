@@ -6,5 +6,9 @@ import java.util.List;
 
 
 public interface MahasiswaService {
-    MahasiswaModel findMahasiswaById(Integer idUser);
+    MahasiswaModel findMahasiswaById(Long idUser);
+    MahasiswaModel addMahasiswa(MahasiswaModel mahasiswa);
+    List<MahasiswaModel> findAllMahasiswa();
+    MahasiswaModel findMahasiswaByUsername(String username);
+
 }

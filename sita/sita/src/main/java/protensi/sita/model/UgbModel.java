@@ -35,10 +35,10 @@ public class UgbModel {
     private String judulUgb;
 
     @Transient
-    private Integer idPembimbing1;
+    private Long idPembimbing1;
 
     @Transient
-    private Integer idPembimbing2;
+    private Long idPembimbing2;
 
     @Lob
     @Column(name = "bukti_kp", nullable = false)

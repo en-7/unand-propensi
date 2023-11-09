@@ -19,10 +19,10 @@ public class MahasiswaServiceImpl implements MahasiswaService {
     @Autowired
     MahasiswaDb mahasiswaDb;
 
-    public MahasiswaModel findMahasiswaById(Integer idUser) {
-        Optional<MahasiswaModel> mahasiswa = mahasiswaDb.findByIdUser(idUser);
-        if (mahasiswa.isPresent()) {
-            return mahasiswa.get();
+    public MahasiswaModel findMahasiswaById(Long idUser) {
+        MahasiswaModel mahasiswa = mahasiswaDb.findByIdUser(idUser);
+        if (mahasiswa != null) {
+            return mahasiswa;
         } else
             return null;
     }

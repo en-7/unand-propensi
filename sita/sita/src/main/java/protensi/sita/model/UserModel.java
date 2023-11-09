@@ -51,9 +51,8 @@ public class UserModel {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @NotNull
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private Timestamp created_at;
 
     public UserModel(String nama, Set<EnumRole> roles, String username, String password, String email) {
@@ -63,4 +62,5 @@ public class UserModel {
         this.password = password;
         this.email = email;
     }
+
 }
