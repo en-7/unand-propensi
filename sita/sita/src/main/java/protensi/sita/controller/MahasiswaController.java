@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class MahasiswaController {
@@ -29,7 +31,9 @@ public class MahasiswaController {
     @GetMapping("/mahasiswa/add")
     public String addMahasiswaFormPage(Model model) {
         MahasiswaModel mahasiswa = new MahasiswaModel();
-        //mahasiswa.setRole(EnumRole.MAHASISWA); Aldin nanti ini di benerin ya set role nya yang sesuai karena roles nya kan Set<EnumRole>
+        Set<EnumRole> roleMahasiswa = new HashSet<EnumRole>();
+        roleMahasiswa.add(EnumRole.ADMIN); // dah ya cici
+        mahasiswa.setRoles(roleMahasiswa);
         model.addAttribute("mahasiswa", mahasiswa);
         return "user/mahasiswa-add-form";
     }

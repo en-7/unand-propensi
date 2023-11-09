@@ -64,23 +64,48 @@
                 <tr>
                     <th>NIM</th>
                     <th>Nama Mahasiswa</th>
+                    <th>Judul TA</th>
+                    <th>Dosen Pembimbing</th>
+                    <th>Dosen Penguji</th>
                     <th style="text-align: center">Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="semhas, iterationStatus : ${listSeminarHasil}" 
+                    <tr th:each="seminarHasil, iterationStatus : ${listSeminarHasil}" 
                     th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'"
-                    data-status="${semhas.statusDokumen}">
+                    data-status="${seminarHasil.statusDokumen}">
+                        <td th:text="${seminarHasil != null ? (seminarHasil.ugb != null ? (seminarHasil.ugb.mahasiswa != null ? seminarHasil.ugb.mahasiswa.nim : '') : '') : ''}"></td>
                         <td>
-                            <a th:text="${semhas.mahasiswa.nim}" style="text-decoration: none; color: black;"></a>
-                        </td> 
+                            <a th:href="@{/profile/{parameter}(parameter=${seminarHasil.ugb.mahasiswa.idUser})}" th:text="${seminarHasil.ugb?.mahasiswa?.nama}" style="text-decoration: none; color: black;"></a>
+                        </td>        
                         <td>
-                            <a th:text="${semhas.mahasiswa.nama}" style="text-decoration: none; color: black;"></a>
+                            <a th:href="@{/seminar-hasil/detail/{parameter}(parameter=${seminarHasil.idSeminarHasil})}" th:text="${seminarHasil.ugb.judulUgb}" style="text-decoration: none; color: black;"></a>
                         </td>                    
+                        <td style="text-align: left;">
+                            <ul>
+                                <li th:each="pembimbing : ${seminarHasil.ugb.pembimbing}" th:text="${pembimbing.nama}" ></li>
+                            </ul>
+                        </td>
+                        <td style="text-align: left;">
+                            <ul>
+                                <li th:each="penguji : ${seminarHasil.ugb.penguji}" th:text="${penguji.nama}"></li>
+                            </ul>
+                        </td>
                         <td>
-                            <form>
-                                <button formaction="@{/semhas/detail/{id}(parameter=${semhas.idSeminarHasil})}">Detail</button>
-                            </form>
+                            <span th:if="${seminarHasil.nilai == null}">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#inputNilaiModal"
+                                        th:attr="data-id=${seminarHasil.idSeminarHasil}"
+                                    >Input Nilai</button>
+                                </div>
+                            </span>
+                            <span th:unless="${seminarHasil.nilai == null}">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateNilaiModal"
+                                        th:attr="data-id=${seminarHasil.idSeminarHasil}"
+                                    >Update Nilai</button>
+                                </div>
+                            </span>
                         </td>
                     </tr>
                 </tbody>

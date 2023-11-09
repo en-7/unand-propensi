@@ -3,7 +3,6 @@ package protensi.sita.service;
 import protensi.sita.security.xml.Attributes;
 import protensi.sita.security.xml.ServiceResponse;
 import protensi.sita.setting.Setting;
-import protensi.sita.service.UserService;
 import protensi.sita.model.AdminModel;
 import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.EnumRole;
@@ -21,6 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -44,25 +46,27 @@ public class UserServiceImpl {
         return userDb.findByUsername(username);
     }
 
-    public void addDummy() {
-        AdminModel admin = new AdminModel();
-        admin.setNama("legend");
-        admin.setUsername("legend");
-        admin.setPassword("legend");
-        encrypt(admin.getPassword());
-        admin.setRole(EnumRole.ADMIN);
-        admin.setEmail("legend@email.com");
-        adminDb.save(admin);
+    // public void addDummy() {
+    // AdminModel admin = new AdminModel();
+    // Set<EnumRole> roleAdmin = new HashSet<EnumRole>();
+    // admin.setNama("legend");
+    // admin.setUsername("legend");
+    // admin.setPassword("$2a$12$bvLzytqbMQTZ.tQTIutpEO.3jNt3MY7f7oYklI5Hk3BJ82wIlusRW");
+    // roleAdmin.add(EnumRole.ADMIN);
+    // admin.setRoles(roleAdmin);
+    // admin.setEmail("legend@email.com");
+    // adminDb.save(admin);
 
-        MahasiswaModel mahasiswa = new MahasiswaModel();
-        mahasiswa.setNama("hoho");
-        mahasiswa.setUsername("hoho");
-        mahasiswa.setPassword("hoho");
-        encrypt(mahasiswa.getPassword());
-        mahasiswa.setRole(EnumRole.MAHASISWA);
-        mahasiswa.setEmail("hoho@email.com");
-        mahasiswa.setNim(001);
-        mahasiswa.setTahap("UGB");
-        mahasiswaDb.save(mahasiswa);
-    }
+    // MahasiswaModel mahasiswa = new MahasiswaModel();
+    // Set<EnumRole> roleMahasiswa = new HashSet<EnumRole>();
+    // mahasiswa.setNama("hoho");
+    // mahasiswa.setUsername("hoho");
+    // mahasiswa.setPassword("$2a$12$VNAYAOyvyGmBkH9bfxyiheb8asfOp02unr.GX2rVcCI0eC3jkupK2");
+    // roleMahasiswa.add(EnumRole.ADMIN);
+    // mahasiswa.setRoles(roleMahasiswa);
+    // mahasiswa.setEmail("hoho@email.com");
+    // mahasiswa.setNim(001);
+    // mahasiswa.setTahap("UGB");
+    // mahasiswaDb.save(mahasiswa);
+    // }
 }

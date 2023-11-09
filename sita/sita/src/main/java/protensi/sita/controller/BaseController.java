@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import protensi.sita.security.UserDetailsServiceImpl;
+import protensi.sita.service.UserServiceImpl;
 
 @Controller
 public class BaseController {
@@ -37,16 +37,15 @@ public class BaseController {
         }
         return "redirect:/";
     }
-    /*
-     * @GetMapping(value="/create-dummy")
-     * public String addDummy(){
-     * userDetailsService.addDummy();
-     * return "login";
-     * }
-     * 
-     * @GetMapping("/error")
-     * private String Error() {
-     * return "error";
-     * }
-     */
+
+    @GetMapping(value = "/create-dummy")
+    public String addDummy() {
+        userServiceImpl.addDummy();
+        return "login";
+    }
+
+    // @GetMapping("/error")
+    // private String Error() {
+    // return "error";
+    // }
 }
