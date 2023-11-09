@@ -8,19 +8,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import protensi.sita.security.UserDetailsServiceImpl;
+import protensi.sita.service.BaseService;
+
+import java.util.*;
 
 @Controller
 public class BaseController {
     @Autowired
     public UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    public BaseService baseService;
+
     @GetMapping("/")
-    private String home() {
+    private String home(Model model) {
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "home";
     }
 
@@ -37,7 +45,7 @@ public class BaseController {
         }
         return "redirect:/";
     }
-    /*
+    
     @GetMapping(value="/create-dummy")
     public String addDummy(){
         userDetailsService.addDummy();
@@ -46,8 +54,8 @@ public class BaseController {
 
     
     @GetMapping("/error")
-    private String Error() {
+    private String Error(Model model) {
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "error";
-    }*/    
-
+    }
 }
