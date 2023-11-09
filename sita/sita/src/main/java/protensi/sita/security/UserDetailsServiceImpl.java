@@ -1,8 +1,10 @@
 package protensi.sita.security;
 
 import protensi.sita.model.EnumRole;
+import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.repository.AdminDb;
+import protensi.sita.repository.MahasiswaDb;
 import protensi.sita.repository.UserDb;
 
 import org.hibernate.Hibernate;
@@ -27,6 +29,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDb userDb;
 
     @Autowired
+    private MahasiswaDb mahasiswaDb;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public UserDetailsServiceImpl(UserDb userDatabase) {
@@ -47,23 +52,37 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 
-/* 
+
     public void addDummy(){
-        UserModel koordinator = new UserModel("koordinator", EnumRole.KOORDINATOR, "koordinator", passwordEncoder.encode("koordinator"), "koordinator@gmail.com");
+        Set<EnumRole> roles_koordinator = new HashSet<EnumRole>();
+        roles_koordinator.add(EnumRole.KOORDINATOR);
+        UserModel koordinator = new UserModel("koordinator", roles_koordinator, "koordinator", passwordEncoder.encode("koordinator"), "koordinator@gmail.com");
         userDb.save(koordinator);
-        UserModel admin = new UserModel("admin", EnumRole.ADMIN, "admin", passwordEncoder.encode("admin"),
-                "admin@gmail.com");
+
+        Set<EnumRole> roles_admin = new HashSet<EnumRole>();
+        roles_admin.add(EnumRole.ADMIN);
+        UserModel admin = new UserModel("admin", roles_admin, "admin", passwordEncoder.encode("admin"), "admin@gmail.com");
         userDb.save(admin);
-        UserModel pembimbing = new UserModel("pembimbing", EnumRole.PEMBIMBING, "pembimbing",
-                passwordEncoder.encode("pembimbing"), "pembimbing@gmail.com");
+
+        Set<EnumRole> roles_pembimbing = new HashSet<EnumRole>();
+        roles_pembimbing.add(EnumRole.PEMBIMBING);
+        UserModel pembimbing = new UserModel("pembimbing", roles_pembimbing, "pembimbing", passwordEncoder.encode("pembimbing"), "pembimbing@gmail.com");
         userDb.save(pembimbing);
-        UserModel penguji = new UserModel("penguji", EnumRole.PENGUJI, "penguji", passwordEncoder.encode("penguji"),
-                "penguji@gmail.com");
+
+        Set<EnumRole> roles_penguji = new HashSet<EnumRole>();
+        roles_penguji.add(EnumRole.PENGUJI);
+        UserModel penguji = new UserModel("penguji", roles_penguji, "penguji", passwordEncoder.encode("penguji"), "penguji@gmail.com");
         userDb.save(penguji);
-        UserModel mahasiswa = new UserModel("mahasiswa", EnumRole.MAHASISWA, "mahasiswa",
-                passwordEncoder.encode("mahasiswa"), "mahasiswa@gmail.com");
+
+        Set<EnumRole> roles_mahasiswa = new HashSet<EnumRole>();
+        roles_mahasiswa.add(EnumRole.MAHASISWA);
+        UserModel mahasiswa = new UserModel("mahasiswa", roles_mahasiswa, "mahasiswa", passwordEncoder.encode("mahasiswa"), "mahasiswa@gmail.com");
         userDb.save(mahasiswa);
+        // MahasiswaModel m = new MahasiswaModel(2123456789, "NONE");
+        // mahasiswaDb.save(m);
+
+
     }
-*/
+
 
 }
