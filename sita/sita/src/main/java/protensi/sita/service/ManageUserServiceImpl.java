@@ -26,16 +26,16 @@ public class ManageUserServiceImpl implements ManageUserService{
         return userDb.findAll();
     }
 
-    public UserModel findUserById(Integer idUser) {
-        Optional<UserModel> user = userDb.findByIdUser(idUser);
-        if (user.isPresent()) {
-            return user.get();
+    public UserModel findUserById(Long idUser) {
+        UserModel user = userDb.findByIdUser(idUser);
+        if (user != null) {
+            return user;
         } else
             return null;
     }
 
-    public List<UserModel> findUserByRoles(EnumRole roles) {
-        return userDb.findAllByRoles(roles);
-    }
+    // public List<UserModel> findUserByRoles(EnumRole roles) {
+    //     return userDb.findAllByRoles(roles);
+    // }
 
 }
