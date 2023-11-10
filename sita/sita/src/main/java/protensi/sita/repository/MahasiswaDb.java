@@ -9,4 +9,5 @@ public interface MahasiswaDb extends JpaRepository<MahasiswaModel, Long> {
     MahasiswaModel findByIdUser(Long idUser);
 
     MahasiswaModel findByUsername(String username);
+
 }

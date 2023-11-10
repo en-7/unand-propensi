@@ -95,7 +95,6 @@ public class BimbinganController {
 
     @GetMapping("/viewall")
     public String listBimbingan(Model model) {
-
         List<JadwalBimbinganModel> listBimbingan = jadwalBimbinganService.findAll();
         model.addAttribute("listBimbingan", listBimbingan);
         return "bimbingan/viewall-jadwal-bimbingan";

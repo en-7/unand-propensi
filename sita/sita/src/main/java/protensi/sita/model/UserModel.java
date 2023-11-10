@@ -62,4 +62,5 @@ public class UserModel {
         this.password = password;
         this.email = email;
     }
+
 }

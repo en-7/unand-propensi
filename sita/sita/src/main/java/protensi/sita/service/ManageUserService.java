@@ -10,7 +10,7 @@ public interface ManageUserService {
 
     List<UserModel> findAllUser();
 
-    UserModel findUserById(Integer idUser);
+    UserModel findUserById(Long idUser);
 
     List<UserModel> findUserByRoles(EnumRole roles);
 }

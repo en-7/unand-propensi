@@ -4,6 +4,7 @@ import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.repository.SeminarProposalDb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -18,18 +19,15 @@ public class SeminarProposalServiceImpl implements SeminarProposalService {
     public void addSempro(SeminarProposalModel seminarProposal){
         seminarProposalDb.save(seminarProposal);
     }
-
     @Override
     public SeminarProposalModel updateSempro(SeminarProposalModel seminarProposal) {
         seminarProposalDb.save(seminarProposal);
         return seminarProposal;
     }
-
     @Override
     public List<SeminarProposalModel> findAllSempro(){
         return seminarProposalDb.findAll();
     }
-
     @Override
     public SeminarProposalModel findSemproById(Long idSeminarProposal){
         Optional<SeminarProposalModel> sempro = seminarProposalDb.findByIdSeminarProposal(idSeminarProposal);
@@ -37,12 +35,10 @@ public class SeminarProposalServiceImpl implements SeminarProposalService {
             return sempro.get();
         } else return null;
     }
-
     @Override
     public List<SeminarProposalModel> findSemproByStatusDokumen(String statusDokumen) {
         return seminarProposalDb.findAllByStatusDokumen(statusDokumen);
     }
-
     @Override
     public SeminarProposalModel saveNilaiAndStatus(Long idSeminarProposal, Long nilai, String statusSeminarProposal) {
         SeminarProposalModel seminarProposal = seminarProposalDb.findByIdSeminarProposal(idSeminarProposal).orElse(null);
@@ -53,7 +49,6 @@ public class SeminarProposalServiceImpl implements SeminarProposalService {
         }
         return null;
     }
-
 
     @Override
     public List<SeminarProposalModel> findAllByPembimbing(Long pembimbingId) {

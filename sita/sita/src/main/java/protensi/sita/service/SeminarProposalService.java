@@ -4,6 +4,8 @@ import protensi.sita.model.SeminarProposalModel;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface SeminarProposalService {
     void addSempro(SeminarProposalModel seminarProposal);
     SeminarProposalModel updateSempro(SeminarProposalModel seminarProposal);
