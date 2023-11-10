@@ -45,6 +45,7 @@ public class BaseController {
         }
         return "redirect:/";
     }
+
     
     @GetMapping(value="/create-dummy")
     public String addDummy(){

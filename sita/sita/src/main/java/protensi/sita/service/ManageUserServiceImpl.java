@@ -34,8 +34,8 @@ public class ManageUserServiceImpl implements ManageUserService{
             return null;
     }
 
-    // public List<UserModel> findUserByRoles(EnumRole roles) {
-    //     return userDb.findAllByRoles(roles);
-    // }
+    public List<UserModel> findUserByRoles(EnumRole roles) {
+        return userDb.findAllByRoles(roles);
+    }
 
 }

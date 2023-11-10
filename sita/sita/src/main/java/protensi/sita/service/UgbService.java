@@ -17,4 +17,6 @@ public interface UgbService {
     HashMap<String, List<UgbModel>> viewAllUgb();
 
     MahasiswaModel getMahasiswa(String username);
+
+    UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa);
 }

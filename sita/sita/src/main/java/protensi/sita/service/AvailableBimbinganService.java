@@ -9,4 +9,5 @@ public interface AvailableBimbinganService {
     AvailableBimbinganModel save(AvailableBimbinganModel availableBimbingan);
     void delete(Long idAvailableBimbingan);
     void add(AvailableBimbinganModel availableBimbingan);
+    List<AvailableBimbinganModel> findAllByIdPembimbing(Long idUser);
 }
