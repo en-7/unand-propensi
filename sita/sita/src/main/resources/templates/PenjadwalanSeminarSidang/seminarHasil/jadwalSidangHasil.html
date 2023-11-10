@@ -8,7 +8,6 @@
     <object th:include="fragments/fragment :: js" th:remove="tag"></object>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
 </head>
-
 <body>
 <!--navbar-->
 <div th:replace="fragments/fragment :: navbar(${'/seminar-hasil'})"></div>
@@ -17,7 +16,6 @@
 <br>
 <h2 class="text-center font-weight-bold text-light">Penjadwalan Seminar Hasil</h2>
 <br>
-
 <div class="container">
     <div class="card m-4 p-4">
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
@@ -25,7 +23,7 @@
                 <a role="button" class="btn btn-secondary" href="/jadwalSidangHasil-pendaftar">Pendaftar</a>
             </div>
             <div class="input-group">
-                <a role="button" class="btn btn-success" href="/home">Back</a>
+                <a role="button" class="btn btn-success" href="/">Back</a>
             </div>
         </div>
         <div class="card-body">
@@ -38,17 +36,22 @@
                     <table class="table">
                         <thead>
                         <tr class="table-success">
-                            <th style="text-align: center">No</th>
-                            <th style="text-align: center">Judul</th>
-                            <th style="text-align: center">Mahasiswa</th>
-                            <th style="text-align: center">Dosen Penguji</th>
-                            <th style="text-align: center">Jadwal</th>
-                            <th style="text-align: center">Action</th>
+                            <th rowspan="2" style="text-align: center">No</th>
+                            <th rowspan="2" style="text-align: center">Judul</th>
+                            <th rowspan="2" style="text-align: center">Mahasiswa</th>
+                            <th rowspan="2" style="text-align: center">Dosen Penguji</th>
+                            <th colspan="3" style="text-align: center">Jadwal</th>
+                            <th rowspan="2" style="text-align: center">Action</th>
+                        </tr>
+                        <tr class="table-success">
+                            <td  style="text-align: center" class="font-weight-bold">Tanggal</td>
+                            <td  style="text-align: center" class="font-weight-bold">Waktu</td>
+                            <td  style="text-align: center" class="font-weight-bold">Tempat</td>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="jadwalSidangSeminar, iterationStatus : ${listjadwalSidangSeminarHasil}"
-                            th:style="${iterationStatus.even} ? 'font-weight:bold;' ">
+                            th:style="${iterationStatus.even} ? '' ">
                             <td  th:text="${iterationStatus.count}"></td>
                             <td  th:text="${jadwalSidangSeminar.seminarHasil.ugb.judulUgb}"></td>
                             <td  th:text="${jadwalSidangSeminar.seminarHasil.ugb.mahasiswa.nama}"></td>
@@ -59,12 +62,15 @@
                             </td>
                             <td>
                                 <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSemhas, 'dd MMMM yyyy')}"></a>
-                                <br>
+                            </td>
+                            <td>
                                 <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSemhas, 'HH:mm')}"></a>
+                            </td>
+                            <td th:text="${jadwalSidangSeminar.tempatSemhas}"></td>
                             <td>
                                 <div class="btn btn-group">
                                     <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangHasil/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
-                                    <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangHasil/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                                    <a class="btn btn-sm btn-danger text-center" th:href="@{/jadwalSidangHasil/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
                                 </div>
                             </td>
                         </tr>
