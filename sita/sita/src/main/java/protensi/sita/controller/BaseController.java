@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import protensi.sita.model.EnumRole;
 import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.BaseService;
+
+
 
 import java.util.*;
 
@@ -26,8 +29,11 @@ public class BaseController {
     @Autowired
     public BaseService baseService;
 
+    
+
     @GetMapping("/")
     private String home(Model model) {
+        
         model.addAttribute("roleUser", baseService.getCurrentRole());
         return "home";
     }

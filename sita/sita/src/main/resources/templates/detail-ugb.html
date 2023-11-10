@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SITA</title>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .container-content {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #d3d3d3;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container-table {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background-color: #3CB371;
+            color: #fff;
+            padding-left: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #d3d3d3;
+        }
+
+        th {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar('/ugb')"></nav>
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h2 class="mt-4 font-weight-bold">Detail UGB</h2>
+    </div>
+    <div class="container-content mt-4">
+        <div class="header-container-table">
+            <h5 class="table-title ml-4 mt-2" th:text="${ugb.judulUgb}"></h5>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Nama</th>
+                <td th:text="${ugb.mahasiswa.nama}"></td>
+            </tr>
+            <tr>
+                <th>NIM</th>
+                <td th:text="${ugb.mahasiswa.nim}"></td>
+            </tr>
+            <tr>
+                <th>Judul UGB</th>
+                <td th:text="${ugb.judulUgb}"></td>
+            </tr>
+            <div th:each="dosen, stats : ${ugb.pembimbing}">
+                <tr>
+                    <th th:text="'Nama Pembimbing ' + ${stats.index + 1} + ':'"></th>
+                    <td th:text="${dosen.nama}"></td>
+                </tr>
+            </div>
+            <div th:each="dosen, stats : ${ugb.penguji}">
+                <tr>
+                    <th th:text="'Nama Penguji ' + ${stats.index + 1} + ':'"></th>
+                    <td th:text="${dosen.nama}"></td>
+                </tr>
+            </div>
+            <tr>
+                <th>Status UGB</th>
+                <td>
+                    <span th:if="${ugb?.statusUgb == null}">-</span>
+                    <span th:unless="${ugb?.statusUgb == null}" th:text="${ugb?.statusugb}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Catatan</th>
+                <td>
+                    <span th:if="${ugb?.catatan == null}">-</span>
+                    <span th:unless="${ugb?.catatan == null}" th:text="${ugb?.catatan}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>File UGB</th>
+                <td>
+                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/draftProposalTa'}" target="_blank">Draft Proposal TA</a>
+                </td>
+
+            </tr>
+            <tr>
+                <th>Bukti KP</th>
+                <td>
+                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
+                </td>
+            </tr>
+            <tr>
+                <th>Transkrip Nilai</th>
+                <td>
+                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
+                </td>
+            </tr>
+            <tr>
+                <th>File KHS</th>
+                <td>
+                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/persetujuanPembimbing'}" target="_blank">Persetujuan Pembimbing</a>
+                </td>
+            </tr>            
+        </table>
+        <br><br>
+        <div class="pb-2 d-flex justify-content-center">
+            <span th:if="${ugb?.statusUgb == 'SUBMITTED'}">
+                <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Approve</a>
+                <a class="btn btn-primary" data-toggle="modal" data-target="">Deny</a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="approveModalLabel">Persetujuan Pendaftaran</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Apakah Anda yakin ingin menyetujui UGB ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <a class="btn btn-primary" href="#" id="approveButton">Ya, Setujui</a>
+          <input type="hidden" id="ugbId" th:value="${ugb?.idUgb}">
+        </div>
+      </div>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    // Menangani klik tombol "Ya, Setujui"
+    document.getElementById("approveButton").addEventListener("click", function () {
+        // Mendapatkan ID proposal dari atribut data
+        var ugbId = document.getElementById("ugbId").value;
+
+        // Lakukan permintaan AJAX untuk memproses persetujuan
+        fetch("/ugb/approve/" + ugbId, {
+            method: "POST",
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    // Setelah berhasil, Anda dapat menutup modal
+                    $("#approveModal").modal("hide");
+                    // Atau lakukan tindakan lain yang sesuai
+                    window.location.href = "/ugb/detail/" + ugbId;
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    });
+</script>
+<script>
+    document.getElementById("denyButton").addEventListener("click", function () {
+    var catatan = document.getElementById("catatan").value;
+    var ugbId = document.getElementById("ugbId").value;
+
+    // Pastikan 'catatan' tidak kosong sebelum melakukan permintaan POST
+    if (catatan) {
+        fetch("/ugb/deny/" + ugbId, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'catatan=' + encodeURIComponent(catatan)
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    // Setelah berhasil, Anda dapat menutup modal
+                    $("#denyModal").modal("hide");
+                    // Atau lakukan tindakan lain yang sesuai
+                    window.location.href = "/ugb/detail/" + ugbId;
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+        } else {
+            alert("Catatan tidak boleh kosong."); // Atau gunakan cara lain untuk memberi tahu pengguna bahwa catatan diperlukan.
+        }
+    });
+
+</script>
+

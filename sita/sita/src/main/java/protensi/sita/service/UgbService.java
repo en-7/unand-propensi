@@ -14,7 +14,11 @@ public interface UgbService {
 
     String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb);
 
-    HashMap<String, List<UgbModel>> viewAllUgb();
+    List<UgbModel> viewAllUgb();
 
     MahasiswaModel getMahasiswa(String username);
+
+    List<UgbModel> filterUgb(String status);
+
+    UgbModel getUgbById(Long idUgb);
 }

@@ -91,23 +91,28 @@ public class UGBController {
     public String listUgb(Model model) {
         System.out.println("*** test ***");
 
-        HashMap<String, List<UgbModel>> result = ugbService.viewAllUgb();
-        Map.Entry<String, List<UgbModel>> entry = result.entrySet().iterator().next();
-        // String roleUser = entry.getKey();
-        List<UgbModel> listUgb = entry.getValue();
+        List<UgbModel> result = ugbService.viewAllUgb();
         
-        System.out.println("*** list ugb retrieved: "+ listUgb);
+        System.out.println("*** list ugb retrieved: "+ result);
 
-        model.addAttribute("listUgb", listUgb);
+        model.addAttribute("listUgb", result);
         model.addAttribute("roleUser", baseService.getCurrentRole());
         return "viewall-ugb";
     }
 
-    // @GetMapping("/filter")
-    // public String filterUgb(@RequestParam String status, Model model) {
-    //     List<SeminarProposalModel> filteredProposals = seminarProposalService.findSemproByStatusDokumen(status);
-    //     model.addAttribute("listSempro", filteredProposals);
-    //     return "viewall-sempro";
-    // }
+    @GetMapping("/ugb/filter")
+    public String filterUgb(@RequestParam("status") String status, Model model) {
+        System.out.println("MASUK ==");
+        List<UgbModel> filteredUGBList = ugbService.filterUgb(status);
+        model.addAttribute("listUgb", filteredUGBList);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
+        return "viewall-ugb";
+    }
 
+    @GetMapping("/ugb/detail/{idUgb}")
+    public String viewDetailUgb(@PathVariable Long idUgb, Model model) {
+        UgbModel retrievedUgb = ugbService.getUgbById(idUgb);
+        model.addAttribute("ugb", retrievedUgb);
+        return "detail-ugb";
+    }
 }
