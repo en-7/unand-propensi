@@ -51,7 +51,7 @@ public class SeminarHasilController {
     public String addSeminarHasilFormPage(Model model) {
         SeminarHasilModel seminarHasilModel = new SeminarHasilModel();
 
-        model.addAttribute("ugb", seminarHasilModel);
+        model.addAttribute("semhas", seminarHasilModel);
 
         return "add-semhas-form";
     }
