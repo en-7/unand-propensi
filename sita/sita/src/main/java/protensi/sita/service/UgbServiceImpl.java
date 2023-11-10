@@ -52,7 +52,7 @@ public class UgbServiceImpl {
             ugb.setTranskrip(transcript.getBytes());
             ugb.setFileKhs(file_khs.getBytes());
             ugb.setFileUgb(file_ugb.getBytes());
-            ugb.setStatusDokumen("SUBMITTED");
+            ugb.setStatusUgb("SUBMITTED");
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             UserModel user = userDb.findByUsername(username);
@@ -81,7 +81,6 @@ public class UgbServiceImpl {
         String username = authentication.getName();
         UserModel thisUser = userDb.findByUsername(username);
         Set<EnumRole> roles = thisUser.getRoles();
-        List<UgbModel> retrievedUgb = new ArrayList<>();
         System.out.println("*** roles user == " + roles.toString());
 
         if (roles.contains(EnumRole.PEMBIMBING) == true){
@@ -125,6 +124,11 @@ public class UgbServiceImpl {
             return filterUgb("SUBMITTED");
         }
     }
+
+    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
+        return ugbDb.findByMahasiswa(mahasiswa);
+    }
+    
     
     
     public List<UgbModel> filterUgb(String status){
@@ -134,9 +138,6 @@ public class UgbServiceImpl {
         Set<EnumRole> roles = thisUser.getRoles();
         System.out.println("*** STATUS == " + status);
         System.out.println("*** ROLES == " + roles.toString());
-                System.out.println("*** ROLES == " + roles);
-
-
 
         if(roles.contains(EnumRole.KOORDINATOR)){
             List<UgbModel> submitted_ugb = ugbDb.getUgbBasedOnStatus(status);
@@ -172,5 +173,18 @@ public class UgbServiceImpl {
 
     public UgbModel getUgbById(Long idUgb){
         return ugbDb.findByIdUgb(idUgb);
+    }
+
+    public void approveUgb(UgbModel ugb){
+        ugb.setStatusDokumen("APPROVED");
+        ugb.setStatusUgb("ALLOCATE");
+        ugbDb.save(ugb);
+    }
+
+    public void denyUgb(UgbModel ugb, String ctt){
+        ugb.setStatusDokumen("DENIED");
+        ugb.setStatusUgb("DENIED");
+        ugb.setCatatan(ctt);
+        ugbDb.save(ugb);
     }
 }

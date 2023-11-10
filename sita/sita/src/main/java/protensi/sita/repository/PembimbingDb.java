@@ -12,4 +12,8 @@ import java.util.List;
 public interface PembimbingDb extends JpaRepository<PembimbingModel, Long> {
     @Query("SELECT idUser FROM PembimbingModel ")
     List<Long> findAllPembimbing();
+    PembimbingModel findByIdUser(Long idUser);
+
+    PembimbingModel findByUsername(String username);
+
 }

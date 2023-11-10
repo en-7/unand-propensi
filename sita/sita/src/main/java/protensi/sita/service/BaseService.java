@@ -10,7 +10,6 @@ public class BaseService {
     public String getCurrentRole(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String roleUser = authentication.getAuthorities().toString();
-        // System.out.println("*** role saat ini: "+ roleUser);
         return roleUser;
     }
     

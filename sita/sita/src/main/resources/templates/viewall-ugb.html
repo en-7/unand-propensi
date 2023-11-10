@@ -79,10 +79,6 @@
             background-color:  rgb(38, 63, 14);
         }
 
-        .filterbuttons {
-            width: fit-content;
-        }
-
         .table-row-hidden {
             display: none; 
         }
@@ -139,8 +135,17 @@
                             <a th:text="${ugb.judulUgb}" style="text-decoration: none; color: black;"></a>
                         </td>                    
                         <td>
-                            <div class="btn-group">
-                                <a class="btn btn-sm btn-primary" th:href="@{/ugb/detail/} + ${ugb.idUgb}">Detail</a>
+                            <div th:switch="${ugb.statusUgb}">
+                                <div th:case="'ALLOCATE'">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-primary" th:href="@{/ugb/allocate/} + ${ugb.idUgb}">Allocate</a>
+                                    </div>
+                                </div>
+                                <div th:case="*">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-primary" th:href="@{/ugb/detail/} + ${ugb.idUgb}">Detail</a>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -154,7 +159,7 @@
 </html>
 <script>
     document.getElementById("filterVerify").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=VERIFY";
+        window.location.href = "/ugb/filter?status=SUBMITTED";
     });
     document.getElementById("filterAllocate").addEventListener("click", function () {
         window.location.href = "/ugb/filter?status=ALLOCATE";

@@ -20,5 +20,9 @@ public interface UgbService {
 
     List<UgbModel> filterUgb(String status);
 
+    void approveUgb(UgbModel ugb);
+
+    void denyUgb(UgbModel ugb, String ctt);
+
     UgbModel getUgbById(Long idUgb);
 }

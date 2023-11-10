@@ -39,7 +39,7 @@ public class JadwalBimbinganServiceImpl implements JadwalBimbinganService {
 
     @Override
     public JadwalBimbinganModel findByAvaialableBimbingan(Long idAvailableBimbingan){
-        Optional<JadwalBimbinganModel> result = jadwalBimbinganDb.findByAvailableBimbingan(idAvailableBimbingan);
+        Optional<JadwalBimbinganModel> result = jadwalBimbinganDb.findByAvailableBimbingan_IdAvailableBimbingan(idAvailableBimbingan);
         return result.orElse(null);
     }
 }

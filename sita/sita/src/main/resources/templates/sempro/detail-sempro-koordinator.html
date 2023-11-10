@@ -52,97 +52,92 @@
     </style>
 </head>
 <body>
-<nav th:replace="fragments/fragment :: navbar('/ugb')"></nav>
+<nav th:replace="fragments/fragment :: navbar('/seminar-proposal')"></nav>
 
 <div class="container">
     <div class="d-flex justify-content-center">
-        <h2 class="mt-4 font-weight-bold">Detail UGB</h2>
+        <h2 class="mt-4 font-weight-bold">Detail Peserta Seminar Proposal</h2>
     </div>
     <div class="container-content mt-4">
         <div class="header-container-table">
-            <h5 class="table-title ml-4 mt-2" th:text="${ugb.judulUgb}"></h5>
+            <h5 class="table-title ml-4 mt-2" th:text="${seminarProposal?.ugb?.mahasiswa?.nama}"></h5>
         </div>
         <table class="table">
             <tr>
                 <th>Nama</th>
-                <td th:text="${ugb.mahasiswa.nama}"></td>
+                <td th:text="${seminarProposal?.ugb?.mahasiswa?.nama}"></td>
             </tr>
             <tr>
                 <th>NIM</th>
-                <td th:text="${ugb.mahasiswa.nim}"></td>
+                <td th:text="${seminarProposal?.ugb?.mahasiswa?.nim}"></td>
             </tr>
             <tr>
-                <th>Judul UGB</th>
-                <td th:text="${ugb.judulUgb}"></td>
+                <th>Judul TA</th>
+                <td th:text="${seminarProposal?.ugb?.judulUgb}"></td>
             </tr>
-            <div th:each="dosen, stats : ${ugb.pembimbing}">
-                <tr>
-                    <th th:text="'Nama Pembimbing ' + ${stats.index + 1} + ':'"></th>
-                    <td th:text="${dosen.nama}"></td>
-                </tr>
-            </div>
-            <div th:each="dosen, stats : ${ugb.penguji}">
-                <tr>
-                    <th th:text="'Nama Penguji ' + ${stats.index + 1} + ':'"></th>
-                    <td th:text="${dosen.nama}"></td>
-                </tr>
-            </div>
             <tr>
-                <th>Status UGB</th>
+                <th>Tanggal Lulus UGB</th>
                 <td>
-                    <span th:if="${ugb?.statusDokumen == null}">-</span>
-                    <span th:unless="${ugb?.statusDokumen == null}" th:text="${ugb?.statusDokumen}"></span>
+                    <span th:if="${seminarProposal?.ugb?.tanggalLulus == null}">-</span>
+                    <span th:unless="${seminarProposal?.ugb?.tanggalLulus == null}" th:text="${#temporals.format(seminarProposal?.ugb?.tanggalLulus, 'dd MMMM yyyy HH:mm:ss')}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Nilai Sempro</th>
+                <td>
+                    <span th:if="${seminarProposal?.nilai == null}">-</span>
+                    <span th:unless="${seminarProposal?.nilai == null}" th:text="${seminarProposal?.nilai}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Status Sempro</th>
+                <td>
+                    <span th:if="${seminarProposal?.statusSeminarProposal == null}">-</span>
+                    <span th:unless="${seminarProposal?.statusSeminarProposal == null}" th:text="${seminarProposal?.statusSeminarProposal}"></span>
+                </td>
+            </tr>
+            
+            <tr>
+                <th>Status Dokumen Sempro</th>
+                <td>
+                    <span th:if="${seminarProposal?.statusDokumen == null}">-</span>
+                    <span th:unless="${seminarProposal?.statusDokumen == null}" th:text="${seminarProposal?.statusDokumen}"></span>
                 </td>
             </tr>
             <tr>
                 <th>Catatan</th>
                 <td>
-                    <span th:if="${ugb?.catatan == null}">-</span>
-                    <span th:unless="${ugb?.catatan == null}" th:text="${ugb?.catatan}"></span>
+                    <span th:if="${seminarProposal?.catatan == null}">-</span>
+                    <span th:unless="${seminarProposal?.catatan == null}" th:text="${seminarProposal?.catatan}"></span>
                 </td>
             </tr>
             <tr>
-                <th>File UGB</th>
+                <th>Draft Proposal TA</th>
                 <td>
-                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/draftProposalTa'}" target="_blank">Draft Proposal TA</a>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/draftProposalTa'}" target="_blank">Draft Proposal TA</a>
                 </td>
 
             </tr>
             <tr>
-                <th>Bukti KP</th>
+                <th>Bukti KRS</th>
                 <td>
-                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
                 </td>
             </tr>
             <tr>
-                <th>Transkrip Nilai</th>
+                <th>Persetujuan Pembimbing</th>
                 <td>
-                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
-                </td>
-            </tr>
-            <tr>
-                <th>File KHS</th>
-                <td>
-                    <a th:href="@{'/ugb/downloadFile/' + ${ugb.idUgb} + '/persetujuanPembimbing'}" target="_blank">Persetujuan Pembimbing</a>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/persetujuanPembimbing'}" target="_blank">Persetujuan Pembimbing</a>
                 </td>
             </tr>            
         </table>
         <br><br>
-        <div th:switch="${roleUser}">
-            <div class="filter-bar" th:case="'[ROLE_[KOORDINATOR]]'">
-                <div class="pb-2 d-flex justify-content-center">
-                    <span th:if="${ugb.statusUgb == 'SUBMITTED'}">
-                        <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Approve</a>
-                        <a class="btn btn-primary" data-toggle="modal" data-target="#denyModal">Deny</a>
-                        <a class="btn btn-primary mx-1" th:href="@{'/ugb/update/'+ ${ugb.idUgb}}">Update</a>
-                    </span>
-                </div>
-            </div>
-            <div class="filter-bar" th:case="'[ROLE_[MAHASISWA]]'">
-                <a th:if="${ugb.statusUgb == 'DENIED'}" class="btn btn-primary mx-1" th:href="@{'/ugb/update/'+ ${ugb.idUgb}}">Update</a>
-            </div>
+        <div class="pb-2 d-flex justify-content-center">
+            <span th:if="${seminarProposal?.statusDokumen == 'SUBMITTED'}">
+                <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Approve</a>
+                <a class="btn btn-primary" data-toggle="modal" data-target="#denyModal">Deny</a>
+            </span>
         </div>
-
     </div>
 </div>
 
@@ -156,18 +151,16 @@
           </button>
         </div>
         <div class="modal-body">
-          Apakah Anda yakin ingin menyetujui UGB ini?
+          Apakah Anda yakin ingin menyetujui pendaftaran proposal ini?
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
           <a class="btn btn-primary" href="#" id="approveButton">Ya, Setujui</a>
-          <input type="hidden" id="ugbId" th:value="${ugb.idUgb}">
+          <input type="hidden" id="seminarProposalId" th:value="${seminarProposal.idSeminarProposal}">
         </div>
       </div>
     </div>
 </div>
-</body>
-</html>
 
 <div class="modal fade" id="denyModal" tabindex="-1" role="dialog" aria-labelledby="denyModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -181,41 +174,44 @@
             <div class="modal-body">
                 <div>
                     <h5>Nama:</h5>
-                    <p th:text="${ugb.mahasiswa.nama}"></p>
+                    <p th:text="${seminarProposal?.ugb?.mahasiswa?.nama}"></p>
                 </div>
                 <div>
                     <h5>NIM:</h5>
-                    <p th:text="${ugb.mahasiswa.nim}"></p>
+                    <p th:text="${seminarProposal?.ugb?.mahasiswa?.nim}"></p>
                 <div>
                     <h5>Judul UGB:</h5>
-                    <p th:text="${ugb.judulUgb}"></p>
+                    <p th:text="${seminarProposal?.ugb?.judulUgb}"></p>
                 </div>
                 <div>
                     <h5>Catatan:</h5>
                     <textarea id="catatan" rows="4" cols="50"></textarea>
                 </div>
-                <input type="hidden" id="ugbId" th:value="${ugb.idUgb}">
+                <input type="hidden" id="seminarProposalId" th:value="${seminarProposal.idSeminarProposal}">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger" id="denyUgbButton">Simpan</button>
+                <button type="button" class="btn btn-danger" id="denyProposalButton">Simpan</button>
             </div>
         </div>
     </div>
 </div>
 
+</body>
+</html>
+
 <script>
     document.getElementById("approveButton").addEventListener("click", function (e) {
         e.preventDefault();
-        var ugbId = document.getElementById("ugbId").value;
+        var seminarProposalId = document.getElementById("seminarProposalId").value;
 
-        fetch("/ugb/approve/" + ugbId, {
+        fetch("/seminar-proposal/approve/" + seminarProposalId, {
             method: "GET",
         })
             .then(function (response) {
                 if (response.ok) {
                     $("#approveModal").modal("hide");
-                    window.location.href = "/ugb/detail/" + ugbId;
+                    window.location.href = "/seminar-proposal/detail/" + seminarProposalId;
                 }
             })
             .catch(function (error) {
@@ -223,35 +219,31 @@
             });
     });
 </script>
-<script>
-    document.getElementById("denyUgbButton").addEventListener("click", function () {
-    var catatan = document.getElementById("catatan").value;
-    var ugbId = document.getElementById("ugbId").value;
 
-    // Pastikan 'catatan' tidak kosong sebelum melakukan permintaan POST
+<script>
+    document.getElementById("denyProposalButton").addEventListener("click", function () {
+    var catatan = document.getElementById("catatan").value;
+    var seminarProposalId = document.getElementById("seminarProposalId").value;
     if (catatan) {
-        fetch("/ugb/deny/" + ugbId, {
+        fetch("/seminar-proposal/deny/" + seminarProposalId, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: 'catatan=' + encodeURIComponent(catatan)
         })
-            .then(function (response) {
-                if (response.ok) {
-                    // Setelah berhasil, Anda dapat menutup modal
-                    $("#denyModal").modal("hide");
-                    // Atau lakukan tindakan lain yang sesuai
-                    window.location.href = "/ugb/detail/" + ugbId;
-                }
-            })
-            .catch(function (error) {
-                console.error("Error:", error);
-            });
-        } else {
-            alert("Catatan tidak boleh kosong."); // Atau gunakan cara lain untuk memberi tahu pengguna bahwa catatan diperlukan.
-        }
-    });
+        .then(function (response) {
+            if (response.ok) {
+                $("#denyModal").modal("hide");
+                window.location.href = "/seminar-proposal/detail/" + seminarProposalId;
+            }
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    } else {
+        alert("Catatan tidak boleh kosong."); 
+    }
+});
 
 </script>
-
