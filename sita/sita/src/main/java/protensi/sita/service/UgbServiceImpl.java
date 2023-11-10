@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.repository.UgbDb;
 
@@ -23,6 +24,10 @@ public class UgbServiceImpl {
 
     public List<UgbModel> findAllUgb(){
         return ugbDb.findAll();
+    }
+
+    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
+        return ugbDb.findByMahasiswa(mahasiswa);
     }
     
 }

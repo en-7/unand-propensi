@@ -1,6 +1,7 @@
 package protensi.sita.security;
 
 import protensi.sita.model.EnumRole;
+import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.repository.AdminDb;
 import protensi.sita.repository.UserDb;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -46,6 +48,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRoles()));
         return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
+
+    public UserModel findByUsername(String username){
+        return userDb.findByUsername(username);
+    } 
 
 /* 
     public void addDummy(){

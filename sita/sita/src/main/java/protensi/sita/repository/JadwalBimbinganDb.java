@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JadwalBimbinganDb extends JpaRepository<JadwalBimbinganModel, Long> {
     Optional<JadwalBimbinganModel> findByIdJadwalBimbingan(Long idJadwalBimbingan);
-    Optional<JadwalBimbinganModel> findByAvailableBimbingan(Long idAvailableBimbingan);
-    
+    Optional<JadwalBimbinganModel> findByAvailableBimbingan_IdAvailableBimbingan(Long idAvailableBimbingan);
     
 }

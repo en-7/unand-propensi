@@ -74,7 +74,7 @@ public class UGBController {
         ugb.setFileKhs(file_khs.getBytes());
         ugb.setFileUgb(file_ugb.getBytes());
         ugb.setStatusDokumen("SUBMITTED");
-        ugb.setMahasiswa(mahasiswaService.findMahasiswaById(3));
+        ugb.setMahasiswa(mahasiswaService.findMahasiswaById(3L));
         ugbService.addUgb(ugb);
 
         return "add-ugb-success";

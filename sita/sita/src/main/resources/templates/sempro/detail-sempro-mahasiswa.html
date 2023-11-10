@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SITA</title>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .container-content {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #d3d3d3;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container-table {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background-color: #3CB371;
+            color: #fff;
+            padding-left: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #d3d3d3;
+        }
+
+        th {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar('/seminar-proposal')"></nav>
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h2 class="mt-4 font-weight-bold">Detail Peserta Seminar Proposal</h2>
+    </div>
+    <div class="container-content mt-4">
+        <div class="header-container-table">
+            <h5 class="table-title ml-4 mt-2" th:text="${seminarProposal?.ugb?.mahasiswa?.nama}"></h5>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Nama</th>
+                <td th:text="${seminarProposal?.ugb?.mahasiswa?.nama}"></td>
+            </tr>
+            <tr>
+                <th>NIM</th>
+                <td th:text="${seminarProposal?.ugb?.mahasiswa?.nim}"></td>
+            </tr>
+            <tr>
+                <th>Judul TA</th>
+                <td th:text="${seminarProposal?.ugb?.judulUgb}"></td>
+            </tr>
+            <tr>
+                <th>Tanggal Lulus UGB</th>
+                <td>
+                    <span th:if="${seminarProposal?.ugb?.tanggalLulus == null}">-</span>
+                    <span th:unless="${seminarProposal?.ugb?.tanggalLulus == null}" th:text="${#temporals.format(seminarProposal?.ugb?.tanggalLulus, 'dd MMMM yyyy HH:mm:ss')}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Nilai Sempro</th>
+                <td>
+                    <span th:if="${seminarProposal?.nilai == null}">-</span>
+                    <span th:unless="${seminarProposal?.nilai == null}" th:text="${seminarProposal?.nilai}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Status Sempro</th>
+                <td>
+                    <span th:if="${seminarProposal?.statusSeminarProposal == null}">-</span>
+                    <span th:unless="${seminarProposal?.statusSeminarProposal == null}" th:text="${seminarProposal?.statusSeminarProposal}"></span>
+                </td>
+            </tr>
+            
+            <tr>
+                <th>Status Dokumen Sempro</th>
+                <td>
+                    <span th:if="${seminarProposal?.statusDokumen == null}">-</span>
+                    <span th:unless="${seminarProposal?.statusDokumen == null}" th:text="${seminarProposal?.statusDokumen}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Catatan</th>
+                <td>
+                    <span th:if="${seminarProposal?.catatan == null}">-</span>
+                    <span th:unless="${seminarProposal?.catatan == null}" th:text="${seminarProposal?.catatan}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Draft Proposal TA</th>
+                <td>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/draftProposalTa'}" target="_blank">Draft Proposal TA</a>
+                </td>
+
+            </tr>
+            <tr>
+                <th>Bukti KRS</th>
+                <td>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
+                </td>
+            </tr>
+            <tr>
+                <th>Persetujuan Pembimbing</th>
+                <td>
+                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/persetujuanPembimbing'}" target="_blank">Persetujuan Pembimbing</a>
+                </td>
+            </tr>            
+        </table>
+        <br><br>
+        <div class="pb-2 d-flex justify-content-center">
+            <a class="btn btn-primary mx-1" th:href="@{'/seminar-proposal/update/'+ ${seminarProposal?.idSeminarProposal}}">Update</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

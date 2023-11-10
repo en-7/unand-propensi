@@ -113,27 +113,16 @@
             </tr>
             <tr>
                 <th>Draft Proposal TA</th>
-                <td>
-                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/draftProposalTa'}" target="_blank">Draft Proposal TA</a>
-                </td>
-
             </tr>
             <tr>
                 <th>Bukti KRS</th>
-                <td>
-                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/buktiKrs'}" target="_blank">Bukti KRS</a>
-                </td>
             </tr>
             <tr>
                 <th>Persetujuan Pembimbing</th>
-                <td>
-                    <a th:href="@{'/seminar-proposal/downloadFile/' + ${seminarProposal.idSeminarProposal} + '/persetujuanPembimbing'}" target="_blank">Persetujuan Pembimbing</a>
-                </td>
-            </tr>            
+            </tr>
         </table>
         <br><br>
         <div class="pb-2 d-flex justify-content-center">
-            <a class="btn btn-primary mx-1" th:href="@{'/seminar-proposal/update/'+ ${seminarProposal?.idSeminarProposal}}">Update</a>
             <span th:if="${seminarProposal?.statusDokumen == 'SUBMITTED'}">
                 <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Approve</a>
                 <a class="btn btn-primary" data-toggle="modal" data-target="#denyModal">Deny</a>
@@ -157,7 +146,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
           <a class="btn btn-primary" href="#" id="approveButton">Ya, Setujui</a>
-          <input type="hidden" id="seminarProposalId" th:value="${seminarProposal?.idSeminarProposal}">
+          <input type="hidden" id="seminarProposalId" th:value="${seminarProposal.idSeminarProposal}">
         </div>
       </div>
     </div>
@@ -188,11 +177,11 @@
                     <h5>Catatan:</h5>
                     <textarea id="catatan" rows="4" cols="50"></textarea>
                 </div>
-                <input type="hidden" id="seminarProposalId" th:value="${seminarProposal?.idSeminarProposal}">
+                <input type="hidden" id="seminarProposalId" th:value="${seminarProposal.idSeminarProposal}">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger" id="denyProposalButton">Deny</button>
+                <button type="button" class="btn btn-danger" id="denyProposalButton">Simpan</button>
             </div>
         </div>
     </div>
@@ -202,20 +191,16 @@
 </html>
 
 <script>
-    // Menangani klik tombol "Ya, Setujui"
-    document.getElementById("approveButton").addEventListener("click", function () {
-        // Mendapatkan ID proposal dari atribut data
+    document.getElementById("approveButton").addEventListener("click", function (e) {
+        e.preventDefault();
         var seminarProposalId = document.getElementById("seminarProposalId").value;
 
-        // Lakukan permintaan AJAX untuk memproses persetujuan
         fetch("/seminar-proposal/approve/" + seminarProposalId, {
-            method: "POST",
+            method: "GET",
         })
             .then(function (response) {
                 if (response.ok) {
-                    // Setelah berhasil, Anda dapat menutup modal
                     $("#approveModal").modal("hide");
-                    // Atau lakukan tindakan lain yang sesuai
                     window.location.href = "/seminar-proposal/detail/" + seminarProposalId;
                 }
             })
@@ -224,12 +209,11 @@
             });
     });
 </script>
+
 <script>
     document.getElementById("denyProposalButton").addEventListener("click", function () {
     var catatan = document.getElementById("catatan").value;
     var seminarProposalId = document.getElementById("seminarProposalId").value;
-
-    // Pastikan 'catatan' tidak kosong sebelum melakukan permintaan POST
     if (catatan) {
         fetch("/seminar-proposal/deny/" + seminarProposalId, {
             method: "POST",
@@ -238,23 +222,18 @@
             },
             body: 'catatan=' + encodeURIComponent(catatan)
         })
-            .then(function (response) {
-                if (response.ok) {
-                    // Setelah berhasil, Anda dapat menutup modal
-                    $("#denyModal").modal("hide");
-                    // Atau lakukan tindakan lain yang sesuai
-                    window.location.href = "/seminar-proposal/detail/" + seminarProposalId;
-                }
-            })
-            .catch(function (error) {
-                console.error("Error:", error);
-            });
-        } else {
-            alert("Catatan tidak boleh kosong."); // Atau gunakan cara lain untuk memberi tahu pengguna bahwa catatan diperlukan.
-        }
-    });
+        .then(function (response) {
+            if (response.ok) {
+                $("#denyModal").modal("hide");
+                window.location.href = "/seminar-proposal/detail/" + seminarProposalId;
+            }
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    } else {
+        alert("Catatan tidak boleh kosong."); 
+    }
+});
 
 </script>
-
-
-
