@@ -2,7 +2,6 @@ package protensi.sita.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,8 +50,9 @@ public class UserModel {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NotNull
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Timestamp created_at;
 
     public UserModel(String nama, Set<EnumRole> roles, String username, String password, String email) {

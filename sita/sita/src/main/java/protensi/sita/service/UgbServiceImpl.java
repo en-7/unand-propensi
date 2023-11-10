@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 
+import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.UgbModel;
@@ -127,6 +128,10 @@ public class UgbServiceImpl {
             result_map.put(roles.toString(), retrievedUgb);
             return result_map;
         }
+    }
+
+    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
+        return ugbDb.findByMahasiswa(mahasiswa);
     }
     
 }

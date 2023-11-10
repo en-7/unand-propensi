@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -85,6 +86,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // MahasiswaModel m = new MahasiswaModel(2123456789, "NONE");
         // mahasiswaDb.save(m);
 
+    }
+
+    public UserModel findByUsername(String username) {
+        return userDb.findByUsername(username);
     }
 
 }
