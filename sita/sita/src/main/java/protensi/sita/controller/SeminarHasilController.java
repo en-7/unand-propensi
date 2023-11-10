@@ -1,10 +1,6 @@
 package protensi.sita.controller;
 
-import protensi.sita.model.EnumRole;
-import protensi.sita.model.SeminarProposalModel;
-import protensi.sita.model.UgbModel;
 import protensi.sita.model.SeminarHasilModel;
-import protensi.sita.model.UserModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

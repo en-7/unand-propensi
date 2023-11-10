@@ -41,4 +41,9 @@ public class AvailableBimbinganServiceImpl implements AvailableBimbinganService 
     public void add(AvailableBimbinganModel availableBimbingan) {
         availableBimbinganDb.save(availableBimbingan);
     }
+
+    @Override
+    public List<AvailableBimbinganModel> findAllByIdPembimbing(Long idUser){
+        return availableBimbinganDb.findAllByPembimbing_IdUser(idUser);
+    }
 }

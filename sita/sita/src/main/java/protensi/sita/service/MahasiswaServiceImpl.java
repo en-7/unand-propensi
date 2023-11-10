@@ -11,7 +11,6 @@ import protensi.sita.model.MahasiswaModel;
 import protensi.sita.repository.MahasiswaDb;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,11 +19,7 @@ public class MahasiswaServiceImpl implements MahasiswaService {
     MahasiswaDb mahasiswaDb;
 
     public MahasiswaModel findMahasiswaById(Long idUser) {
-        MahasiswaModel mahasiswa = mahasiswaDb.findByIdUser(idUser);
-        if (mahasiswa != null) {
-            return mahasiswa;
-        } else
-            return null;
+        return mahasiswaDb.findByIdUser(idUser);
     }
 
     public BCryptPasswordEncoder encoder() {
