@@ -5,8 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+
 
 import javax.transaction.Transactional;
 
@@ -48,6 +51,15 @@ public class UgbServiceImpl {
 
     public String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb){
         try{
+            String namaFileKp = StringUtils.cleanPath(bukti_kp.getOriginalFilename());
+            String namaFileTranskrip = StringUtils.cleanPath(transcript.getOriginalFilename());
+            String namaFileKhs = StringUtils.cleanPath(file_khs.getOriginalFilename());
+            String namaFileUgb = StringUtils.cleanPath(file_ugb.getOriginalFilename());
+
+            ugb.setNameFileKp(namaFileKp);
+            ugb.setNameFileTranskrip(namaFileTranskrip);
+            ugb.setNameFileKhs(namaFileKhs);
+            ugb.setNameFileUgb(namaFileUgb);
             ugb.setBuktiKp(bukti_kp.getBytes());
             ugb.setTranskrip(transcript.getBytes());
             ugb.setFileKhs(file_khs.getBytes());
@@ -71,7 +83,7 @@ public class UgbServiceImpl {
             return "success BITCH";
         }catch (IOException e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                HttpStatus.INTERNAL_SERVER_ERROR, "Document");
         }
         
     }
