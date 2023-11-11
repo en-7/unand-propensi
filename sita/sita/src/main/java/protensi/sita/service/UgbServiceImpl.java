@@ -9,17 +9,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-
-
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
+import protensi.sita.model.PembimbingModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.repository.MahasiswaDb;
 import protensi.sita.repository.UgbDb;
 import protensi.sita.repository.UserDb;
+import reactor.netty.http.server.HttpServerResponse;
 
 import java.io.IOException;
 import java.util.*;
@@ -210,10 +212,6 @@ public class UgbServiceImpl {
             return filterUgb("SUBMITTED");
         }
     }
-
-    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
-        return ugbDb.findByMahasiswa(mahasiswa);
-    }
     
     public List<UgbModel> filterUgb(String status){
         UserModel thisUser = getCurrentUser();
@@ -269,4 +267,47 @@ public class UgbServiceImpl {
         ugb.setCatatan(ctt);
         ugbDb.save(ugb);
     }
+
+    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
+        return ugbDb.findByMahasiswa(mahasiswa);
+    }
+
+    public void downloadUgbFiles(String type, Long id, HttpServletResponse response){
+        try{
+            UgbModel retrievedUgb = getUgbById(id);
+            response.setContentType("application/ocetet-stream");
+            String headerKey = "Content-Disposition";
+            
+            if(type.equals("FILE UGB")){
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileUgb();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getFileUgb());
+                outputStream.close();
+            }else if(type.equals("FILE KHS")){
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileKhs();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getFileKhs());
+                outputStream.close();
+            }else if(type.equals("FILE KP")){
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileKp();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getBuktiKp());
+                outputStream.close();
+            }else{
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileTranskrip();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getTranskrip());
+                outputStream.close();
+            }
+
+        }catch (IOException e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
+    }
 }
+

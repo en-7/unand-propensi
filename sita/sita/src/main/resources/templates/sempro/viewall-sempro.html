@@ -67,11 +67,7 @@
         }
 
         .filter-bar button.active {
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
             border-bottom: 3px solid #000000;
-=======
-            border-bottom: 3px solid #000000; 
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
         }
 
         .filter-bar button:hover {
@@ -79,11 +75,7 @@
         }
 
         .table-row-hidden {
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
             display: none;
-=======
-            display: none; 
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
         }
     </style>
 </head>
@@ -143,22 +135,14 @@
                             <span th:unless="${seminarProposal.statusDokumen == 'SUBMITTED' || seminarProposal.statusDokumen == 'DENY'}">
                                 <span th:if="${seminarProposal.nilai == null}">
                                     <div class="btn-group">
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
                                         <button class="btn btn-sm btn-success input-button" data-toggle="modal" data-target="#inputNilaiModal"
-=======
-                                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#inputNilaiModal"
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
                                             th:attr="data-id=${seminarProposal.idSeminarProposal}"
                                         >Input Nilai</button>
                                     </div>
                                 </span>
                                 <span th:unless="${seminarProposal.nilai == null}">
                                     <div class="btn-group">
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
                                         <button class="btn btn-sm btn-success update-button" data-toggle="modal" data-target="#updateNilaiModal"
-=======
-                                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateNilaiModal"
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
                                         th:attr="data-id=${seminarProposal.idSeminarProposal}, data-nilai=${seminarProposal.nilai}, data-status=${seminarProposal.statusSeminarProposal}"
                                         >Update Nilai</button>
                                     </div>
@@ -171,11 +155,6 @@
         </div>
     </div>
 </div>
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
-
-=======
-<!-- Popup Input Nilai -->
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
 <div class="modal fade" id="inputNilaiModal" tabindex="-1" role="dialog" aria-labelledby="inputNilaiModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -206,10 +185,6 @@
     </div>
 </div>
 
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
-=======
-<!-- Popup Update Nilai -->
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
 <div class="modal fade" id="updateNilaiModal" tabindex="-1" role="dialog" aria-labelledby="updateNilaiModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -244,11 +219,7 @@
 </html>
 
 <script>
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
 document.querySelectorAll(".input-button").forEach(function(button) {
-=======
-document.querySelectorAll(".btn-success").forEach(function(button) {
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
     button.addEventListener("click", function() {
         var seminarProposalId = this.getAttribute("data-id");
         document.getElementById("simpanNilai").setAttribute("data-id", seminarProposalId);
@@ -270,10 +241,6 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
         nilai: parseFloat(nilai),
         statusSeminarProposal: statusSeminarProposal
     };
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
-=======
-
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
     fetch("/seminar-proposal/input-nilai/" + seminarProposalId, {
         method: "POST",
         headers: {
@@ -284,11 +251,7 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
     .then(function (response) {
         if (response.ok) {
             $("#inputNilaiModal").modal("hide");
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
             window.location.href = "/seminar-proposal/detail/" + seminarProposalId;
-=======
-            window.location.href = "/seminar-proposal/viewall";
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
         } else {
             alert("Gagal menyimpan nilai.");
         }
@@ -349,7 +312,6 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
 
 </script>
 <script>
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
     function filterDaftar(status) {
         var rows = document.querySelectorAll('.table tbody tr');
 
@@ -376,89 +338,10 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
         window.location.href = "/seminar-proposal/filter?status=APPROVED";
     });
 
-=======
-document.querySelectorAll(".btn-success").forEach(function(button) {
-    button.addEventListener("click", function() {
-        var seminarProposalId = this.getAttribute("data-id");
-        var nilai = this.getAttribute("data-nilai");
-        var statusSeminarProposal = this.getAttribute("data-status");
-
-        document.getElementById("updateNilai").value = nilai;
-        document.getElementById("updateStatusSeminarProposal").value = statusSeminarProposal;
-        document.getElementById("simpanUpdateNilai").setAttribute("data-id", seminarProposalId);
-    });
-});
-
-document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
-    var seminarProposalId = this.getAttribute("data-id");
-    var nilai = document.getElementById("updateNilai").value;
-    var statusSeminarProposal = document.getElementById("updateStatusSeminarProposal").value;
-
-    if (isNaN(parseFloat(nilai)) || nilai === "") {
-        alert("Nilai harus berupa angka.");
-        return;
-    }
-
-    var data = {
-        idSeminarProposal: seminarProposalId,
-        nilai: parseFloat(nilai),
-        statusSeminarProposal: statusSeminarProposal
-    };
-
-    fetch("/seminar-proposal/update-nilai/" + seminarProposalId, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(function (response) {
-        if (response.ok) {
-            $("#updateNilaiModal").modal("hide");
-            window.location.href = "/seminar-proposal/viewall";
-        } else {
-            alert("Gagal menyimpan nilai.");
-        }
-    })
-    .catch(function (error) {
-        console.error("Error:", error);
-    });
-});
-
-</script>
-<script>
-    function filterDaftar(status) {
-        var rows = document.querySelectorAll('.table tbody tr');
-
-        rows.forEach(function (row) {
-            var statusDokumen = row.getAttribute('data-status');
-
-            if (status === 'ALL') {
-                row.style.display = '';
-            } else if(status === statusDokumen) {
-                row.style.display = '';
-            } else{
-                row.style.display = 'none';
-            }
-        });
-    }
-    document.getElementById("filterApprove").addEventListener("click", function () {
-        filterDaftar("SUBMITTED");
-        window.location.href = "/seminar-proposal/filter?status=SUBMITTED";
-    });
-    document.getElementById("filterApproved").addEventListener("click", function () {
-        filterDaftar("APPROVED");
-        window.location.href = "/seminar-proposal/filter?status=APPROVED";
-    });
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
     document.getElementById("filterDenied").addEventListener("click", function () {
         filterDaftar("DENY");
         window.location.href = "/seminar-proposal/filter?status=DENY";
     });
-<<<<<<< HEAD:sita/sita/src/main/resources/templates/sempro/viewall-sempro.html
-
-=======
->>>>>>> 5caffc42dcdb2b81d59e30b508b089a372574b13:sita/sita/src/main/resources/templates/viewall-sempro.html
     document.getElementById("filterAll").addEventListener("click", function () {
         filterDaftar("ALL");
         window.location.href = "/seminar-proposal/viewall";
