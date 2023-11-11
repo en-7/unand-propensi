@@ -16,7 +16,16 @@ public interface UgbService {
 
     List<UgbModel> viewAllUgb();
 
-    MahasiswaModel getMahasiswa(String username);
+    UserModel getCurrentUser();
+
+    UgbModel getAddFormObjects();
+
+    void updateUgbKoordinator(Long idUgb, Long idP1, Long idP2);
+    
+    void updateUgbMahasiswa(Long idUgb, String judul, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb);
+
+
+    // MahasiswaModel getMahasiswa(String username);
 
     List<UgbModel> filterUgb(String status);
 

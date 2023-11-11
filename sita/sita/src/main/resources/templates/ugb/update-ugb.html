@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SITA</title>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+    <style>
+        .select2-container .select2-selection--single {
+            height: 40px !important;
+        }
+    
+        .kuantitas-input{
+            height: 40px !important;
+        }
+    
+        .container-content {
+            width: 850px;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 80px;
+        }
+    
+        .container-table {
+            width: 900px;
+            height: auto;
+            border-radius: 10px;
+            border-style: solid;
+            border-color: #2D89FF;
+        }
+    
+        .header-container-table {
+            height: 60px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background-color: #2D89FF;
+        }
+    
+        .table {
+            margin-top: 20px;
+            width: 800px;
+            height: auto;
+        }
+    
+        th {
+            text-align: center;
+        }
+    
+        td {
+            text-align: center;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .both {
+            clear: both;
+        }
+
+        .file-upload-container {
+            width:auto;
+            grid-template-columns: repeat(2, 1fr);
+            display: grid;
+            border: 1px solid #CED4DA;
+            padding: 6.5px;
+            padding-left: 13px;
+            border-radius: 6px;
+            color: #495057;
+            -webkit-border-radius: 4px;
+            background: #E9ECEF;
+        }
+
+        .file-upload-container-updatek {
+            width:auto;
+            grid-template-columns: 30px auto 1rem;
+            display: grid;
+            border: 1px solid #CED4DA;
+            padding: 6.5px;
+            padding-left: 13px;
+            border-radius: 6px;
+            color: #495057;
+            -webkit-border-radius: 4px;
+            background: #E9ECEF;
+        }
+
+        #formupdate{
+            width: 800px;
+            margin-top: 80px;
+            margin-bottom: 150px;
+        }
+
+        .file-upload-container-pdf {
+            width:auto;
+            grid-template-columns: 130px auto 1rem;
+            display: grid;
+            border: 1px solid #CED4DA;
+            border-radius: 6px;
+            color: #495057;
+            -webkit-border-radius: 4px;
+            background: #E9ECEF;
+        }
+
+        #fileLabelKp , #fileLabelTranskrip, #fileLabelKhs, #fileLabelUgb {
+            margin-top: 0.5rem;
+        }
+
+        input[type=file]{
+            background-color: transparent;
+            border: transparent;
+            width:120px;
+            color:transparent;
+        }
+
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/fragment :: navbar(${'/ugb'})"></div>
+
+<div class="container" id="formupdate">
+    <div class="card m-4 p-4">
+        <div class="card-body">
+            <div class="justify-content-center">
+                <h2>Update Pendaftaran UGB</h2>
+                <br>
+                <form th:object="${ugb.mahasiswa}">
+                    Nama: <br>
+                    <input required class="form-control" type="text" th:field="*{nama}" maxlength="30" readonly="true"/>
+                    <br>
+                    NIM: <br>
+                    <input required class="form-control" type="text" th:field="*{nim}" maxlength="30" readonly="true"/>
+                    <br>
+                </form>
+                <div th:switch="${roleUser}">
+                    <div th:case="'[ROLE_[KOORDINATOR]]'">
+                        <form th:action="@{'/ugb/updateK/' + ${ugb.idUgb}}" method="POST" enctype="multipart/form-data">
+                            Judul UGB: <br>
+                            <input required class="form-control" type="text" th:value="${ugb.judulUgb}" maxlength="30" readonly="true"/>
+                            <br>
+                            Nama Pembimbing 1: <br>
+                            <select name="id_p1" class="form-control"  id="dropOperator">
+                                <option th:each="pembimbing : ${listPembimbing}" 
+                                        th:value="${pembimbing.idUser}" 
+                                        th:text="${pembimbing.nama}" 
+                                        th:selected="${pembimbing} == ${pembimbing1}">
+                                </option>
+                            </select>
+                            <br>
+                            Nama Pembimbing 2: <br>
+                            <select name="id_p2" class="form-control"  id="dropOperator">
+                                <option th:each="pembimbing : ${listPembimbing}" 
+                                        th:value="${pembimbing.idUser}" 
+                                        th:text="${pembimbing.nama}" 
+                                        th:selected="${pembimbing} == ${pembimbing2}">
+                                </option>
+                            </select>
+                            <br>
+                            <tr>
+                            <th>File UGB:</th><br>
+                                <div class="file-upload-container-updatek">
+                                    <td>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                                            <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                                            <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                                        </svg>
+                                        <a th:href="@{/ugb/downloadFile(type='FILE UGB',id=${ugb.idUgb})}" th:text="${ugb.nameFileUgb}"></a>
+                                    </td>
+                                </div>
+                            </tr><br>
+                            <tr>
+                                <th>Bukti KP</th><br>
+                                <div class="file-upload-container-updatek">
+                                    <td>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                                            <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                                            <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                                        </svg>
+                                        <a th:href="@{/ugb/downloadFile(type='FILE KP',id=${ugb.idUgb})}" th:text="${ugb.nameFileKp}"></a>
+                                    </td>
+                                </div>
+                            </tr><br>
+                            <tr>
+                                <th>Transkrip Nilai</th><br>
+                                <div class="file-upload-container-updatek">
+                                    <td>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                                            <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                                            <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                                        </svg>
+                                        <a th:href="@{/ugb/downloadFile(type='FILE TRANSKRIP',id=${ugb.idUgb})}" th:text="${ugb.nameFileTranskrip}"></a>
+                                    </td>
+                                </div>
+                            </tr><br>
+                            <tr>
+                                <th>File KHS</th><br>
+                                <div class="file-upload-container-updatek">
+                                    <td>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                                            <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                                            <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                                        </svg>
+                                        <a th:href="@{/ugb/downloadFile(type='FILE KHS',id=${ugb.idUgb})}" th:text="${ugb.nameFileKhs}"></a>
+                                    </td>
+                                </div>
+                            </tr><br>
+                            <div class="pb-2 d-flex justify-content-center">
+                                <button class="btn btn-primary" type="submit" name="save">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div th:case="'[ROLE_[MAHASISWA]]'">
+                        <form th:action="@{'/ugb/updateM/' + ${ugb.idUgb}}" method="POST" enctype="multipart/form-data">
+                            Judul UGB: <br>
+                            <input required class="form-control" type="text" th:value="${ugb.judulUgb}" name="judul_ugb" maxlength="30"/>
+                            <br>
+                            Nama Pembimbing 1: <br>
+                            <div class="file-upload-container">
+                                <a th:text="${pembimbing1.nama}" ></a>
+                            </div><br>
+                            Nama Pembimbing 2: <br>
+                            <div class="file-upload-container">
+                                <a th:text="${pembimbing2.nama}" ></a>
+                            </div><br>
+                            Bukti telah / sedang melaksanakan KP (PDF): <br>
+                            <div class="file-upload-container-pdf">
+                                <input class="form-control" type="file" name="bukti_kp" accept=".pdf" id="buktikp" onchange="pressed()">
+                                <a class="ignore-click" id="fileLabelKp" th:text="${ugb.nameFileKp}" th:href="@{/ugb/downloadFile(type='FILE KP',id=${ugb.idUgb})}"></a>
+                            </div>
+                            <br>
+                            Transkrip Nilai (PDF): <br>
+                            <div class="file-upload-container-pdf">
+                                <input class="form-control" type="file" name="transcript" accept=".pdf" id="transkrip" onchange="pressed()">
+                                <a class="ignore-click-transkrip" id="fileLabelTranskrip" th:text="${ugb.nameFileTranskrip}" th:href="@{/ugb/downloadFile(type='FILE TRANSKRIP',id=${ugb.idUgb})}"></a>
+                            </div>
+                            <br>
+                            File KHS (PDF): <br>
+                            <div class="file-upload-container-pdf">
+                                <input class="form-control" type="file" name="file_khs" accept=".pdf" id="khs" onchange="pressed()">
+                                <a class="ignore-click-khs" id="fileLabelKhs" th:text="${ugb.nameFileKhs}" th:href="@{/ugb/downloadFile(type='FILE KHS',id=${ugb.idUgb})}"></a>
+                            </div>
+                            <br>
+                            File UGB (PDF): <br>
+                            <div class="file-upload-container-pdf">
+                                <input class="form-control" type="file" name="file_ugb" accept=".pdf" id="ugb" onchange="pressed()">
+                                <a class="ignore-click-ugb" id="fileLabelUgb" th:text="${ugb.nameFileUgb}" th:href="@{/ugb/downloadFile(type='FILE UGB',id=${ugb.idUgb})}"></a>
+                            </div>
+                            <br>
+                            <div class="pb-2 d-flex justify-content-center">
+                                <button class="btn btn-primary" type="submit" name="save">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>             
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+<script>
+    window.pressed = function(event){
+    var a = document.getElementById('buktikp');
+    if(a.value != "")
+        {
+            var theSplit = a.value.split('\\');
+            fileLabelKp.innerHTML = theSplit[theSplit.length-1];
+            fileLabelKp.href = "";
+            fileLabelKp.style.textDecoration = 'none';
+            fileLabelKp.style.color = 'black';
+
+            for (var i = 0; i < document.getElementsByClassName("ignore-click").length; i++) {
+                document.getElementsByClassName("ignore-click")[i].addEventListener('click', function (event) {
+                    event.preventDefault();
+                    return false;
+                });
+            }
+        }
+
+    var b = document.getElementById('transkrip');
+    if(b.value != "")
+        {
+            var theSplit = b.value.split('\\');
+            fileLabelTranskrip.innerHTML = theSplit[theSplit.length-1];
+            fileLabelTranskrip.href = "";
+            fileLabelTranskrip.style.textDecoration = 'none';
+            fileLabelTranskrip.style.color = 'black';
+
+            for (var i = 0; i < document.getElementsByClassName("ignore-click-transkrip").length; i++) {
+                document.getElementsByClassName("ignore-click-transkrip")[i].addEventListener('click', function (event) {
+                    event.preventDefault();
+                    return false;
+                });
+            }
+        }
+
+    var c = document.getElementById('khs');
+    if(c.value != "")
+        {
+            var theSplit = c.value.split('\\');
+            fileLabelKhs.innerHTML = theSplit[theSplit.length-1];
+            fileLabelKhs.href = "";
+            fileLabelKhs.style.textDecoration = 'none';
+            fileLabelKhs.style.color = 'black';
+
+            for (var i = 0; i < document.getElementsByClassName("ignore-click-khs").length; i++) {
+                document.getElementsByClassName("ignore-click-khs")[i].addEventListener('click', function (event) {
+                    event.preventDefault();
+                    return false;
+                });
+            }
+        }
+    var d = document.getElementById('ugb');
+    if(d.value != "")
+        {
+            var theSplit = d.value.split('\\');
+            fileLabelUgb.innerHTML = theSplit[theSplit.length-1];
+            fileLabelUgb.href = "";
+            fileLabelUgb.style.textDecoration = 'none';
+            fileLabelUgb.style.color = 'black';
+
+            for (var i = 0; i < document.getElementsByClassName("ignore-click-ugb").length; i++) {
+                document.getElementsByClassName("ignore-click-ugb")[i].addEventListener('click', function (event) {
+                    event.preventDefault();
+                    return false;
+                });
+            }
+        }
+    };
+</script>
+
+
+

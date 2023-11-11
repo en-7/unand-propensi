@@ -42,6 +42,12 @@
             border-top-right-radius: 8px;
             background-color: #2D89FF;
         }
+
+        #formadd{
+            width: 800px;
+            margin-top: 80px;
+            margin-bottom: 150px;
+        }
     
         .table {
             margin-top: 20px;
@@ -61,7 +67,7 @@
 <body>
     <div th:replace="fragments/fragment :: navbar(${'/ugb'})"></div>
 
-<div class="container">
+<div class="container" id="formadd">
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
@@ -69,41 +75,50 @@
                 <br>
                 <form th:action="@{/ugb/add}" th:object="${ugb}" method="POST" enctype="multipart/form-data">
                     Judul UGB: <br>
-                    <input required class="form-control" type="text" name="judulUgb" maxlength="30"/>
-                    <br><br>
+                    <input required th:maxlength="500" class="form-control" type="text" name="judulUgb" maxlength="30"/>
+                    <br>
 
                     Nama Pembimbing 1: <br>
-                    <select th:field="*{idPembimbing1}" class="form-control"  id="dropOperator">
-                        <option value="0">Select Pembimbing 1</option>
-                        <option th:each="pembimbing : ${listPembimbing}" th:value="${pembimbing.idUser}" th:text="${pembimbing.nama}"></option>
+                    <select th:field="*{idPembimbing1}" class="form-control"  id="dropOperator1">
+                        <option th:each="pembimbing : ${listPembimbing}" 
+                                th:value="${pembimbing.idUser}" 
+                                th:text="${pembimbing.nama}"
+                                th:selected="${pembimbing.idUser} == 0"></option>
                     </select>
-                    <br><br>
+                    <br>
 
                     Nama Pembimbing 2: <br>
-                    <select th:field="*{idPembimbing2}" class="form-control"  id="dropOperator">
-                        <option value="0">Select Pembimbing 2</option>
-                        <option th:each="pembimbing : ${listPembimbing}" th:value="${pembimbing.idUser}" th:text="${pembimbing.nama}"></option>
+                    <select th:field="*{idPembimbing2}" class="form-control"  id="dropOperator2">
+                        <option th:each="pembimbing : ${listPembimbing}" 
+                                th:value="${pembimbing.idUser}" 
+                                th:text="${pembimbing.nama}" 
+                                th:selected="${pembimbing.idUser} == 0"></option>
                     </select>
-                    <br><br>
+                    <br>
 
                     Bukti telah / sedang melaksanakan KP (PDF):
                     <input required class="form-control" type="file" name="bukti_kp" accept=".pdf" />
-                    <br><br>
+                    <br>
+                    <div id="error_kp"></div>
 
                     Transkrip Nilai (PDF):
                     <input required class="form-control" type="file" name="transcript" accept=".pdf" />
-                    <br><br>
-
+                    <br>
+                    <div id="error_t"></div>
+                    
                     File KHS (PDF):
                     <input required class="form-control" type="file" name="file_khs" accept=".pdf" />
-                    <br><br>
+                    <br>
+                    <div id="error_khs"></div>
 
                     File UGB (PDF):
                     <input required class="form-control" type="file" name="file_ugb" accept=".pdf" />
-                    <br><br>
+                    <br>
+                    <div id="error_ugb"></div>
 
+                    <br>
                     <div class="pb-2 d-flex justify-content-center">
-                        <button class="btn btn-primary" type="submit" name="save">Submit</button>
+                        <button class="btn btn-primary" id="submitbtn" type="submit" name="save">Submit</button>
                     </div>
                 </form>
                 
