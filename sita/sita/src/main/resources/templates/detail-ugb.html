@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SITA</title>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .container-content {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #d3d3d3;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container-table {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            background-color: #3CB371;
+            color: #fff;
+            padding-left: 20px;
+        }
+
+        .table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #d3d3d3;
+        }
+
+        th {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar('/ugb')"></nav>
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h2 class="mt-4 font-weight-bold">Detail UGB</h2>
+    </div>
+    <div class="container-content mt-4">
+        <div class="header-container-table">
+            <h5 class="table-title ml-4 mt-2" th:text="${ugb.judulUgb}"></h5>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Nama</th>
+                <td th:text="${ugb.mahasiswa.nama}"></td>
+            </tr>
+            <tr>
+                <th>NIM</th>
+                <td th:text="${ugb.mahasiswa.nim}"></td>
+            </tr>
+            <tr>
+                <th>Judul UGB</th>
+                <td th:text="${ugb.judulUgb}"></td>
+            </tr>
+            <div th:each="dosen, stats : ${ugb.pembimbing}">
+                <tr>
+                    <th th:text="'Nama Pembimbing ' + ${stats.index + 1} + ':'"></th>
+                    <td th:text="${dosen.nama}"></td>
+                </tr>
+            </div>
+            <div th:each="dosen, stats : ${ugb.penguji}">
+                <tr>
+                    <th th:text="'Nama Penguji ' + ${stats.index + 1} + ':'"></th>
+                    <td th:text="${dosen.nama}"></td>
+                </tr>
+            </div>
+            <tr>
+                <th>Status UGB</th>
+                <td>
+                    <span th:if="${ugb?.statusDokumen == null}">-</span>
+                    <span th:unless="${ugb?.statusDokumen == null}" th:text="${ugb?.statusDokumen}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Catatan</th>
+                <td>
+                    <span th:if="${ugb?.catatan == null}">-</span>
+                    <span th:unless="${ugb?.catatan == null}" th:text="${ugb?.catatan}"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>File UGB</th>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                        <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                        <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                    </svg>
+                    <a th:href="@{/ugb/downloadFile(type='FILE UGB',id=${ugb.idUgb})}" th:text="${ugb.nameFileUgb}"></a>
+                </td>
+            </tr>
+            <tr>
+                <th>Bukti KP</th>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                        <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                        <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                    </svg>
+                    <a th:href="@{/ugb/downloadFile(type='FILE KP',id=${ugb.idUgb})}" th:text="${ugb.nameFileKp}"></a>
+                </td>
+            </tr>
+            <tr>
+                <th>Transkrip Nilai</th>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                        <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                        <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                    </svg>
+                    <a th:href="@{/ugb/downloadFile(type='FILE TRANSKRIP',id=${ugb.idUgb})}" th:text="${ugb.nameFileTranskrip}"></a>
+                </td>
+            </tr>
+            <tr>
+                <th>File KHS</th>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-pdf-fill" viewBox="0 0 16 16">
+                        <path d="M5.523 12.424c.14-.082.293-.162.459-.238a7.878 7.878 0 0 1-.45.606c-.28.337-.498.516-.635.572a.266.266 0 0 1-.035.012.282.282 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548zm2.455-1.647c-.119.025-.237.05-.356.078a21.148 21.148 0 0 0 .5-1.05 12.045 12.045 0 0 0 .51.858c-.217.032-.436.07-.654.114zm2.525.939a3.881 3.881 0 0 1-.435-.41c.228.005.434.022.612.054.317.057.466.147.518.209a.095.095 0 0 1 .026.064.436.436 0 0 1-.06.2.307.307 0 0 1-.094.124.107.107 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256zM8.278 6.97c-.04.244-.108.524-.2.829a4.86 4.86 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.517.517 0 0 1 .145-.04c.013.03.028.092.032.198.005.122-.007.277-.038.465z"/>
+                        <path fill-rule="evenodd" d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm5.5 1.5v2a1 1 0 0 0 1 1h2l-3-3zM4.165 13.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.651 11.651 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.856.856 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.844.844 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.76 5.76 0 0 0-1.335-.05 10.954 10.954 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.238 1.238 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a19.697 19.697 0 0 1-1.062 2.227 7.662 7.662 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103z"/>
+                    </svg>
+                    <a th:href="@{/ugb/downloadFile(type='FILE KHS',id=${ugb.idUgb})}" th:text="${ugb.nameFileKhs}"></a>
+                </td>
+            </tr>           
+        </table>
+        <br><br>
+        <div th:switch="${roleUser}">
+            <div class="filter-bar" th:case="'[ROLE_[KOORDINATOR]]'">
+                <div class="pb-2 d-flex justify-content-center">
+                    <span th:if="${ugb.statusUgb == 'SUBMITTED'}">
+                        <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Approve</a>
+                        <a class="btn btn-primary" data-toggle="modal" data-target="#denyModal">Deny</a>
+                        <a class="btn btn-primary mx-1" th:href="@{'/ugb/update/'+ ${ugb.idUgb}}">Update</a>
+                    </span>
+                </div>
+            </div>
+            <div class="filter-bar" th:case="'[ROLE_[MAHASISWA]]'">
+                <a th:if="${ugb.statusUgb == 'DENIED'}" class="btn btn-primary mx-1" th:href="@{'/ugb/update/'+ ${ugb.idUgb}}">Update</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="approveModalLabel">Persetujuan Pendaftaran</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Apakah Anda yakin ingin menyetujui UGB ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <a class="btn btn-primary" href="#" id="approveButton">Ya, Setujui</a>
+          <input type="hidden" id="ugbId" th:value="${ugb.idUgb}">
+        </div>
+      </div>
+    </div>
+</div>
+</body>
+</html>
+
+<div class="modal fade" id="denyModal" tabindex="-1" role="dialog" aria-labelledby="denyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="denyModalLabel">Catatan Penolakan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h5>Nama:</h5>
+                    <p th:text="${ugb.mahasiswa.nama}"></p>
+                </div>
+                <div>
+                    <h5>NIM:</h5>
+                    <p th:text="${ugb.mahasiswa.nim}"></p>
+                <div>
+                    <h5>Judul UGB:</h5>
+                    <p th:text="${ugb.judulUgb}"></p>
+                </div>
+                <div>
+                    <h5>Catatan:</h5>
+                    <textarea id="catatan" rows="4" cols="50"></textarea>
+                </div>
+                <input type="hidden" id="ugbId" th:value="${ugb.idUgb}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-danger" id="denyUgbButton">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("approveButton").addEventListener("click", function (e) {
+        e.preventDefault();
+        var ugbId = document.getElementById("ugbId").value;
+
+        fetch("/ugb/approve/" + ugbId, {
+            method: "GET",
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    $("#approveModal").modal("hide");
+                    window.location.href = "/ugb/detail/" + ugbId;
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    });
+</script>
+<script>
+    document.getElementById("denyUgbButton").addEventListener("click", function () {
+    var catatan = document.getElementById("catatan").value;
+    var ugbId = document.getElementById("ugbId").value;
+
+    // Pastikan 'catatan' tidak kosong sebelum melakukan permintaan POST
+    if (catatan) {
+        fetch("/ugb/deny/" + ugbId, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'catatan=' + encodeURIComponent(catatan)
+        })
+            .then(function (response) {
+                if (response.ok) {
+                    // Setelah berhasil, Anda dapat menutup modal
+                    $("#denyModal").modal("hide");
+                    // Atau lakukan tindakan lain yang sesuai
+                    window.location.href = "/ugb/detail/" + ugbId;
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+        } else {
+            alert("Catatan tidak boleh kosong."); // Atau gunakan cara lain untuk memberi tahu pengguna bahwa catatan diperlukan.
+        }
+    });
+
+</script>
+

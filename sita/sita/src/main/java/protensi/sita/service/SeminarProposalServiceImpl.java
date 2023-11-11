@@ -49,30 +49,15 @@ public class SeminarProposalServiceImpl implements SeminarProposalService {
         }
         return null;
     }
+
     @Override
-    public MultipartFile getFileByIdAndType(Long idSeminarProposal, String fileType) {
-        SeminarProposalModel seminarProposal = seminarProposalDb.findById(idSeminarProposal).orElse(null);
+    public List<SeminarProposalModel> findAllByPembimbing(Long pembimbingId) {
+        return seminarProposalDb.findAllByPembimbing(pembimbingId);
+    }
 
-        if (seminarProposal != null) {
-            byte[] fileBytes = null;
-
-            switch (fileType) {
-                case "draftProposalTa":
-                    fileBytes = seminarProposal.getDraftProposalTa();
-                    break;
-                case "buktiKrs":
-                    fileBytes = seminarProposal.getBuktiKrs();
-                    break;
-                case "persetujuanPembimbing":
-                    fileBytes = seminarProposal.getPersetujuanPembimbing();
-                    break;
-            }
-
-            if (fileBytes != null) {
-                return new ByteArrayMultipartFile(fileBytes);
-            }
-        }
-        return null;
+    @Override
+    public List<SeminarProposalModel> findAllByPenguji(Long pengujiId) {
+        return seminarProposalDb.findAllByPenguji(pengujiId);
     }
 
 }

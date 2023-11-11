@@ -5,8 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+
 
 import javax.transaction.Transactional;
 
@@ -48,11 +51,20 @@ public class UgbServiceImpl {
 
     public String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb){
         try{
+            String namaFileKp = StringUtils.cleanPath(bukti_kp.getOriginalFilename());
+            String namaFileTranskrip = StringUtils.cleanPath(transcript.getOriginalFilename());
+            String namaFileKhs = StringUtils.cleanPath(file_khs.getOriginalFilename());
+            String namaFileUgb = StringUtils.cleanPath(file_ugb.getOriginalFilename());
+
+            ugb.setNameFileKp(namaFileKp);
+            ugb.setNameFileTranskrip(namaFileTranskrip);
+            ugb.setNameFileKhs(namaFileKhs);
+            ugb.setNameFileUgb(namaFileUgb);
             ugb.setBuktiKp(bukti_kp.getBytes());
             ugb.setTranskrip(transcript.getBytes());
             ugb.setFileKhs(file_khs.getBytes());
             ugb.setFileUgb(file_ugb.getBytes());
-            ugb.setStatusDokumen("SUBMITTED");
+            ugb.setStatusUgb("SUBMITTED");
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             UserModel user = userDb.findByUsername(username);
@@ -71,62 +83,120 @@ public class UgbServiceImpl {
             return "success BITCH";
         }catch (IOException e) {
             throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                HttpStatus.INTERNAL_SERVER_ERROR, "Document");
         }
         
     }
 
-    public HashMap<String, List<UgbModel>> viewAllUgb(){
-        HashMap<String, List<UgbModel>> result_map = new HashMap<>();
+    public List<UgbModel> viewAllUgb(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         UserModel thisUser = userDb.findByUsername(username);
         Set<EnumRole> roles = thisUser.getRoles();
-        List<UgbModel> retrievedUgb = new ArrayList<>();
         System.out.println("*** roles user == " + roles.toString());
 
         if (roles.contains(EnumRole.PEMBIMBING) == true){
             // *** the default filter would be 'BIMBINGAN'
             // *** returns the default list for dosen with role [PEMBIMBING] or [PEMBIMBING, PENGUJI]
             // *** list contains ugb mahasiswa bimbingan
-            List<UgbModel> submitted_ugb = ugbDb.findAll();
-            System.out.println("@@@@ initial list ugb pembimbing = "+submitted_ugb);
-            for(UgbModel u : submitted_ugb){
-                System.out.println("@@@@ UGB_now = "+u.getJudulUgb());
-                if(u.getPembimbing().contains(thisUser) == true){
-                    retrievedUgb.add(u);
-                    System.out.println("@@@@ ugb dgn judul -"+u.getJudulUgb()+"- ditambah ke list");
-                }
-            }
-            result_map.put(roles.toString(), retrievedUgb);
-            return result_map;
-
+            // List<UgbModel> submitted_ugb = ugbDb.findAll();
+            // System.out.println("@@@@ initial list ugb pembimbing = "+submitted_ugb);
+            // for(UgbModel u : submitted_ugb){
+            //     System.out.println("@@@@ UGB_now = "+u.getJudulUgb());
+            //     if(u.getPembimbing().contains(thisUser) == true){
+            //         retrievedUgb.add(u);
+            //         System.out.println("@@@@ ugb dgn judul -"+u.getJudulUgb()+"- ditambah ke list");
+            //     }
+            // }
+            // return retrievedUgb;
+            return filterUgb("SUBMITTED");
         }else if(roles.contains(EnumRole.PENGUJI) == true){
             // *** the default filter would be 'EVALUATE'
             // *** returns the default list for dosen with role [PENGUJI]
             // *** list contains ugb with status 'EVALUATE'
-            List<UgbModel> submitted_ugb = ugbDb.getUgbBasedOnStatus("EVALUATE");
-            System.out.println("@@@@ initial list ugb penguji = "+submitted_ugb);
+            // List<UgbModel> submitted_ugb = ugbDb.getUgbBasedOnStatus("EVALUATE");
+            // System.out.println("@@@@ initial list ugb penguji = "+submitted_ugb);
+            // for(UgbModel u : submitted_ugb){
+            //     System.out.println("@@@@ UGB_now = "+u.getJudulUgb());
+            //     if(u.getPembimbing().contains(thisUser) == true){
+            //         retrievedUgb.add(u);
+            //         System.out.println("@@@@ ugb dgn judul -"+u.getJudulUgb()+"- ditambah ke list");
+            //     }
+                
+            // }
+            // return retrievedUgb;
+            return filterUgb("EVALUATE");
+        }else{
+            // *** the default filter would be 'VERIFY'
+            // returns the default list for dosen with role [KOORDINATOR]
+            // *** list contains ugb with status 'SUBMITTED'
+            // List<UgbModel> submitted_ugb = ugbDb.getUgbBasedOnStatus("APPROVE");
+            // System.out.println("@@@@ initial list ugb koordinator = "+submitted_ugb);
+            // return retrievedUgb;
+            return filterUgb("SUBMITTED");
+        }
+    }
+
+    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
+        return ugbDb.findByMahasiswa(mahasiswa);
+    }
+    
+    
+    
+    public List<UgbModel> filterUgb(String status){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserModel thisUser = userDb.findByUsername(username);
+        Set<EnumRole> roles = thisUser.getRoles();
+        System.out.println("*** STATUS == " + status);
+        System.out.println("*** ROLES == " + roles.toString());
+
+        if(roles.contains(EnumRole.KOORDINATOR)){
+            List<UgbModel> submitted_ugb = ugbDb.getUgbBasedOnStatus(status);
+            return submitted_ugb;
+        }else if(roles.contains(EnumRole.PENGUJI) && status.equals("EVALUATE") || status.equals("EVALUATED")){
+            //as penguji
+            System.out.println("masuk else if penguji");
+            List<UgbModel> submitted_ugb = ugbDb.getUgbBasedOnStatus(status);
+            List<UgbModel> retrievedUgb = new ArrayList<>();
             for(UgbModel u : submitted_ugb){
                 System.out.println("@@@@ UGB_now = "+u.getJudulUgb());
+                if(u.getPenguji().contains(thisUser) == true){
+                    retrievedUgb.add(u);
+                    System.out.println("@@@@ ugb dgn judul -"+u.getJudulUgb()+"- ditambah ke list");
+                } 
+            }
+            return retrievedUgb;
+        }else{
+            List<UgbModel> submitted_ugb = ugbDb.findAll();
+            List<UgbModel> retrievedUgb = new ArrayList<>();
+
+            for(UgbModel u : submitted_ugb){
+                System.out.println("@@@@ UGB_now pembimbing = "+u.getJudulUgb());
                 if(u.getPembimbing().contains(thisUser) == true){
                     retrievedUgb.add(u);
                     System.out.println("@@@@ ugb dgn judul -"+u.getJudulUgb()+"- ditambah ke list");
                 }
-                
             }
-            result_map.put(roles.toString(), retrievedUgb);
-            return result_map;
-
-        }else{
-            // *** the default filter would be 'APPROVE'
-            // returns the default list for dosen with role [KOORDINATOR]
-            // *** list contains ugb with status 'EVALUATE'
-            List<UgbModel> submitted_ugb = ugbDb.getUgbBasedOnStatus("APPROVE");
-            System.out.println("@@@@ initial list ugb koordinator = "+submitted_ugb);
-            result_map.put(roles.toString(), retrievedUgb);
-            return result_map;
+            return retrievedUgb;
         }
+        
     }
-    
+
+    public UgbModel getUgbById(Long idUgb){
+        return ugbDb.findByIdUgb(idUgb);
+    }
+
+    public void approveUgb(UgbModel ugb){
+        ugb.setStatusDokumen("APPROVED");
+        ugb.setStatusUgb("ALLOCATE");
+        ugbDb.save(ugb);
+    }
+
+    public void denyUgb(UgbModel ugb, String ctt){
+        ugb.setStatusDokumen("DENIED");
+        ugb.setStatusUgb("DENIED");
+        ugb.setCatatan(ctt);
+        ugbDb.save(ugb);
+    }
 }
