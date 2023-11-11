@@ -12,5 +12,5 @@ public interface ManageUserService {
 
     UserModel findUserById(Long idUser);
 
-    List<UserModel> findUserByRoles(EnumRole roles);
+    // List<UserModel> findUserByRoles(EnumRole roles);
 }
