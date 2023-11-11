@@ -1,6 +1,7 @@
 package protensi.sita.service;
 
 import protensi.sita.model.MahasiswaModel;
+import protensi.sita.model.PembimbingModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.model.UgbModel;
 

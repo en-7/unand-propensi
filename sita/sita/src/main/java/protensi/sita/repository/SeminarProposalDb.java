@@ -1,6 +1,7 @@
 package protensi.sita.repository;
 
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.UgbModel;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface SeminarProposalDb extends JpaRepository<SeminarProposalModel, Long> {
     Optional<SeminarProposalModel> findByIdSeminarProposal(Long idSeminarProposal);
+    Optional<SeminarProposalModel> findByUgb(UgbModel ugb);
     List<SeminarProposalModel> findAllByStatusDokumen(String statusDokumen);
     
      // Mencari proposal seminar berdasarkan pembimbing
