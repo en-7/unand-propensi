@@ -9,10 +9,7 @@ import org.springframework.ui.Model;
 import protensi.sita.model.SeminarHasilModel;
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.TugasAkhirModel;
-import protensi.sita.service.SeminarHasilServiceImpl;
-import protensi.sita.service.SeminarProposalService;
-import protensi.sita.service.TugasAkhirService;
-import protensi.sita.service.jadwalSidangSeminarService;
+import protensi.sita.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +29,9 @@ public class PenjadwalanSeminarSidang {
 
     @Autowired
     private TugasAkhirService tugasAkhirService;
+
+    @Autowired
+    public BaseService baseService;
 
 
 
@@ -67,6 +67,7 @@ public class PenjadwalanSeminarSidang {
             }
         }
         model.addAttribute("listjadwalSidangSeminar", getListSidangProposal);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "PenjadwalanSeminarSidang/seminarProposal/jadwalSidangProposal";
     }
 
@@ -142,6 +143,7 @@ public class PenjadwalanSeminarSidang {
             }
         }
         model.addAttribute("listjadwalSidangSeminarHasil", getListSidangHasil);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "PenjadwalanSeminarSidang/seminarHasil/jadwalSidangHasil";
     }
     @GetMapping("/jadwalSidangHasil-pendaftar")
@@ -213,6 +215,7 @@ public class PenjadwalanSeminarSidang {
             }
         }
         model.addAttribute("listjadwalSidangTA", getListJadwalSidangTA);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "PenjadwalanSeminarSidang/sidangTA/jadwalSidangTA";
     }
 

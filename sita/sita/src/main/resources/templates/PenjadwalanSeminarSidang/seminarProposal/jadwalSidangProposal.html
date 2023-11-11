@@ -23,11 +23,17 @@
 <div class="container">
     <div class="card m-4 p-4">
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group" role="group" aria-label="First group">
-                <a role="button" class="btn btn-secondary" href="/jadwalSidangProposal-pendaftar">Pendaftar</a>
+
+            <div th:switch="${roleUser}">
+                <div th:case="'[ROLE_[KOORDINATOR]]'">
+                    <div class="btn-group" role="group" aria-label="First group">
+                        <a role="button" class="btn btn-secondary" href="/jadwalSidangProposal-pendaftar">Pendaftar</a>
+                    </div>
+                </div>
             </div>
+
             <div class="input-group">
-                <a role="button" class="btn btn-success" href="/home">Back</a>
+                <a role="button" class="btn btn-success" href="/">Back</a>
             </div>
         </div>
         <div class="card-body">
@@ -45,7 +51,11 @@
                         <th rowspan="2" style="text-align: center">Mahasiswa</th>
                         <th rowspan="2" style="text-align: center">Dosen Penguji</th>
                         <th colspan="3" style="text-align: center">Jadwal</th>
-                        <th rowspan="2" style="text-align: center">Action</th>
+                        <div th:switch="${roleUser}">
+                            <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                <th rowspan="2" style="text-align: center">Action</th>
+                            </div>
+                        </div>
                     </tr>
                     <tr class="table-success">
                         <td  style="text-align: center" class="font-weight-bold">Tanggal</td>
@@ -71,12 +81,17 @@
                             <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSempro, 'HH:mm')}"></a>
                         </td>
                         <td th:text="${jadwalSidangSeminar.tempatSempro}"></td>
-                        <td>
-                            <div class="btn btn-group">
-                                <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangProposal/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
-                                <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangProposal/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+
+                        <div th:switch="${roleUser}">
+                            <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                <td>
+                                    <div class="btn btn-group">
+                                        <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangProposal/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
+                                        <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangProposal/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                                    </div>
+                                </td>
                             </div>
-                        </td>
+                        </div>
                     </tr>
                     </tbody>
                 </table>

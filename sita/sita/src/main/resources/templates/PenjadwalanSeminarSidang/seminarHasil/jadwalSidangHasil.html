@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <title>SITA | Seminar Hasil</title>
     <object th:include="fragments/fragment :: css" th:remove="tag"></object>
     <object th:include="fragments/fragment :: js" th:remove="tag"></object>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
@@ -19,8 +20,13 @@
 <div class="container">
     <div class="card m-4 p-4">
         <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="btn-group" role="group" aria-label="First group">
-                <a role="button" class="btn btn-secondary" href="/jadwalSidangHasil-pendaftar">Pendaftar</a>
+
+            <div th:switch="${roleUser}">
+                <div th:case="'[ROLE_[KOORDINATOR]]'">
+                    <div class="btn-group" role="group" aria-label="First group">
+                        <a role="button" class="btn btn-secondary" href="/jadwalSidangHasil-pendaftar">Pendaftar</a>
+                    </div>
+                </div>
             </div>
             <div class="input-group">
                 <a role="button" class="btn btn-success" href="/">Back</a>
@@ -41,7 +47,11 @@
                             <th rowspan="2" style="text-align: center">Mahasiswa</th>
                             <th rowspan="2" style="text-align: center">Dosen Penguji</th>
                             <th colspan="3" style="text-align: center">Jadwal</th>
-                            <th rowspan="2" style="text-align: center">Action</th>
+                            <div th:switch="${roleUser}">
+                                <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                    <th rowspan="2" style="text-align: center">Action</th>
+                                </div>
+                            </div>
                         </tr>
                         <tr class="table-success">
                             <td  style="text-align: center" class="font-weight-bold">Tanggal</td>
@@ -67,12 +77,16 @@
                                 <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSemhas, 'HH:mm')}"></a>
                             </td>
                             <td th:text="${jadwalSidangSeminar.tempatSemhas}"></td>
-                            <td>
-                                <div class="btn btn-group">
-                                    <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangHasil/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
-                                    <a class="btn btn-sm btn-danger text-center" th:href="@{/jadwalSidangHasil/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                            <div th:switch="${roleUser}">
+                                <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                    <td>
+                                        <div class="btn btn-group">
+                                            <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangHasil/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
+                                            <a class="btn btn-sm btn-danger text-center" th:href="@{/jadwalSidangHasil/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                                        </div>
+                                    </td>
                                 </div>
-                            </td>
+                            </div>
                         </tr>
                         </tbody>
                     </table>
