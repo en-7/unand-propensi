@@ -224,6 +224,7 @@ public class SeminarProposalController {
         }
         
     }
+    
 
     @PostMapping("/update-nilai/{idSeminarProposal}")
     public String updateNilai(@PathVariable Long idSeminarProposal, @RequestBody Map<String, Object> data, Model model) {
