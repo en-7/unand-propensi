@@ -11,8 +11,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import protensi.sita.security.UserDetailsServiceImpl;
+import protensi.sita.model.EnumRole;
+import protensi.sita.model.UserModel;
+
+import java.util.*;
 
 @Configuration
 @EnableWebSecurity
@@ -44,12 +50,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
+        // Set<EnumRole> koordinator = new HashSet<>();
+        // koordinator.add(EnumRole.KOORDINATOR);
+        // Set<EnumRole> dosenboth1 = new HashSet<>();
+        // koordinator.add(EnumRole.PEMBIMBING);
+        // koordinator.add(EnumRole.PENGUJI);
+        // Set<EnumRole> dosenboth2 = new HashSet<>();
+        // koordinator.add(EnumRole.PENGUJI);
+        // koordinator.add(EnumRole.PEMBIMBING);
         http.csrf().disable()
                 .authorizeRequests().antMatchers(
                 "/js/**",
                 "/css/**",
                 "/images/**",
                 "/create-dummy").permitAll()
+                .antMatchers("/ugb/viewall").hasAnyAuthority("ROLE_[KOORDINATOR]","ROLE_[PEMBIMBING, PENGUJI]","ROLE_[PENGUJI, PEMBIMBING]")
+                .antMatchers("/ugb/approve/**").hasAnyAuthority("ROLE_[KOORDINATOR]","ROLE_[PEMBIMBING, PENGUJI]","ROLE_[PENGUJI, PEMBIMBING]")
+                .antMatchers("/ugb/deny/**").hasAnyAuthority("ROLE_[KOORDINATOR]","ROLE_[PEMBIMBING, PENGUJI]","ROLE_[PENGUJI, PEMBIMBING]")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
