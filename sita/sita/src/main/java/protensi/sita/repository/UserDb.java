@@ -17,7 +17,7 @@ public interface UserDb extends JpaRepository<UserModel, Long> {
 
     UserModel findByIdUser(Long idUser);
 
-    List<UserModel> findAllByRoles(EnumRole roles);
+    // List<UserModel> findAllByRoles(Set<EnumRole> roles);
 
     UserModel findByUsername(String username);
 

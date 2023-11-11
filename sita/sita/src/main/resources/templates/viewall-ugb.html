@@ -49,7 +49,16 @@
 
         .filter-bar {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+            width: 1100px;
+            margin: 20px auto 0;
+            background-color: rgb(38, 63, 14);
+            padding: 0 0;
+        }
+
+        .filter-bar2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             width: 1100px;
             margin: 20px auto 0;
             background-color: rgb(38, 63, 14);
@@ -65,6 +74,14 @@
             background-color: #3c7850;
             width: 100%;
         }
+
+        .filter-bar button:hover {
+            background-color:  rgb(38, 63, 14);
+        }
+
+        .table-row-hidden {
+            display: none; 
+        }
     </style>
 </head>
 <body>
@@ -72,34 +89,26 @@
 
 
 <div class="container">
-    <div class="filter-bar">
-        <div th:switch="${roleUser}"> 
-            <div th:case="'[PEMBIMBING]'">
-                <button id="filterBimbingan">BIMBINGAN</button>
-            </div>
-            <div th:case="'[PEMBIMBING, PENGUJI]'">
-                <button id="filterBimbingan">BIMBINGAN</button>
-                <button id="filterEvaluate">EVALUATE</button>
-                <button id="filterEvaluated">EVALUATED</button>
-            </div>
-            <div th:case="'[PENGUJI, PEMBIMBING]'">
-                <button id="filterBimbingan">BIMBINGAN</button>
-                <button id="filterEvaluate">EVALUATE</button>
-                <button id="filterEvaluated">EVALUATED</button>
-            </div>
-            <div th:case="'[PENGUJI]'">
-                <button id="filterEvaluate">EVALUATE</button>
-                <button id="filterEvaluated">EVALUATED</button>
-            </div>
-            <div th:case="'[KOORDINATOR]'">
-                <button id="filterVerify">VERIFY</button>
-                <button id="filterAllocate">ALLOCATE</button>
-                <button id="filterAllocated">ALLOCATED</button>
-            </div>
-        </div>
-    </div>
     <div class="d-flex justify-content-center">
         <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta UGB NEW1</h2>
+    </div>
+    <div th:switch="${roleUser}">
+        <div class="filter-bar" th:case="'[ROLE_[KOORDINATOR]]'">
+            <button id="filterVerify">VERIFY</button>
+            <button id="filterAllocate">ALLOCATE</button>
+            <button id="filterAllocated">ALLOCATED</button>
+        </div> 
+        <div class="filter-bar3"th:case="'[ROLE_[PEMBIMBING]]'">
+        </div>
+        <div class="filter-bar2"th:case="'[ROLE_[PENGUJI]]'">
+            <button id="filterEvaluate">EVALUATE</button>
+            <button id="filterEvaluated">EVALUATED</button>
+        </div>
+        <div class="filter-bar" th:case="*">
+            <button id="filterBimbingan">BIMBINGAN</button>
+            <button id="filterEvaluate" >EVALUATE</button>
+            <button id="filterEvaluated">EVALUATED</button>
+        </div>
     </div>
     <div class="d-flex justify-content-center">
         <div class="content-container-table">
@@ -126,9 +135,18 @@
                             <a th:text="${ugb.judulUgb}" style="text-decoration: none; color: black;"></a>
                         </td>                    
                         <td>
-                            <form>
-                                <button formaction="@{/ugb/detail/{id}(parameter=${ugb.idUgb})}">Detail</button>
-                            </form>
+                            <div th:switch="${ugb.statusUgb}">
+                                <div th:case="'ALLOCATE'">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-primary" th:href="@{/ugb/allocate/} + ${ugb.idUgb}">Allocate</a>
+                                    </div>
+                                </div>
+                                <div th:case="*">
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-primary" th:href="@{/ugb/detail/} + ${ugb.idUgb}">Detail</a>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -140,6 +158,15 @@
 </body>
 </html>
 <script>
+    document.getElementById("filterVerify").addEventListener("click", function () {
+        window.location.href = "/ugb/filter?status=SUBMITTED";
+    });
+    document.getElementById("filterAllocate").addEventListener("click", function () {
+        window.location.href = "/ugb/filter?status=ALLOCATE";
+    });
+    document.getElementById("filterAllocated").addEventListener("click", function () {
+        window.location.href = "/ugb/filter?status=ALLOCATED";
+    });
     document.getElementById("filterBimbingan").addEventListener("click", function () {
         window.location.href = "/ugb/filter?status=SUBMITTED";
     });
@@ -149,13 +176,5 @@
     document.getElementById("filterEvaluated").addEventListener("click", function () {
         window.location.href = "/ugb/filter?status=EVALUATED";
     });
-    document.getElementById("filterVerify").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=VERIFY";
-    });
-    document.getElementById("filterAllocate").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=ALLOCATE";
-    });
-    document.getElementById("filterAllocated").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=ALLOCATED";
-    });
+    
 </script>
