@@ -24,18 +24,27 @@ public class SeminarProposalModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_seminar_proposal", updatable = false, nullable = false)
     private Long idSeminarProposal;
-
+    
     @Lob
     @Column(name = "draft_proposal_ta", nullable = false)
     private byte[] draftProposalTa;
+
+    @Column(name = "nama_file_draft_proposal_ta", nullable = false)
+    private String nameFileDraftProposalTa;
 
     @Lob
     @Column(name = "bukti_krs", nullable = false)
     private byte[] buktiKrs;
 
+    @Column(name = "nama_file_bukti_krs", nullable = false)
+    private String nameFileBuktiKrs;
+
     @Lob
     @Column(name = "persetujuan_pembimbing", nullable = false)
     private byte[] persetujuanPembimbing;
+
+    @Column(name = "nama_file_persetujuan_pembimbing", nullable = false)
+    private String nameFilePersetujuanPembimbing;
 
     @Size(max = 100)
     @Column(name = "status_dokumen")

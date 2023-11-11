@@ -1,12 +1,17 @@
 package protensi.sita.service;
 
 import protensi.sita.model.AvailableBimbinganModel;
+import protensi.sita.model.UgbModel;
+import protensi.sita.model.UserModel;
 import protensi.sita.repository.AvailableBimbinganDb;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -45,5 +50,18 @@ public class AvailableBimbinganServiceImpl implements AvailableBimbinganService 
     @Override
     public List<AvailableBimbinganModel> findAllByIdPembimbing(Long idUser){
         return availableBimbinganDb.findAllByPembimbing_IdUser(idUser);
+    }
+
+    @Override
+    @Transactional
+    public List<AvailableBimbinganModel> listAvailablePembimbing(UgbModel ugb){
+        Set<UserModel> pembimbingSet = ugb.getPembimbing();
+        List<UserModel> listPembimbing= new ArrayList<>(pembimbingSet);
+        List<AvailableBimbinganModel> listAvailable = new ArrayList<AvailableBimbinganModel>();
+        for (UserModel pembimbing : listPembimbing) {
+            List<AvailableBimbinganModel> listAvailablePembimbing = availableBimbinganDb.findAllByPembimbing_IdUser(pembimbing.getIdUser());
+            listAvailable.addAll(listAvailablePembimbing);
+        }
+        return listAvailable;
     }
 }

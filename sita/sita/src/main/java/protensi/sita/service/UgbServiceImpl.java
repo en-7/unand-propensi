@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
+import protensi.sita.model.PembimbingModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.repository.MahasiswaDb;
@@ -136,12 +137,6 @@ public class UgbServiceImpl {
             return filterUgb("SUBMITTED");
         }
     }
-
-    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
-        return ugbDb.findByMahasiswa(mahasiswa);
-    }
-    
-    
     
     public List<UgbModel> filterUgb(String status){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -198,5 +193,9 @@ public class UgbServiceImpl {
         ugb.setStatusUgb("DENIED");
         ugb.setCatatan(ctt);
         ugbDb.save(ugb);
+    }
+
+    public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
+        return ugbDb.findByMahasiswa(mahasiswa);
     }
 }

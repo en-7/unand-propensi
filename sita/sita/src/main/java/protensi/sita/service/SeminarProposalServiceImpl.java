@@ -1,10 +1,10 @@
 package protensi.sita.service;
 
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.UgbModel;
 import protensi.sita.repository.SeminarProposalDb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -58,6 +58,14 @@ public class SeminarProposalServiceImpl implements SeminarProposalService {
     @Override
     public List<SeminarProposalModel> findAllByPenguji(Long pengujiId) {
         return seminarProposalDb.findAllByPenguji(pengujiId);
+    }
+
+    @Override
+    public SeminarProposalModel findSemproByUgb(UgbModel ugb){
+        Optional<SeminarProposalModel> seminarProposal = seminarProposalDb.findByUgb(ugb);
+        if (seminarProposal.isPresent()) {
+            return seminarProposal.get();
+        } else return null;
     }
 
 }
