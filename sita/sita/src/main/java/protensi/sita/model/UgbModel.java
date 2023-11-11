@@ -44,17 +44,29 @@ public class UgbModel {
     @Column(name = "bukti_kp", nullable = false)
     private byte[] buktiKp;
 
+    @Column(name = "nama_file_kp", nullable = false)
+    private String nameFileKp;
+
     @Lob
     @Column(name = "transkrip", nullable = false)
     private byte[] transkrip;
+
+    @Column(name = "nama_file_transkrip", nullable = false)
+    private String nameFileTranskrip;
 
     @Lob
     @Column(name = "file_khs", nullable = false)
     private byte[] fileKhs;
 
+    @Column(name = "nama_file_khs", nullable = false)
+    private String nameFileKhs;
+
     @Lob
     @Column(name = "file_ugb", nullable = false)
     private byte[] fileUgb;
+
+    @Column(name = "nama_file_ugb", nullable = false)
+    private String nameFileUgb;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
