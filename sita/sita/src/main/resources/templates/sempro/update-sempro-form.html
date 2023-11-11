@@ -59,7 +59,7 @@
     </style>
 </head>
 <body>
-<nav th:replace="fragments/fragment :: navbar('/seminar-proposal')"></nav>
+    <div th:replace="fragments/fragment :: navbar(${'/seminar-proposal'})"></div>
 
 <div class="container">
     <div class="card m-4 p-4">
@@ -67,17 +67,17 @@
             <div class="justify-content-center">
                 <h2>Update Pendaftaran Seminar Proposal</h2>
                 <br>
-                <form th:action="@{/seminar-proposal/update}" th:object="${seminarProposal}" method="POST" enctype="multipart/form-data">
+                <form th:action="@{'/seminar-proposal/update/' + ${seminarProposal.idSeminarProposal}}" th:object="${seminarProposal}" method="POST" enctype="multipart/form-data">
                     Draft Proposal TA (PDF):
-                    <input required class="form-control" type="file" th:field="*{draftProposalTa}" name="draftProposalTaFile" accept=".pdf" />
+                    <input required class="form-control" type="file" name="draftProposalTaFile" accept=".pdf" />
                     <br><br>
 
                     Bukti KRS (PDF):
-                    <input required class="form-control" type="file" th:field="*{buktiKrs}" name="buktiKrsFile" accept=".pdf" />
+                    <input required class="form-control" type="file" name="buktiKrsFile" accept=".pdf" />
                     <br><br>
 
                     File Persetujuan Pembimbing (PDF):
-                    <input required class="form-control" type="file" th:field="*{persetujuanPembimbing}" name="persetujuanPembimbingFile" accept=".pdf" />
+                    <input required class="form-control" type="file" name="persetujuanPembimbingFile" accept=".pdf" />
                     <br><br>
 
                     <div class="pb-2 d-flex justify-content-center">
