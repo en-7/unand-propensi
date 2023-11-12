@@ -121,6 +121,7 @@ public class UgbServiceImpl {
             }
             ugb.setStatusDokumen("SUBMITTED");
             ugb.setStatusUgb("SUBMITTED");
+            ugb.setCatatan(null);
             ugbDb.save(ugb);
         }catch (IOException e) {
             throw new ResponseStatusException(
