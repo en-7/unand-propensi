@@ -56,14 +56,24 @@
                             <div th:case="'[ROLE_[PENGUJI, PEMBIMBING]]'">
                                 <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>
                             </div>
-                            <div th:case="'[ROLE_[KOORDINATOR]]'">
-                                <a class="dropdown-item" href="#">Jadwal Sidang</a>
-                            </div>
+                            <a class="dropdown-item" href="/jadwalSidangProposal">Jadwal Sidang</a>
                         </div>
                     </div>
                 </li>
+<!--                <li  class="nav-item dropdown">-->
+<!--                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                        Sidang TA-->
+<!--                    </a>-->
+<!--                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">-->
+<!--                        <a class="dropdown-item" href="/jadwalSidangTugasAkhir">Penjadwalan</a>-->
+<!--                        <a class="dropdown-item" href="#">Daftar</a>-->
+<!--                        <a class="dropdown-item" href="/seminar-proposal/add">Pendaftaran</a>-->
+<!--                        <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>-->
+<!--                        <a class="dropdown-item" href="#">Jadwal Sidang</a>-->
+<!--                    </div>-->
+<!--                </li>-->
 
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" th:classappend="${page == '/seminar-hasil'} ? active : ''">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Seminar Hasil
                     </a>
@@ -87,7 +97,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/tugas-akhir/add">Pendaftaran</a>
                         <a class="dropdown-item" href="/tugas-akhir/viewall">Daftar Peserta</a>
-                        <a class="dropdown-item" href="#">Jadwal Sidang</a>
+                        <a class="dropdown-item" href="/jadwalSidangTugasAkhir">Jadwal Sidang</a>
                     </div>
                 </li>
                 <li th:if="${roleUser != '[ROLE_[KOORDINATOR]]'}"class="nav-item dropdown" th:classappend="${page == '/bimbingan'} ? active : ''">
