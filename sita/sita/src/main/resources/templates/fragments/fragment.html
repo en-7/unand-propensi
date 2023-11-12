@@ -43,9 +43,23 @@
                         Seminar Proposal
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/seminar-proposal/add">Pendaftaran</a>
-                            <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>
-                            <a class="dropdown-item" href="#">Jadwal Sidang</a>
+                        <div th:switch="${roleUser}"> 
+                            <div th:case="'[ROLE_[MAHASISWA]]'">
+                                <a class="dropdown-item" href="/seminar-proposal/add">Pendaftaran</a>
+                            </div>
+                            <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>
+                            </div>
+                            <div th:case="'[ROLE_[PEMBIMBING, PENGUJI]]'">
+                                <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>
+                            </div>
+                            <div th:case="'[ROLE_[PENGUJI, PEMBIMBING]]'">
+                                <a class="dropdown-item" href="/seminar-proposal/viewall">Daftar Peserta</a>
+                            </div>
+                            <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                <a class="dropdown-item" href="#">Jadwal Sidang</a>
+                            </div>
+                        </div>
                     </div>
                 </li>
 
@@ -76,7 +90,7 @@
                         <a class="dropdown-item" href="#">Jadwal Sidang</a>
                     </div>
                 </li>
-                <li class="nav-item dropdown" th:classappend="${page == '/bimbingan'} ? active : ''">
+                <li th:if="${roleUser != '[ROLE_[KOORDINATOR]]'}"class="nav-item dropdown" th:classappend="${page == '/bimbingan'} ? active : ''">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Bimbingan
                     </a>

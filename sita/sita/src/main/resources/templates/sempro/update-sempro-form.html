@@ -59,7 +59,7 @@
     </style>
 </head>
 <body>
-<nav th:replace="fragments/fragment :: navbar('/seminar-proposal')"></nav>
+    <div th:replace="fragments/fragment :: navbar(${'/seminar-proposal'})"></div>
 
 <div class="container">
     <div class="card m-4 p-4">
@@ -67,21 +67,21 @@
             <div class="justify-content-center">
                 <h2>Update Pendaftaran Seminar Proposal</h2>
                 <br>
-                <form th:action="@{/seminar-proposal/update}" th:object="${seminarProposal}" method="POST" enctype="multipart/form-data">
+                <form th:action="@{'/seminar-proposal/update/' + ${seminarProposal.idSeminarProposal}}" th:object="${seminarProposal}" method="POST" enctype="multipart/form-data">
                     Draft Proposal TA (PDF):
-                    <input required class="form-control" type="file" th:field="*{draftProposalTa}" name="draftProposalTaFile" accept=".pdf" />
+                    <input required class="form-control" type="file" id="draftProposalTaFile" name="draftProposalTaFile" accept=".pdf" onchange="validateFile()" />
                     <br><br>
-
+            
                     Bukti KRS (PDF):
-                    <input required class="form-control" type="file" th:field="*{buktiKrs}" name="buktiKrsFile" accept=".pdf" />
+                    <input required class="form-control" type="file" id="buktiKrsFile" name="buktiKrsFile" accept=".pdf" onchange="validateFile()" />
                     <br><br>
-
+            
                     File Persetujuan Pembimbing (PDF):
-                    <input required class="form-control" type="file" th:field="*{persetujuanPembimbing}" name="persetujuanPembimbingFile" accept=".pdf" />
+                    <input required class="form-control" type="file" id="persetujuanPembimbingFile" name="persetujuanPembimbingFile" accept=".pdf" onchange="validateFile()" />
                     <br><br>
-
+            
                     <div class="pb-2 d-flex justify-content-center">
-                        <button class="btn btn-primary" type="submit" name="save">Submit</button>
+                        <button class="btn btn-primary" type="submit" name="save" id="submitButton" disabled>Submit</button>
                     </div>
                 </form>
                 
@@ -92,3 +92,48 @@
 
 </body>
 </html>
+
+
+<script>
+    function validateFile() {
+        var draftProposalTa = document.getElementById("draftProposalTaFile");
+        var buktiKrs = document.getElementById("buktiKrsFile");
+        var persetujuanPembimbing = document.getElementById("persetujuanPembimbingFile");
+        var submitButton = document.getElementById("submitButton");
+
+        var isValid = true;
+
+        if (!isValidFileType(draftProposalTa, 'application/pdf')) {
+            isValid = false;
+            draftProposalTa.value = '';
+        }
+
+        if (!isValidFileType(buktiKrs, 'application/pdf')) {
+            isValid = false;
+            buktiKrs.value = ''; 
+        }
+
+        if (!isValidFileType(persetujuanPembimbing, 'application/pdf')) {
+            isValid = false;
+            persetujuanPembimbing.value = ''; 
+        }
+
+        // Nonaktifkan tombol submit jika file tidak valid
+        submitButton.disabled = !isValid;
+
+        // Tampilkan alert jika ada file yang tidak valid
+        if (!isValid) {
+            alert("Invalid file type. Please choose PDF files for all attachments.");
+        }
+    }
+
+    function isValidFileType(input, validType) {
+        // Check if a file is selected
+        if (input.files.length > 0) {
+            var fileType = input.files[0].type;
+            return fileType === validType;
+        }
+        return true; // No file selected is also considered valid
+    }
+</script>
+

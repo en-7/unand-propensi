@@ -6,6 +6,7 @@ import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.security.UserDetailsServiceImpl;
+import protensi.sita.service.BaseService;
 import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.service.SeminarProposalServiceImpl;
 import protensi.sita.service.UgbServiceImpl;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 @Resource
 @Controller
@@ -53,6 +57,9 @@ public class SeminarProposalController {
     @Autowired
     private MahasiswaServiceImpl mahasiswaService;
 
+    @Autowired
+    public BaseService baseService;
+
     @GetMapping("/add")
     public String addSemproFormPage(Model model, Authentication authentication) {
         String namaUser = authentication.getName();
@@ -60,10 +67,18 @@ public class SeminarProposalController {
         if (user.getRoles().contains(EnumRole.MAHASISWA)) {
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaByUsername(user.getUsername());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
+            SeminarProposalModel seminarProposal = seminarProposalService.findSemproByUgb(ugb);
             if (ugb.getStatusDokumen().equals("EVALUATED")) {
-                SeminarProposalModel seminarProposal = new SeminarProposalModel();
-                model.addAttribute("seminarProposal", seminarProposal);
-                return "sempro/add-sempro-form";
+                if (seminarProposal != null) {
+                    model.addAttribute("roleUser", baseService.getCurrentRole());
+                    model.addAttribute("seminarProposal", seminarProposal);
+                    return "sempro/detail-sempro-mahasiswa";
+                } else {
+                    seminarProposal = new SeminarProposalModel();
+                    model.addAttribute("roleUser", baseService.getCurrentRole());
+                    model.addAttribute("seminarProposal", seminarProposal);
+                    return "sempro/add-sempro-form";
+                }
             } else {
                 return "sempro/error-sempro";
             }
@@ -80,11 +95,17 @@ public class SeminarProposalController {
             @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
             Model model, Authentication authentication) {
         try {
-
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
+            String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
+            String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
+            String namaFilePersetujuanPembimbing = StringUtils
+                    .cleanPath(persetujuanPembimbingFile.getOriginalFilename());
 
+            seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
+            seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
+            seminarProposal.setNameFileDraftProposalTa(namaFiledraftProposalTa);
             seminarProposal.setDraftProposalTa(draftProposalTaBytes);
             seminarProposal.setBuktiKrs(buktiKrsBytes);
             seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
@@ -100,8 +121,9 @@ public class SeminarProposalController {
             seminarProposal.setStatusDokumen("SUBMITTED");
 
             seminarProposalService.addSempro(seminarProposal);
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
-            return "sempro/detail-sempro";
+            return "sempro/detail-sempro-mahasiswa";
         } catch (IOException e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
@@ -111,30 +133,41 @@ public class SeminarProposalController {
     @GetMapping("/update/{idSeminarProposal}")
     public String updateSemproFormPage(@PathVariable Long idSeminarProposal, Model model) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         model.addAttribute("seminarProposal", seminarProposal);
         return "sempro/update-sempro-form";
     }
 
-    @PostMapping("/update")
-    public String updateSemproSubmitPage(@ModelAttribute SeminarProposalModel seminarProposal,
+    @PostMapping("/update/{idSeminarProposal}")
+    public String updateSemproSubmitPage(
+            @PathVariable Long idSeminarProposal,
             @RequestParam("draftProposalTaFile") MultipartFile draftProposalTaFile,
             @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
             @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
-            Model model) {
+            Model model, Authentication authentication) {
         try {
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
+            String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
+            String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
+            String namaFilePersetujuanPembimbing = StringUtils
+                    .cleanPath(persetujuanPembimbingFile.getOriginalFilename());
 
+            SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
+            seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
+            seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
+            seminarProposal.setNameFileDraftProposalTa(namaFiledraftProposalTa);
             seminarProposal.setDraftProposalTa(draftProposalTaBytes);
             seminarProposal.setBuktiKrs(buktiKrsBytes);
             seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
+            seminarProposal.setCatatan(null);
+            seminarProposal.setStatusDokumen("SUBMITTED");
 
-            // Melakukan validasi dan menyimpan perubahan ke database
             seminarProposalService.updateSempro(seminarProposal);
-
-            model.addAttribute("id", seminarProposal.getIdSeminarProposal());
-            return "sempro/update-sempro-success";
+            model.addAttribute("roleUser", baseService.getCurrentRole());
+            model.addAttribute("seminarProposal", seminarProposal);
+            return "sempro/detail-sempro-mahasiswa";
         } catch (IOException e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
@@ -147,6 +180,7 @@ public class SeminarProposalController {
         UserModel user = userDetailsService.findByUsername(namaUser);
         if (user.getRoles().contains(EnumRole.KOORDINATOR)) {
             List<SeminarProposalModel> listSempro = seminarProposalService.findAllSempro();
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("listSempro", listSempro);
             return "sempro/viewall-sempro";
         } else if (user.getRoles().contains(EnumRole.PEMBIMBING) && user.getRoles().contains(EnumRole.PENGUJI)) {
@@ -156,6 +190,7 @@ public class SeminarProposalController {
             List<SeminarProposalModel> listSempro = new ArrayList<SeminarProposalModel>();
             listSempro.addAll(listSemproPembimbing);
             listSempro.addAll(listSemproPenguji);
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("listSempro", listSempro);
             return "sempro/viewall-sempro-dosen";
         }
@@ -166,6 +201,7 @@ public class SeminarProposalController {
     public String filterSeminarProposals(@RequestParam String status, Model model) {
         List<SeminarProposalModel> filteredProposals = seminarProposalService.findSemproByStatusDokumen(status);
         model.addAttribute("listSempro", filteredProposals);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "sempro/viewall-sempro";
     }
 
@@ -182,6 +218,7 @@ public class SeminarProposalController {
         seminarProposalService.updateSempro(seminarProposal);
 
         if (updatedSeminarProposal != null) {
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-koordinator";
         } else {
@@ -203,6 +240,7 @@ public class SeminarProposalController {
         seminarProposalService.updateSempro(seminarProposal);
         if (updatedSeminarProposal != null) {
             model.addAttribute("seminarProposal", seminarProposal);
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "sempro/detail-sempro-koordinator";
         } else {
             throw new ResponseStatusException(
@@ -217,6 +255,7 @@ public class SeminarProposalController {
         UserModel user = userDetailsService.findByUsername(namaUser);
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
         model.addAttribute("seminarProposal", seminarProposal);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         if (user.getRoles().contains(EnumRole.KOORDINATOR)) {
             return "sempro/detail-sempro-koordinator";
         } else if (user.getRoles().contains(EnumRole.PEMBIMBING) && user.getRoles().contains(EnumRole.PENGUJI)) {
@@ -232,7 +271,7 @@ public class SeminarProposalController {
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
             seminarProposal.setStatusDokumen("APPROVED");
             seminarProposalService.updateSempro(seminarProposal);
-
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-koordinator";
         } catch (Exception e) {
@@ -249,7 +288,7 @@ public class SeminarProposalController {
             seminarProposal.setStatusDokumen("DENY");
             seminarProposal.setCatatan(catatan);
             seminarProposalService.updateSempro(seminarProposal);
-
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-koordinator";
         } catch (Exception e) {
@@ -257,4 +296,41 @@ public class SeminarProposalController {
                     HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
+
+    @GetMapping("/downloadFile")
+    public void downloadFile(@RequestParam("type") String type,
+            @RequestParam("id") Long id,
+            HttpServletResponse response) {
+        try {
+            SeminarProposalModel retrievedSempro = seminarProposalService.findSemproById(id);
+            response.setContentType("application/ocetet-stream");
+            String headerKey = "Content-Disposition";
+
+            if (type.equals("FILE BUKTI KRS")) {
+                String headerValue = "attachment; filename=" + retrievedSempro.getNameFileBuktiKrs();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSempro.getBuktiKrs());
+                outputStream.close();
+            } else if (type.equals("FILE DRAFT PROPOSAL TA")) {
+                String headerValue = "attachment; filename=" + retrievedSempro.getNameFileDraftProposalTa();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSempro.getDraftProposalTa());
+                outputStream.close();
+            } else if (type.equals("FILE PERSETUJUAN PEMBIMBING")) {
+                String headerValue = "attachment; filename=" + retrievedSempro.getNameFilePersetujuanPembimbing();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSempro.getPersetujuanPembimbing());
+                outputStream.close();
+            }
+
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
+
+    }
+
 }
