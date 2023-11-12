@@ -8,4 +8,8 @@ public interface TugasAkhirService {
     void addSidangTA(TugasAkhirModel tugasAkhir);
 
     List<TugasAkhirModel> findAllTugasAkhir();
+
+    TugasAkhirModel findTugasAkhirById(Long idTugasAkhir);
+
+    List<TugasAkhirModel> findTugasAkhirByStatusDokumen(String statusDokumen);
 }
