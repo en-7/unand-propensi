@@ -9,10 +9,6 @@
     <object th:include="fragments/fragment :: js" th:remove="tag"></object>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
     <style>
-        body {
-            background-color: #ffffff;
-        }
-
         .container-content {
             max-width: 850px;
             margin: 0 auto;
@@ -49,6 +45,24 @@
         th {
             font-weight: bold;
         }
+
+        .status-text{
+            font-weight:bold;
+        }
+        
+        #formdetail{
+            margin-bottom: 200px;
+        }
+
+        .btn-primary{
+            margin-bottom: 40px;
+        }
+        #update-btn-m{
+            margin-bottom: 40px;
+        }
+        .buttonHolder{ 
+            text-align: center; 
+        }
     </style>
 </head>
 <body>
@@ -58,7 +72,7 @@
     <div class="d-flex justify-content-center">
         <h2 class="mt-4 font-weight-bold">Detail UGB</h2>
     </div>
-    <div class="container-content mt-4">
+    <div class="container-content mt-4" id="formdetail">
         <div class="header-container-table">
             <h5 class="table-title ml-4 mt-2" th:text="${ugb.judulUgb}"></h5>
         </div>
@@ -91,7 +105,7 @@
                 <th>Status UGB</th>
                 <td>
                     <span th:if="${ugb?.statusDokumen == null}">-</span>
-                    <span th:unless="${ugb?.statusDokumen == null}" th:text="${ugb?.statusDokumen}"></span>
+                    <span class="status-text" th:unless="${ugb?.statusDokumen == null}" th:text="${ugb?.statusDokumen}"></span>
                 </td>
             </tr>
             <tr>
@@ -142,7 +156,7 @@
                 </td>
             </tr>           
         </table>
-        <br><br>
+        <br>
         <div th:switch="${roleUser}">
             <div class="filter-bar" th:case="'[ROLE_[KOORDINATOR]]'">
                 <div class="pb-2 d-flex justify-content-center">
@@ -154,7 +168,9 @@
                 </div>
             </div>
             <div class="filter-bar" th:case="'[ROLE_[MAHASISWA]]'">
-                <a th:if="${ugb.statusUgb == 'DENIED'}" class="btn btn-primary mx-1" th:href="@{'/ugb/update/'+ ${ugb.idUgb}}">Update</a>
+                <div class="buttonHolder">
+                    <a th:if="${ugb.statusUgb == 'DENIED'}" class="btn btn-primary mx-1" id="update-btn-m" th:href="@{'/ugb/update/'+ ${ugb.idUgb}}">Update</a>
+                </div>
             </div>
         </div>
 
@@ -269,4 +285,5 @@
     });
 
 </script>
+
 

@@ -9,8 +9,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-
-
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import protensi.sita.model.EnumRole;
@@ -21,6 +21,7 @@ import protensi.sita.model.UserModel;
 import protensi.sita.repository.MahasiswaDb;
 import protensi.sita.repository.UgbDb;
 import protensi.sita.repository.UserDb;
+import reactor.netty.http.server.HttpServerResponse;
 
 import java.io.IOException;
 import java.util.*;
@@ -50,6 +51,83 @@ public class UgbServiceImpl {
         return listPembimbing;
     }
 
+    public UserModel getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserModel thisUser = userDb.findByUsername(username);
+        return thisUser;
+    }
+
+    public UgbModel getAddFormObjects(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        MahasiswaModel thisMahasiswa = mahasiswaDb.findByUsername(username);
+        UgbModel retrievedUgb = findByIdMahasiswa(thisMahasiswa);
+
+        if(retrievedUgb != null){
+            return retrievedUgb;
+
+        }else{
+            UgbModel ugbModel = new UgbModel();
+            return ugbModel;
+        }
+    }
+
+    public void updateUgbKoordinator(Long idUgb, Long idP1, Long idP2){
+        UgbModel ugb = getUgbById(idUgb);
+        Set<UserModel> set_pembimbing = new HashSet<>();
+        UserModel pembimbing1 = userDb.findByIdUser(idP1);
+        UserModel pembimbing2 = userDb.findByIdUser(idP2);
+
+        set_pembimbing.add(pembimbing1);
+        set_pembimbing.add(pembimbing2);
+        System.out.println("nama pemb_1 = "+ pembimbing1.getNama());
+        System.out.println("nama pemb_2 = "+ pembimbing2.getNama());
+
+        ugb.setPembimbing(set_pembimbing);
+        ugbDb.save(ugb);
+    }
+
+    public void updateUgbMahasiswa(Long idUgb, String judul, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb){
+        UgbModel ugb = getUgbById(idUgb);
+        try{
+            // System.out.println("kp: "+bukti_kp);
+            // System.out.println("transkrip: "+transcript);
+            // System.out.println("is transkrip empty?: "+transcript.isEmpty());
+
+
+            if(!bukti_kp.isEmpty()){
+                String namaFileKp = StringUtils.cleanPath(bukti_kp.getOriginalFilename());
+                ugb.setNameFileKp(namaFileKp);
+                ugb.setBuktiKp(bukti_kp.getBytes());
+            }
+            if(!transcript.isEmpty()){
+                String namaFileTranskrip = StringUtils.cleanPath(transcript.getOriginalFilename());
+                ugb.setNameFileTranskrip(namaFileTranskrip);
+                ugb.setTranskrip(transcript.getBytes());
+            }
+            if(!file_khs.isEmpty()){
+                String namaFileKhs = StringUtils.cleanPath(file_khs.getOriginalFilename());
+                ugb.setNameFileKhs(namaFileKhs);
+                ugb.setFileKhs(file_khs.getBytes());
+            }
+            if(!file_ugb.isEmpty()){
+                String namaFileUgb = StringUtils.cleanPath(file_ugb.getOriginalFilename());
+                ugb.setNameFileUgb(namaFileUgb);
+                ugb.setFileUgb(file_ugb.getBytes());
+            }
+            if(judul != null){
+                ugb.setJudulUgb(judul);
+            }
+            ugb.setStatusDokumen("SUBMITTED");
+            ugb.setStatusUgb("SUBMITTED");
+            ugbDb.save(ugb);
+        }catch (IOException e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, "Document");
+        }
+    }
+
     public String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb){
         try{
             String namaFileKp = StringUtils.cleanPath(bukti_kp.getOriginalFilename());
@@ -66,9 +144,8 @@ public class UgbServiceImpl {
             ugb.setFileKhs(file_khs.getBytes());
             ugb.setFileUgb(file_ugb.getBytes());
             ugb.setStatusUgb("SUBMITTED");
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            UserModel user = userDb.findByUsername(username);
+            ugb.setStatusDokumen("SUBMITTED");
+            UserModel user = getCurrentUser();
             // System.out.println("### id mahassiswa noww: "+ user.getIdUser());
 
             MahasiswaModel mahasiswa = mahasiswaDb.findByIdUser(user.getIdUser());
@@ -90,9 +167,7 @@ public class UgbServiceImpl {
     }
 
     public List<UgbModel> viewAllUgb(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UserModel thisUser = userDb.findByUsername(username);
+        UserModel thisUser = getCurrentUser();
         Set<EnumRole> roles = thisUser.getRoles();
         System.out.println("*** roles user == " + roles.toString());
 
@@ -139,9 +214,7 @@ public class UgbServiceImpl {
     }
     
     public List<UgbModel> filterUgb(String status){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        UserModel thisUser = userDb.findByUsername(username);
+        UserModel thisUser = getCurrentUser();
         Set<EnumRole> roles = thisUser.getRoles();
         System.out.println("*** STATUS == " + status);
         System.out.println("*** ROLES == " + roles.toString());
@@ -198,4 +271,43 @@ public class UgbServiceImpl {
     public UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa){
         return ugbDb.findByMahasiswa(mahasiswa);
     }
+
+    public void downloadUgbFiles(String type, Long id, HttpServletResponse response){
+        try{
+            UgbModel retrievedUgb = getUgbById(id);
+            response.setContentType("application/ocetet-stream");
+            String headerKey = "Content-Disposition";
+            
+            if(type.equals("FILE UGB")){
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileUgb();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getFileUgb());
+                outputStream.close();
+            }else if(type.equals("FILE KHS")){
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileKhs();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getFileKhs());
+                outputStream.close();
+            }else if(type.equals("FILE KP")){
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileKp();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getBuktiKp());
+                outputStream.close();
+            }else{
+                String headerValue = "attachment; filename=" + retrievedUgb.getNameFileTranskrip();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedUgb.getTranskrip());
+                outputStream.close();
+            }
+
+        }catch (IOException e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
+    }
 }
+
