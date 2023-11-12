@@ -65,10 +65,9 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2>Pendaftaran Sidang Tugas Akhir</h2>
+                <h2>Update Pendaftaran Sidang Tugas Akhir</h2>
                 <br>
-                <form th:action="@{/tugas-akhir/add}" th:object="${sidangTugasAkhir}" method="POST" enctype="multipart/form-data">
-
+                <form th:action="@{'/tugas-akhir/update/' + ${sidangTugasAkhir.idTugasAkhir}}" th:object="${sidangTugasAkhir}" method="POST" enctype="multipart/form-data">
                     Nilai TOEFL : <br>
                     <input required class="form-control" type="text" name="nilaiToefl" maxlength="30"/>
                     <br><br>
