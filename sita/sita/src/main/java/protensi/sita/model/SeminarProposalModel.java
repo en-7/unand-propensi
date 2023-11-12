@@ -72,4 +72,11 @@ public class SeminarProposalModel {
     @JoinColumn(name = "id_ugb")
     private UgbModel ugb;
 
+//    @OneToOne
+//    @JoinColumn(name = "id_jadwal_sidang")
+//    private JadwalSidangModel jadwalSidang;\
+
+    @OneToOne(mappedBy = "seminarProposal")
+    private JadwalSidangModel jadwalSidang;
+
 }

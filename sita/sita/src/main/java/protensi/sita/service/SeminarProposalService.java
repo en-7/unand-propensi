@@ -15,4 +15,5 @@ public interface SeminarProposalService {
     SeminarProposalModel findSemproByUgb(UgbModel ugb);
     List<SeminarProposalModel> findSemproByStatusDokumen(String statusDokumen);
     SeminarProposalModel saveNilaiAndStatus(Long idSeminarProposal, Long nilai, String statusSeminarProposal);
+
 }
