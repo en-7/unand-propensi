@@ -59,7 +59,7 @@
                                     <li th:text="${penguji.nama}"></li>
                                 </ul>
                             </td>
-                            <td th:text="${pendaftarSemhas.statusSemhas}"></td>
+                            <td class="text-success" th:text="${pendaftarSemhas.statusDokumen}"></td>
                             <td>
                                 <a class="btn btn-sm btn-primary" th:href="@{/jadwalSidangHasil/create/} + ${pendaftarSemhas.idSeminarHasil}">Create</a>
                             </td>

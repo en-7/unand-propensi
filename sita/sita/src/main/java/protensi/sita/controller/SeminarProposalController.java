@@ -102,7 +102,7 @@ public class SeminarProposalController {
 
             seminarProposalService.addSempro(seminarProposal);
             model.addAttribute("seminarProposal", seminarProposal);
-            return "sempro/detail-sempro";
+            return "sempro/detail-sempro-mahasiswa";
         } catch (IOException e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");

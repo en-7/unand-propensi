@@ -1,14 +1,13 @@
 package protensi.sita.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-import protensi.sita.model.JadwalSidangModel;
+import protensi.sita.model.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import protensi.sita.model.SeminarHasilModel;
-import protensi.sita.model.SeminarProposalModel;
-import protensi.sita.model.TugasAkhirModel;
+import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.*;
 
 import java.util.ArrayList;
@@ -32,6 +31,9 @@ public class PenjadwalanSeminarSidang {
 
     @Autowired
     public BaseService baseService;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
 
 
@@ -72,18 +74,27 @@ public class PenjadwalanSeminarSidang {
     }
 
     @GetMapping("/jadwalSidangProposal-pendaftar")
-    public String jadwalSidangProposalPendaftar(Model model){
-        List<SeminarProposalModel> listPendaftarSempro = seminarProposalService.findAllSempro();
-        List<SeminarProposalModel> newListPendaftarSempro = new ArrayList<SeminarProposalModel>();
-        for(SeminarProposalModel i : listPendaftarSempro){
-            if(i.getJadwalSidang() == null){
-                newListPendaftarSempro.add(i);
+    public String jadwalSidangProposalPendaftar(Model model, Authentication auth){
+        String namaUser = auth.getName();
+        UserModel user = userDetailsService.findByUsername(namaUser);
+        if(user.getRoles().contains(EnumRole.KOORDINATOR)){
+            List<SeminarProposalModel> listPendaftarSempro = seminarProposalService.findAllSempro();
+            List<SeminarProposalModel> newListPendaftarSempro = new ArrayList<SeminarProposalModel>();
+            for(SeminarProposalModel i : listPendaftarSempro){
+                if(i.getJadwalSidang() == null && i.getStatusDokumen().equalsIgnoreCase("EVALUATED")){
+                    newListPendaftarSempro.add(i);
+                }
             }
-        }
-        model.addAttribute("listdaftarSempro", newListPendaftarSempro);
+            model.addAttribute("listdaftarSempro", newListPendaftarSempro);
 
-        return "PenjadwalanSeminarSidang/seminarProposal/jadwalSidangProposal-pendaftar";
+            return "PenjadwalanSeminarSidang/seminarProposal/jadwalSidangProposal-pendaftar";
+        }
+        else {
+            return "sempro/error-sempro";
+        }
+
     }
+
 
     //controller delete sempro
     @GetMapping(value = "/jadwalSidangProposal/delete/{id}")
@@ -146,17 +157,25 @@ public class PenjadwalanSeminarSidang {
         model.addAttribute("roleUser", baseService.getCurrentRole());
         return "PenjadwalanSeminarSidang/seminarHasil/jadwalSidangHasil";
     }
+
     @GetMapping("/jadwalSidangHasil-pendaftar")
-    public String jadwalSidangHasilPendaftar(Model model){
-        List<SeminarHasilModel> listPedaftarSemhas = seminarHasilService.findAllSeminarHasil();
-        List<SeminarHasilModel> newLisPendaftarSemhas = new ArrayList<>();
-        for(SeminarHasilModel j : listPedaftarSemhas){
-            if(j.getJadwalSidang() == null){
-                newLisPendaftarSemhas.add(j);
+    public String jadwalSidangHasilPendaftar(Model model, Authentication auth){
+        String namaUser = auth.getName();
+        UserModel user = userDetailsService.findByUsername(namaUser);
+        if(user.getRoles().contains(EnumRole.KOORDINATOR)){
+            List<SeminarHasilModel> listPedaftarSemhas = seminarHasilService.findAllSeminarHasil();
+            List<SeminarHasilModel> newLisPendaftarSemhas = new ArrayList<>();
+            for(SeminarHasilModel j : listPedaftarSemhas){
+                if(j.getJadwalSidang() == null && j.getStatusDokumen().equalsIgnoreCase("EVALUATED")){
+                    newLisPendaftarSemhas.add(j);
+                }
             }
+            model.addAttribute("listdaftarSemhas", newLisPendaftarSemhas);
+            return "PenjadwalanSeminarSidang/seminarHasil/jadwalSidangHasil-pendaftar";
         }
-        model.addAttribute("listdaftarSemhas", newLisPendaftarSemhas);
-        return "PenjadwalanSeminarSidang/seminarHasil/jadwalSidangHasil-pendaftar";
+        else {
+            return "sempro/error-sempro";
+        }
     }
 
     //controller delete jadwal semhas
@@ -220,20 +239,26 @@ public class PenjadwalanSeminarSidang {
     }
 
     @GetMapping("/jadwalSidangTugasAkhir-pendaftar")
-    public String jadwalSidangTugasAkhirPendaftar(Model model){
-        List<TugasAkhirModel> listPendaftarTugasAkhir = tugasAkhirService.findAllTugasAkhir();
-        List<TugasAkhirModel> newListPendaftarTugasAkhir = new ArrayList<>();
-        for(TugasAkhirModel k : listPendaftarTugasAkhir){
-            if(k.getJadwalSidang() == null){
-                newListPendaftarTugasAkhir.add(k);
+    public String jadwalSidangTugasAkhirPendaftar(Model model, Authentication auth){
+        String namaUser = auth.getName();
+        UserModel user = userDetailsService.findByUsername(namaUser);
+        if(user.getRoles().contains(EnumRole.KOORDINATOR)) {
+            List<TugasAkhirModel> listPendaftarTugasAkhir = tugasAkhirService.findAllTugasAkhir();
+            List<TugasAkhirModel> newListPendaftarTugasAkhir = new ArrayList<>();
+            for (TugasAkhirModel k : listPendaftarTugasAkhir) {
+                if (k.getJadwalSidang() == null && k.getStatusDokumen().equalsIgnoreCase("EVALUATED")) {
+                    newListPendaftarTugasAkhir.add(k);
+                }
             }
+            model.addAttribute("listdaftarSidangTA", newListPendaftarTugasAkhir);
+            return "PenjadwalanSeminarSidang/sidangTA/jadwalSidangTA-pendaftar";
         }
-        model.addAttribute("listdaftarSidangTA", newListPendaftarTugasAkhir);
-        return "PenjadwalanSeminarSidang/sidangTA/jadwalSidangTA-pendaftar";
-
+        else {
+            return "sempro/error-sempro";
+        }
     }
 
-    //controller delete sempro
+    //controller delete sidangTA
     @GetMapping(value = "/jadwalSidangTugasAkhir/delete/{id}")
     public String deleteSidangTA(@PathVariable Long id, Model model){
         jadwalSidangSeminarService.deletesJadwalSidangSeminar(id);
