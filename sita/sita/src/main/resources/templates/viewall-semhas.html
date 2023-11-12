@@ -46,14 +46,49 @@
         td {
             text-align: center;
         }
+
+        .filter-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            width: 1100px;
+            margin: 20px auto 0;
+            background-color: #2D89FF;
+            padding: 0 0;
+        }
+
+        .filter-bar button {
+            color: #ffffff;
+            border: none;
+            padding: 10px 0;
+            cursor: pointer;
+            text-align: center;
+            background-color: #2D89FF;
+            width: 100%;
+        }
+
+        .filter-bar button.active {
+            border-bottom: 3px solid #000000; 
+        }
+
+        .filter-bar button:hover {
+            background-color: #1E6EBC;
+        }
+
+        .table-row-hidden {
+            display: none; 
+        }
     </style>
 </head>
 <body>
 <nav th:replace="fragments/fragment :: navbar (${'/seminar-hasil'})"></nav>
 
-
 <div class="container">
-<div class="container">
+    <div class="filter-bar">
+        <button id="filterAll">ALL</button>
+        <button id="filterApprove">APPROVE</button>
+        <button id="filterApproved">APPROVED</button>
+        <button id="filterDenied">DENIED</button>
+    </div>
     <div class="d-flex justify-content-center">
         <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta Seminar Hasil</h2>
     </div>
@@ -64,23 +99,48 @@
                 <tr>
                     <th>NIM</th>
                     <th>Nama Mahasiswa</th>
+                    <th>Judul TA</th>
+                    <th>Dosen Pembimbing</th>
+                    <th>Dosen Penguji</th>
                     <th style="text-align: center">Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="semhas, iterationStatus : ${listSeminarHasil}" 
+                    <tr th:each="seminarHasil, iterationStatus : ${listSeminarHasil}" 
                     th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'"
-                    data-status="${semhas.statusDokumen}">
+                    data-status="${seminarHasil.statusDokumen}">
+                        <td th:text="${seminarHasil != null ? (seminarHasil.ugb != null ? (seminarHasil.ugb.mahasiswa != null ? seminarHasil.ugb.mahasiswa.nim : '') : '') : ''}"></td>
                         <td>
-                            <a th:text="${semhas.mahasiswa.nim}" style="text-decoration: none; color: black;"></a>
-                        </td> 
+                            <a th:href="@{/profile/{parameter}(parameter=${seminarHasil.ugb.mahasiswa.idUser})}" th:text="${seminarHasil.ugb?.mahasiswa?.nama}" style="text-decoration: none; color: black;"></a>
+                        </td>        
                         <td>
-                            <a th:text="${semhas.mahasiswa.nama}" style="text-decoration: none; color: black;"></a>
+                            <a th:href="@{/seminar-hasil/detail/{parameter}(parameter=${seminarHasil.idSeminarHasil})}" th:text="${seminarHasil.ugb.judulUgb}" style="text-decoration: none; color: black;"></a>
                         </td>                    
+                        <td style="text-align: left;">
+                            <ul>
+                                <li th:each="pembimbing : ${seminarHasil.ugb.pembimbing}" th:text="${pembimbing.nama}" ></li>
+                            </ul>
+                        </td>
+                        <td style="text-align: left;">
+                            <ul>
+                                <li th:each="penguji : ${seminarHasil.ugb.penguji}" th:text="${penguji.nama}"></li>
+                            </ul>
+                        </td>
                         <td>
-                            <form>
-                                <button formaction="@{/semhas/detail/{id}(parameter=${semhas.idSeminarHasil})}">Detail</button>
-                            </form>
+                            <span th:if="${seminarHasil.nilai == null}">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#inputNilaiModal"
+                                        th:attr="data-id=${seminarHasil.idSeminarHasil}"
+                                    >Input Nilai</button>
+                                </div>
+                            </span>
+                            <span th:unless="${seminarHasil.nilai == null}">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateNilaiModal"
+                                        th:attr="data-id=${seminarHasil.idSeminarHasil}"
+                                    >Update Nilai</button>
+                                </div>
+                            </span>
                         </td>
                     </tr>
                 </tbody>
@@ -89,5 +149,196 @@
     </div>
 </div>
 
+<!-- Form Input Nilai -->
+<div class="modal fade" id="inputNilaiModal" tabindex="-1" role="dialog" aria-labelledby="inputNilaiModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inputNilaiModalLabel">Input Nilai Seminar Hasil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nilai:</label>
+                    <input type="text" class="form-control" id="nilai" required>
+                </div>
+                <div class="form-group">
+                    <label>Status:</label>
+                    <select class="form-control" id="statusSemhas" required>
+                        <option value="LULUS">LULUS</option>
+                        <option value="TIDAK LULUS">TIDAK LULUS</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="simpanNilai">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Form Update Nilai -->
+<div class="modal fade" id="updateNilaiModal" tabindex="-1" role="dialog" aria-labelledby="updateNilaiModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateNilaiModalLabel">Update Nilai Seminar Hasil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nilai:</label>
+                    <input type="text" class="form-control" id="updateNilai" required>
+                </div>
+                <div class="form-group">
+                    <label>Status:</label>
+                    <select class="form-control" id="updateStatusSemhas" required>
+                        <option value="LULUS">LULUS</option>
+                        <option value="TIDAK LULUS">TIDAK LULUS</option>
+                    </select>
+                </div>
+            </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="simpanUpdateNilai">Simpan</button>
+    </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
+
+<script>
+    // Logic Tombol Input Nilai
+    document.querySelectorAll(".btn-success").forEach(function(button) {
+        button.addEventListener("click", function() {
+            var seminarHasilId = this.getAttribute("data-id");
+            document.getElementById("simpanNilai").setAttribute("data-id", seminarHasilId); // Memasukkan data-id ke tombol "Simpan"
+        });
+    });
+    
+    // Logic Tombol Simpan Nilai
+    document.getElementById("simpanNilai").addEventListener("click", function () {
+        var seminarHasilId = this.getAttribute("data-id");
+        var nilai = document.getElementById("nilai").value;
+        console.log("###NILAI :"+ nilai);
+        var statusSemhas = document.getElementById("statusSemhas").value;
+        
+        // Mengecek nilai harus angka dan tidak kosong
+        if (isNaN(parseFloat(nilai)) || nilai === "") {
+            alert("Nilai harus berupa angka.");
+            return;
+        }
+        
+        // Setting objek data yang akan dikirim
+        var data = {
+            idSeminarHasil: seminarHasilId,
+            nilai: parseFloat(nilai),
+            statusSemhas: statusSemhas
+        };
+        
+        console.log("###OBJECT TYPE :"+ typeof seminarHasilId);
+        console.log("###OBJECT TYPE :"+ typeof nilai);
+        console.log("###OBJECT TYPE :"+ typeof statusSemhas);
+        fetch("/seminar-hasil/input-nilai/" + seminarHasilId, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(function (response) {
+            if (response.ok) {
+                // Jika telah berhasil, form dapat ditutup
+                $("#inputNilaiModal").modal("hide");
+                // Atau dapat melakukan tindakan bersesuaian yang lain
+                window.location.href = "/seminar-hasil/viewall";
+            } else {
+                alert("Gagal menyimpan nilai.");
+            }
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    
+    });
+
+</script>
+
+<script>
+    // Logic Tombol Update Nilai
+    document.querySelectorAll(".btn-success").forEach(function(button) {
+        button.addEventListener("click", function() {
+            var seminarHasilId = this.getAttribute("data-id");
+    
+            // Retrieve nilai dan status dari listSeminarHasil berdasarkan seminarHasilId
+            var semhasData = listSeminarHasil.find(function(item) {
+                return item.idSeminarHasil === seminarHasilId;
+            });
+    
+            // Mengecek apakah nilai dan status ditemukan di database
+            if (semhasData) {
+                var nilaiDatabase = semhasData.nilai;
+                var statusDatabase = semhasData.statusSemhas;
+    
+                // Melakukan update nilai dan status di database
+                document.getElementById("updateNilai").value = nilaiDatabase;
+                document.getElementById("updateStatusSemhas").value = statusDatabase;
+    
+                // Set seminarHasilId ke tombol "Simpan" pada form update
+                document.getElementById("simpanUpdateNilai").setAttribute("data-id", seminarHasilId);
+            } else {
+                alert("Data seminar hasil tidak ditemukan.");
+            }
+        });
+    });
+    
+    // Logic Tombol Simpan pada Form Update Nilai
+    document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
+        var seminarHasilId = this.getAttribute("data-id");
+        var updateNilai = document.getElementById("updateNilai").value;
+        var updateStatusSemhas = document.getElementById("updateStatusSemhas").value;
+    
+        // Mengecek updateNilai harus angka dan tidak kosong
+        if (isNaN(parseFloat(updateNilai)) || updateNilai === "") {
+            alert("Update Nilai harus berupa angka.");
+            return;
+        }
+    
+        // Setting objek data yang akan dikirim
+        var data = {
+            idSeminarHasil: seminarHasilId,
+            nilai: parseFloat(updateNilai),
+            statusSemhas: updateStatusSemhas
+        };
+    
+        // AJAX Request untuk menyimpan nilai yang telah di update
+        fetch("/seminar-hasil/update-nilai/" + seminarHasilId, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(function (response) {
+            if (response.ok) {
+                // Jika telah berhasil, form dapat ditutup
+                $("#updateNilaiModal").modal("hide");
+                // Atau dapat melakukan tindakan bersesuaian yang lain
+                window.location.href = "/seminar-hasil/detail/" + seminarHasilId;
+            } else {
+                alert("Gagal menyimpan nilai yang telah di update.");
+            }
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    });
+    
+</script>
