@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <title>SITA | Sidang TA</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+</head>
+
+<body>
+<!--navbar-->
+<div th:replace="fragments/fragment :: navbar(${'/tugas-akhir'})"></div>
+
+<!--body-->
+<br>
+<h2 class="text-center font-weight-bold text-light">Penjadwalan Sidang Tugas Akhir</h2>
+<br>
+
+<div class="container">
+    <div class="card m-4 p-4">
+        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group" role="group" aria-label="First group">
+                <a role="button" class="btn btn-secondary" href="/jadwalSidangTugasAkhir">Jadwal</a>
+            </div>
+            <div class="input-group">
+                <a role="button" class="btn btn-success" href="/">Back</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="justify-content-center">
+                <h3 class="font-weight-bold text-center ">PENDAFTAR</h3>
+                <!--Table-->
+                <div th:if="*{listdaftarSidangTA.size() != 0}">
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr class="table-success">
+                            <th style="text-align: center">No</th>
+                            <th style="text-align: center">Judul</th>
+                            <th style="text-align: center">Mahasiswa</th>
+                            <th style="text-align: center">Dosen Penguji</th>
+                            <th style="text-align: center">STATUS</th>
+                            <th style="text-align: center">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="pendaftarTA, iterationStatus : ${listdaftarSidangTA}"
+                            th:style="${iterationStatus.even} ? '' ">
+                            <td  th:text="${iterationStatus.count}"></td>
+                            <td  th:text="${pendaftarTA.ugb.judulUgb}"></td>
+                            <td  th:text="${pendaftarTA.ugb.mahasiswa.nama}"></td>
+                            <td>
+                                <ul th:each="penguji, iterationStatus2 : ${pendaftarTA.ugb.penguji}">
+                                    <li th:text="${penguji.nama}"></li>
+                                </ul>
+                            </td>
+                            <td class="text-success" th:text="${pendaftarTA.statusDokumen}"></td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" th:href="@{/jadwalSidangTugasAkhir/create/} + ${pendaftarTA.idTugasAkhir}">Create</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div th:unless="*{listdaftarSidangTA.size() !=0}">
+                    <h3 class="text-center" th:text="'Tidak ada Mahasiswa yang Mendaftar Sidang TA'"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--body-->
+</body>
+</html>

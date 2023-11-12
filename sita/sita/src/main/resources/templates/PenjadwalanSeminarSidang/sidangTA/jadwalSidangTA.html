@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SITA | Sidang TA</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+</head>
+
+<body>
+<!--navbar-->
+<div th:replace="fragments/fragment :: navbar(${'/tugas-akhir'})"></div>
+
+<!--body-->
+<br>
+<h2 class="text-center font-weight-bold text-light">Penjadwalan Sidang Tugas Akhir</h2>
+<div class="container">
+    <div class="card m-4 p-4">
+        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+
+            <div th:switch="${roleUser}">
+                <div th:case="'[ROLE_[KOORDINATOR]]'">
+                    <div class="btn-group" role="group" aria-label="First group">
+                        <a role="button" class="btn btn-secondary" href="/jadwalSidangTugasAkhir-pendaftar">Pendaftar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <a role="button" class="btn btn-success" href="/">Back</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="justify-content-center">
+                <h3 class="font-weight-bold text-center ">JADWAL</h3>
+                <!--Table-->
+                <br>
+                <div th:if="*{listjadwalSidangTA.size() != 0}">
+                    <br>
+                    <table class="table">
+                        <thead>
+                        <tr class="table-success">
+                            <th rowspan="2" style="text-align: center">No</th>
+                            <th rowspan="2" style="text-align: center">Judul</th>
+                            <th rowspan="2" style="text-align: center">Mahasiswa</th>
+                            <th rowspan="2" style="text-align: center">Dosen Penguji</th>
+                            <th colspan="3" style="text-align: center">Jadwal</th>
+                            <div th:switch="${roleUser}">
+                                <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                    <th rowspan="2" style="text-align: center">Action</th>
+                                </div>
+                            </div>
+                        </tr>
+                        <tr class="table-success">
+                            <td  style="text-align: center" class="font-weight-bold">Tanggal</td>
+                            <td  style="text-align: center" class="font-weight-bold">Waktu</td>
+                            <td  style="text-align: center" class="font-weight-bold">Tempat</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="jadwalSidangSeminar, iterationStatus : ${listjadwalSidangTA}"
+                            th:style="${iterationStatus.even} ? '' ">
+                            <td  th:text="${iterationStatus.count}"></td>
+                            <td  th:text="${jadwalSidangSeminar.tugasAkhir.ugb.judulUgb}"></td>
+                            <td  th:text="${jadwalSidangSeminar.tugasAkhir.ugb.mahasiswa.nama}"></td>
+                            <td>
+                                <ul th:each="penguji, iterationStatus2 : ${jadwalSidangSeminar.tugasAkhir.ugb.penguji}">
+                                    <li th:text="${penguji.nama}"></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSidangTa, 'dd MMMM yyyy')}"></a>
+                            </td>
+                            <td>
+                                <a th:text="${#temporals.format(jadwalSidangSeminar.tanggalSidangTa, 'HH:mm')}"></a>
+                            </td>
+                            <td th:text="${jadwalSidangSeminar.tempatSidangTA}"></td>
+
+                            <div th:switch="${roleUser}">
+                                <div th:case="'[ROLE_[KOORDINATOR]]'">
+                                    <td>
+                                        <div class="btn-group">
+                                            <a class="btn btn-sm btn-warning" th:href="@{/jadwalSidangTugasAkhir/setJadwal/} + ${jadwalSidangSeminar.idJadwalSidang}">Set Jadwal</a>
+                                            <a class="btn btn-sm btn-danger" th:href="@{/jadwalSidangTugasAkhir/delete/} + ${jadwalSidangSeminar.idJadwalSidang}">Delete</a>
+                                        </div>
+                                    </td>
+                                </div>
+                            </div>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div th:unless="*{listjadwalSidangTA.size() !=0}">
+                    <h3 class="text-center" th:text="'Tidak ada Mahasiswa yang Mendaftar Tugas Akhir'"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--body-->
+</body>
+</html>
