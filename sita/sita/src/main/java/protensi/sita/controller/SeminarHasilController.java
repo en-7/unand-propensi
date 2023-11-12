@@ -4,6 +4,7 @@ import protensi.sita.model.UserModel;
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.SeminarHasilModel;
+import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.UgbModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.SeminarHasilServiceImpl;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -60,7 +62,7 @@ public class SeminarHasilController {
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             if (ugb.getStatusDokumen().equals("EVALUATED")) {
                 SeminarHasilModel seminarHasil = new SeminarHasilModel();
-                model.addAttribute("semhas", seminarHasil);
+                model.addAttribute("seminarHasil", seminarHasil);
                 return "add-semhas-form";
             } else {
                 return "error";
@@ -98,8 +100,8 @@ public class SeminarHasilController {
         seminarHasil.setStatusDokumen("SUBMITTED");
 
         seminarHasilService.addSeminarHasil(seminarHasil);
-        model.addAttribute("semhas", seminarHasil);
-        return "add-semhas-success";
+        model.addAttribute("seminarHasil", seminarHasil);
+        return "detail-semhas-mahasiswa";
     }
 
     @GetMapping("/seminar-hasil/viewall")
@@ -120,8 +122,142 @@ public class SeminarHasilController {
             model.addAttribute("listSemhas", listSemhas);
             return "viewall-semhas-dosen";
         } else {
-            return "error";
+            return "error-semhas";
         }
     }
 
+    @GetMapping("/seminar-hasil/detail/{idSeminarHasil}")
+    public String viewDetailSemhasPage(@PathVariable Long idSeminarHasil, Model model,
+            Authentication authentication) {
+        String namaUser = authentication.getName();
+        UserModel user = userDetailsService.findByUsername(namaUser);
+        SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
+        model.addAttribute("seminarHasil", seminarHasil);
+        if (user.getRoles().contains(EnumRole.KOORDINATOR)) {
+            return "detail-semhas-koordinator";
+        } else if (user.getRoles().contains(EnumRole.PEMBIMBING) && user.getRoles().contains(EnumRole.PENGUJI)) {
+            return "detail-semhas-dosen";
+        } else {
+            return "detail-semhas-mahasiswa";
+        }
+    }
+
+    @GetMapping("/seminar-hasil/update/{idSeminarHasil}")
+    public String updateSemhasFormPage(@PathVariable Long idSeminarHasil, Model model) {
+        SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
+        model.addAttribute("seminarHasil", seminarHasil);
+        return "update-semhas-form";
+    }
+
+    @PostMapping("/seminar-hasil/update")
+    public String updateSeminarHasilSubmitPage(@ModelAttribute SeminarHasilModel seminarHasil,
+            @RequestParam("acc_pembimbing") MultipartFile acc_pembimbing,
+            @RequestParam("bukti_kp") MultipartFile bukti_kp,
+            @RequestParam("risalah_sempro") MultipartFile risalah_sempro,
+            @RequestParam("notes_sempro") MultipartFile notes_sempro,
+            @RequestParam("form_saps") MultipartFile form_saps,
+            @RequestParam("draft_TA") MultipartFile draft_TA,
+            Model model, Authentication authentication) throws IOException {
+        seminarHasil.setPersetujuanPembimbing(acc_pembimbing.getBytes());
+        seminarHasil.setLaporanKP(bukti_kp.getBytes());
+        seminarHasil.setRisalahSempro(risalah_sempro.getBytes());
+        seminarHasil.setCatatanSempro(notes_sempro.getBytes());
+        seminarHasil.setSaps(form_saps.getBytes());
+        seminarHasil.setDraftLaporanTa(draft_TA.getBytes());
+
+        seminarHasilService.updateSemhas(seminarHasil);
+        model.addAttribute("id", seminarHasil.getIdSeminarHasil());
+
+        return "update-semhas-success";
+    }
+
+    @GetMapping("/seminar-hasil/filter")
+    public String filterSeminarHasil(@RequestParam String status, Model model) {
+        List<SeminarHasilModel> filteredSemhas = seminarHasilService.findSemhasByStatusDokumen(status);
+        model.addAttribute("listSemhas", filteredSemhas);
+        return "viewall-semhas";
+    }
+
+    @PostMapping("/seminar-hasil/input-nilai/{idSeminarHasil}")
+    public String inputNilaiSemhas(@PathVariable Long idSeminarHasil, @RequestBody Map<String, Object> data,
+            Model model) {
+        System.out.println("--- nilai :" + (String) data.get("nilai"));
+
+        SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
+        Long nilai = ((Integer) data.get("nilai")).longValue();
+
+        // Long nilai = ((Integer) data.get("nilai")).longValue();
+        System.out.println("--- parsed nilai :" + nilai);
+
+        // Long nilai = Long.parseLong((String) data.get("nilai"));
+        // Long nilai = (Long) data.get("nilai");
+        String statusSemhas = (String) data.get("statusSemhas");
+        SeminarHasilModel updatedSeminarHasil = seminarHasilService.saveNilaiAndStatus(idSeminarHasil,
+                nilai, statusSemhas);
+
+        System.out.println("--- updated semhas :" + updatedSeminarHasil);
+        LocalDateTime nowTime = LocalDateTime.now();
+        seminarHasil.setTanggalLulus(nowTime);
+        seminarHasilService.updateSemhas(seminarHasil);
+
+        if (updatedSeminarHasil != null) {
+            model.addAttribute("seminarHasil", seminarHasil);
+            return "detail-semhas-koordinator";
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
+        }
+
+    }
+
+    @PostMapping("/seminar-hasil/update-nilai/{idSeminarHasil}")
+    public String updateNilaiSemhas(@PathVariable Long idSeminarHasil, @RequestBody Map<String, Object> data,
+            Model model) {
+        SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
+        Long nilai = ((Integer) data.get("nilai")).longValue();
+        String statusSemhas = (String) data.get("statusSemhas");
+        SeminarHasilModel updatedSeminarHasil = seminarHasilService.saveNilaiAndStatus(idSeminarHasil,
+                nilai, statusSemhas);
+
+        seminarHasilService.updateSemhas(seminarHasil);
+        if (updatedSeminarHasil != null) {
+            model.addAttribute("seminarHasil", seminarHasil);
+            return "detail-semhas-koordinator";
+        } else {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
+        }
+    }
+
+    @GetMapping("/seminar-hasil/approve/{idSeminarHasil}")
+    public String approveSeminarHasil(@PathVariable Long idSeminarHasil, Model model) {
+        try {
+            SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
+            seminarHasil.setStatusDokumen("APPROVED");
+            seminarHasilService.updateSemhas(seminarHasil);
+
+            model.addAttribute("seminarHasil", seminarHasil);
+            return "detail-semhas-koordinator";
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
+        }
+    }
+
+    @PostMapping("/seminar-hasil/deny/{idSeminarHasil}")
+    public String denySeminarHasil(@PathVariable Long idSeminarHasil, @RequestParam("catatan") String catatan,
+            Model model) {
+        try {
+            SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
+            seminarHasil.setStatusDokumen("DENY");
+            seminarHasil.setCatatan(catatan);
+            seminarHasilService.updateSemhas(seminarHasil);
+
+            model.addAttribute("seminarHasil", seminarHasil);
+            return "detail-sempro-koordinator";
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
+        }
+    }
 }

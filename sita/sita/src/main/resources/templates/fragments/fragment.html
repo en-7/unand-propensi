@@ -54,8 +54,14 @@
                         Seminar Hasil
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/seminar-hasil/add">Pendaftaran</a>
-                        <a class="dropdown-item" href="/seminar-hasil/viewall">Daftar Peserta</a>
+                        <div th:switch="${roleUser}"> 
+                            <div th:case="'[ROLE_[MAHASISWA]]'">
+                                <a class="dropdown-item" href="/seminar-hasil/add">Pendaftaran</a>
+                            </div>
+                            <div th:case="*">
+                                <a class="dropdown-item" href="/seminar-hasil/viewall">Daftar Peserta</a>
+                            </div>
+                        </div>
                         <a class="dropdown-item" href="#">Jadwal Sidang</a>
                     </div>
                 </li>
