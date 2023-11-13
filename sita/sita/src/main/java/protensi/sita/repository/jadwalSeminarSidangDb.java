@@ -8,7 +8,7 @@ import protensi.sita.model.JadwalSidangModel;
 import java.util.Optional;
 
 @Repository
-public interface jadwalSeminarSidangDb extends JpaRepository<JadwalSidangModel, Long>{
+public interface JadwalSeminarSidangDb extends JpaRepository<JadwalSidangModel, Long>{
 
 //    Optional<JadwalSidangModel> findById(Long id);
 }

@@ -102,22 +102,19 @@
 
         var isValid = true;
 
-        // Validasi Draft Proposal TA
         if (!isValidFileType(draftProposalTa, 'application/pdf')) {
             isValid = false;
-            draftProposalTa.value = ''; // Clear the file input if the selected file is not a PDF
+            draftProposalTa.value = '';
         }
 
-        // Validasi Bukti KRS
         if (!isValidFileType(buktiKrs, 'application/pdf')) {
             isValid = false;
-            buktiKrs.value = ''; // Clear the file input if the selected file is not a PDF
+            buktiKrs.value = ''; 
         }
 
-        // Validasi Persetujuan Pembimbing
         if (!isValidFileType(persetujuanPembimbing, 'application/pdf')) {
             isValid = false;
-            persetujuanPembimbing.value = ''; // Clear the file input if the selected file is not a PDF
+            persetujuanPembimbing.value = ''; 
         }
 
         // Nonaktifkan tombol submit jika file tidak valid
@@ -127,15 +124,14 @@
         if (!isValid) {
             alert("Invalid file type. Please choose PDF files for all attachments.");
         }
+
     }
 
     function isValidFileType(input, validType) {
-        // Check if a file is selected
         if (input.files.length > 0) {
             var fileType = input.files[0].type;
             return fileType === validType;
-        }
-        return true; // No file selected is also considered valid
-    }
+        } 
+        return true;
+    } 
 </script>
-
