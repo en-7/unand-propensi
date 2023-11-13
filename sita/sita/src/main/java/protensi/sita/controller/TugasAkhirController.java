@@ -170,9 +170,9 @@ public class TugasAkhirController {
 
     @GetMapping("/filter")
     public String filterTugasAkhir(@RequestParam String status, Model model) {
-        List<TugasAkhirModel> filteredTugasAkhir = tugasAkhirService.findTugasAkhirByStatusDokumen(status);
+        //List<TugasAkhirModel> filteredTugasAkhir = tugasAkhirService.findTugasAkhirByStatusDokumen(status);
 
-        model.addAttribute("listTugasakhir", filteredTugasAkhir);
+        //model.addAttribute("listTugasakhir", filteredTugasAkhir);
         model.addAttribute("roleUser", baseService.getCurrentRole());
         return "viewall-ta";
     }

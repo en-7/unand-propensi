@@ -128,6 +128,7 @@ public class BimbinganController {
             return "bimbingan/viewall-jadwal-bimbingan";
 
         } else{
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "bimbingan/error-bimbingan";
         }
     }
@@ -140,22 +141,34 @@ public class BimbinganController {
         if (user.getRoles().contains(EnumRole.PEMBIMBING)) {
             PembimbingModel pembimbing = pembimbingService.findPembimbingById(user.getIdUser());
             List<AvailableBimbinganModel> listAvailable = availableBimbinganService.findAllByIdPembimbing(pembimbing.getIdUser());
-            model.addAttribute("listAvailable", listAvailable);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
-            return "bimbingan/viewall-available-bimbingan";
+            if (listAvailable.isEmpty()){
+                model.addAttribute("roleUser", baseService.getCurrentRole());
+                return "bimbingan/error-bimbingan";
+            }else {
+                model.addAttribute("listAvailable", listAvailable);
+                model.addAttribute("roleUser", baseService.getCurrentRole());
+                return "bimbingan/viewall-available-bimbingan";
+            }
+           
 
         } else if (user.getRoles().contains(EnumRole.MAHASISWA)){
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
-            List<AvailableBimbinganModel> listAvailable = availableBimbinganService.listAvailablePembimbing(ugb);
-            List<JadwalBimbinganModel> listBimbingan = jadwalBimbinganService.findBimbinganByListAvailable(listAvailable);
-            model.addAttribute("user", mahasiswa);
-            model.addAttribute("listBimbingan", listBimbingan);
-            model.addAttribute("listAvailable", listAvailable);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
-            return "bimbingan/viewall-booking-bimbingan";
+            if (ugb == null){
+                model.addAttribute("roleUser", baseService.getCurrentRole());
+                return "bimbingan/error-bimbingan";
+            }else {
+                List<AvailableBimbinganModel> listAvailable = availableBimbinganService.listAvailablePembimbing(ugb);
+                List<JadwalBimbinganModel> listBimbingan = jadwalBimbinganService.findBimbinganByListAvailable(listAvailable);
+                model.addAttribute("user", mahasiswa);
+                model.addAttribute("listBimbingan", listBimbingan);
+                model.addAttribute("listAvailable", listAvailable);
+                model.addAttribute("roleUser", baseService.getCurrentRole());
+                return "bimbingan/viewall-booking-bimbingan";
+            }
 
         } else{
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "bimbingan/error-bimbingan";
         }
     }
