@@ -18,7 +18,7 @@ import java.util.List;
 public class PenjadwalanSeminarSidang {
 
     @Autowired
-    private jadwalSidangSeminarService jadwalSidangSeminarService;
+    private JadwalSidangSeminarService jadwalSidangSeminarService;
 
     @Autowired
     private SeminarProposalService seminarProposalService;

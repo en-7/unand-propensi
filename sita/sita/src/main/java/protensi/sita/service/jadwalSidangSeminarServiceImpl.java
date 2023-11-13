@@ -10,7 +10,7 @@ import protensi.sita.model.TugasAkhirModel;
 import protensi.sita.repository.SeminarHasilDb;
 import protensi.sita.repository.SeminarProposalDb;
 import protensi.sita.repository.TugasAkhirDb;
-import protensi.sita.repository.jadwalSeminarSidangDb;
+import protensi.sita.repository.JadwalSeminarSidangDb;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -18,10 +18,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class jadwalSidangSeminarServiceImpl implements jadwalSidangSeminarService{
+public class JadwalSidangSeminarServiceImpl implements JadwalSidangSeminarService{
 
     @Autowired
-    jadwalSeminarSidangDb jadwalSeminarSidangDb;
+    JadwalSeminarSidangDb jadwalSeminarSidangDb;
 
     @Autowired
     SeminarProposalDb seminarProposalDb;
