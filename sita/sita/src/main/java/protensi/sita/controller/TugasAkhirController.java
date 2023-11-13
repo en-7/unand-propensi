@@ -84,6 +84,8 @@ public class TugasAkhirController {
             tugasAkhir.setBuktiToefl(buktiToeflBytes);
             tugasAkhir.setTranskripNilaiTerbaru(transkripNilaiTerbaruBytes);
 
+            ////tambahin set id ugb, id semhas, id sempro
+
             tugasAkhir.setStatusDokumen("SUBMITTED");
 
             tugasAkhirService.addSidangTA(tugasAkhir);

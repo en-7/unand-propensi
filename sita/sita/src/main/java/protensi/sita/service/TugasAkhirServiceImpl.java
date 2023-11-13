@@ -1,12 +1,14 @@
 package protensi.sita.service;
 
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.TugasAkhirModel;
 import protensi.sita.repository.TugasAkhirDb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -24,6 +26,7 @@ public class TugasAkhirServiceImpl implements TugasAkhirService {
         tugasAkhirDb.save(tugasAkhir);
     }
 
+    @Override
     @Override
     public List<TugasAkhirModel> findAllTugasAkhir() {
         return tugasAkhirDb.findAll();

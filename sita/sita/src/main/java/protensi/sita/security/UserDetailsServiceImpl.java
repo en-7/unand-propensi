@@ -53,40 +53,43 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 
-
-    public void addDummy(){
+    public void addDummy() {
         Set<EnumRole> roles_koordinator = new HashSet<EnumRole>();
         roles_koordinator.add(EnumRole.KOORDINATOR);
-        UserModel koordinator = new UserModel("koordinator", roles_koordinator, "koordinator", passwordEncoder.encode("koordinator"), "koordinator@gmail.com");
+        UserModel koordinator = new UserModel("koordinator", roles_koordinator, "koordinator",
+                passwordEncoder.encode("koordinator"), "koordinator@gmail.com");
         userDb.save(koordinator);
 
         Set<EnumRole> roles_admin = new HashSet<EnumRole>();
         roles_admin.add(EnumRole.ADMIN);
-        UserModel admin = new UserModel("admin", roles_admin, "admin", passwordEncoder.encode("admin"), "admin@gmail.com");
+        UserModel admin = new UserModel("admin", roles_admin, "admin", passwordEncoder.encode("admin"),
+                "admin@gmail.com");
         userDb.save(admin);
 
         Set<EnumRole> roles_pembimbing = new HashSet<EnumRole>();
         roles_pembimbing.add(EnumRole.PEMBIMBING);
-        UserModel pembimbing = new UserModel("pembimbing", roles_pembimbing, "pembimbing", passwordEncoder.encode("pembimbing"), "pembimbing@gmail.com");
+        UserModel pembimbing = new UserModel("pembimbing", roles_pembimbing, "pembimbing",
+                passwordEncoder.encode("pembimbing"), "pembimbing@gmail.com");
         userDb.save(pembimbing);
 
         Set<EnumRole> roles_penguji = new HashSet<EnumRole>();
         roles_penguji.add(EnumRole.PENGUJI);
-        UserModel penguji = new UserModel("penguji", roles_penguji, "penguji", passwordEncoder.encode("penguji"), "penguji@gmail.com");
+        UserModel penguji = new UserModel("penguji", roles_penguji, "penguji", passwordEncoder.encode("penguji"),
+                "penguji@gmail.com");
         userDb.save(penguji);
 
         Set<EnumRole> roles_mahasiswa = new HashSet<EnumRole>();
         roles_mahasiswa.add(EnumRole.MAHASISWA);
-        UserModel mahasiswa = new UserModel("mahasiswa", roles_mahasiswa, "mahasiswa", passwordEncoder.encode("mahasiswa"), "mahasiswa@gmail.com");
+        UserModel mahasiswa = new UserModel("mahasiswa", roles_mahasiswa, "mahasiswa",
+                passwordEncoder.encode("mahasiswa"), "mahasiswa@gmail.com");
         userDb.save(mahasiswa);
         // MahasiswaModel m = new MahasiswaModel(2123456789, "NONE");
         // mahasiswaDb.save(m);
 
-
     }
 
-    public UserModel findByUsername(String username){
+    public UserModel findByUsername(String username) {
         return userDb.findByUsername(username);
-    } 
+    }
 
 }
