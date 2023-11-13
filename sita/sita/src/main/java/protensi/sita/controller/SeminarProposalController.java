@@ -96,20 +96,20 @@ public class SeminarProposalController {
         @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
         @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
         Model model, Authentication authentication) {
-    try {
-        byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
-        byte[] buktiKrsBytes = buktiKrsFile.getBytes();
-        byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
-        String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
-        String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
-        String namaFilePersetujuanPembimbing = StringUtils.cleanPath(persetujuanPembimbingFile.getOriginalFilename());
+        try {
+            byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
+            byte[] buktiKrsBytes = buktiKrsFile.getBytes();
+            byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
+            String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
+            String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
+            String namaFilePersetujuanPembimbing = StringUtils.cleanPath(persetujuanPembimbingFile.getOriginalFilename());
 
-        seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
-        seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
-        seminarProposal.setNameFileDraftProposalTa(namaFiledraftProposalTa);
-        seminarProposal.setDraftProposalTa(draftProposalTaBytes);
-        seminarProposal.setBuktiKrs(buktiKrsBytes);
-        seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
+            seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
+            seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
+            seminarProposal.setNameFileDraftProposalTa(namaFiledraftProposalTa);
+            seminarProposal.setDraftProposalTa(draftProposalTaBytes);
+            seminarProposal.setBuktiKrs(buktiKrsBytes);
+            seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
             // Mengatur idUgb dalam entitas SeminarProposalModel
             String namaUser = authentication.getName();
             UserModel user = userDetailsService.findByUsername(namaUser);
