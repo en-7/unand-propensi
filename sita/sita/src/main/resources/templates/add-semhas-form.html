@@ -70,23 +70,27 @@
                 <form th:action="@{/seminar-hasil/add}" th:object="${seminarHasil}" method="POST" enctype="multipart/form-data">
 
                     File Persetujuan Pembimbing (PDF):
-                    <input required class="form-control" type="file" name="persetujuanPembimbingFile" accept=".pdf" />
+                    <input required class="form-control" type="file" name="acc_pembimbing" accept=".pdf" />
                     <br><br>
 
                     Tanda Terima Laporan KP (PDF):
-                    <input required class="form-control" type="file" name="persetujuanPembimbingFile" accept=".pdf" />
+                    <input required class="form-control" type="file" name="bukti_kp" accept=".pdf" />
                     <br><br>
 
                     Risalah Seminar Proposal (PDF):
-                    <input required class="form-control" type="file" name="persetujuanPembimbingFile" accept=".pdf" />
+                    <input required class="form-control" type="file" name="risalah_sempro" accept=".pdf" />
                     <br><br>
 
-                    Form SAPS (PDF):
-                    <input required class="form-control" type="file" name="buktiKrsFile" accept=".pdf" />
+                    Catatan setelah Seminar Proposal (PDF)
+                    <input required class="form-control" type="file" name="notes_sempro" accept=".pdf" />
                     <br><br>
                     
+                    Form SAPS (PDF):
+                    <input required class="form-control" type="file" name="form_saps" accept=".pdf" />
+                    <br><br>
+
                     Draft Proposal TA (PDF):
-                    <input required class="form-control" type="file" name="draftProposalTaFile" accept=".pdf" />
+                    <input required class="form-control" type="file" name="draft_TA" accept=".pdf" />
                     <br><br>
 
                     <div class="pb-2 d-flex justify-content-center">

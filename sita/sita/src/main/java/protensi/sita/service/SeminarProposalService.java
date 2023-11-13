@@ -1,10 +1,9 @@
 package protensi.sita.service;
 
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.UgbModel;
 
 import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
 
 public interface SeminarProposalService {
     void addSempro(SeminarProposalModel seminarProposal);
@@ -13,6 +12,7 @@ public interface SeminarProposalService {
     List<SeminarProposalModel> findAllByPembimbing(Long pembimbingId);
     List<SeminarProposalModel> findAllByPenguji(Long pengujiId);
     SeminarProposalModel findSemproById(Long idSeminarProposal);
+    SeminarProposalModel findSemproByUgb(UgbModel ugb);
     List<SeminarProposalModel> findSemproByStatusDokumen(String statusDokumen);
     SeminarProposalModel saveNilaiAndStatus(Long idSeminarProposal, Long nilai, String statusSeminarProposal);
 

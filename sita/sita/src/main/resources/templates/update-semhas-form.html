@@ -59,47 +59,38 @@
     </style>
 </head>
 <body>
-    <div th:replace="fragments/fragment :: navbar(${'/ugb'})"></div>
+    <div th:replace="fragments/fragment :: navbar(${'/seminar-hasil'})"></div>
 
 <div class="container">
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2>Pendaftaran Usulan Garis Besar</h2>
+                <h2>Update Seminar Hasil</h2>
                 <br>
-                <form th:action="@{/ugb/add}" th:object="${ugb}" method="POST" enctype="multipart/form-data">
-                    Judul UGB: <br>
-                    <input required class="form-control" type="text" name="judulUgb" maxlength="30"/>
+                <form th:action="@{/seminar-hasil/add}" th:object="${seminarHasil}" method="POST" enctype="multipart/form-data">
+
+                    File Persetujuan Pembimbing (PDF):
+                    <input required class="form-control" type="file" name="acc_pembimbing" accept=".pdf" />
                     <br><br>
 
-                    Nama Pembimbing 1: <br>
-                    <select th:field="*{idPembimbing1}" class="form-control"  id="dropOperator">
-                        <option value="0">Select Pembimbing 1</option>
-                        <option th:each="pembimbing : ${listPembimbing}" th:value="${pembimbing.idUser}" th:text="${pembimbing.nama}"></option>
-                    </select>
-                    <br><br>
-
-                    Nama Pembimbing 2: <br>
-                    <select th:field="*{idPembimbing2}" class="form-control"  id="dropOperator">
-                        <option value="0">Select Pembimbing 2</option>
-                        <option th:each="pembimbing : ${listPembimbing}" th:value="${pembimbing.idUser}" th:text="${pembimbing.nama}"></option>
-                    </select>
-                    <br><br>
-
-                    Bukti telah / sedang melaksanakan KP (PDF):
+                    Tanda Terima Laporan KP (PDF):
                     <input required class="form-control" type="file" name="bukti_kp" accept=".pdf" />
                     <br><br>
 
-                    Transkrip Nilai (PDF):
-                    <input required class="form-control" type="file" name="transcript" accept=".pdf" />
+                    Risalah Seminar Proposal (PDF):
+                    <input required class="form-control" type="file" name="risalah_sempro" accept=".pdf" />
                     <br><br>
 
-                    File KHS (PDF):
-                    <input required class="form-control" type="file" name="file_khs" accept=".pdf" />
+                    Catatan setelah Seminar Proposal (PDF)
+                    <input required class="form-control" type="file" name="notes_sempro" accept=".pdf" />
+                    <br><br>
+                    
+                    Form SAPS (PDF):
+                    <input required class="form-control" type="file" name="form_saps" accept=".pdf" />
                     <br><br>
 
-                    File UGB (PDF):
-                    <input required class="form-control" type="file" name="file_ugb" accept=".pdf" />
+                    Draft Proposal TA (PDF):
+                    <input required class="form-control" type="file" name="draft_TA" accept=".pdf" />
                     <br><br>
 
                     <div class="pb-2 d-flex justify-content-center">

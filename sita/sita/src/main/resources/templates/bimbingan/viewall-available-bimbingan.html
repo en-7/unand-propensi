@@ -78,7 +78,7 @@
                                 <a class="btn btn-sm btn-primary" th:attr="href=@{/bimbingan/atur-jadwal/update/{id}(id=${availableBimbingan.idAvailableBimbingan})}">Edit</a>
                             </div>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-primary delete-button" data-toggle="modal" data-target="#deleteConfirmationModal"
+                                <button th:if="${availableBimbingan.bookingStatus == 'AVAILABLE'}" class="btn btn-sm btn-primary delete-button" data-toggle="modal" data-target="#deleteConfirmationModal"
                                 th:attr="data-id=${availableBimbingan.idAvailableBimbingan}">Hapus</button>                            
                             </div>
                         </td>

@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
 </head>
 <body>
-<nav th:replace="fragments/fragment :: navbar('/seminar-proposal')"></nav>
+<nav th:replace="fragments/fragment :: navbar('/seminar-hasil')"></nav>
 <style>
     .select2-container .select2-selection--single {
         height: 40px !important;
@@ -65,9 +65,9 @@
         <div class="card m-4 p-4">
             <div class="card-body">
                 <div class="justify-content-center">
-                    <h2 th:text="'Pendaftaran Seminar Proposal dengan id ' + ${id} + ' berhasil diupdate.'"></h2>
+                    <h2 th:text="'Pendaftaran Seminar Hasil dengan id ' + ${id} + ' berhasil diupdate.'"></h2>
                     <br>
-                    <a class="btn btn-primary" th:href="@{/seminar-proposal/viewall}">Kembali</a>
+                    <a class="btn btn-primary" th:href="@{/seminar-hasil/viewall}">Kembali</a>
                 </div>
             </div>
         </div>

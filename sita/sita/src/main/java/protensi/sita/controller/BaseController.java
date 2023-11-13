@@ -46,14 +46,13 @@ public class BaseController {
         }
         return "redirect:/";
     }
-    
-    @GetMapping(value="/create-dummy")
-    public String addDummy(){
+
+    @GetMapping(value = "/create-dummy")
+    public String addDummy() {
         userDetailsService.addDummy();
         return "login";
     }
 
-    
     @GetMapping("/error")
     private String Error(Model model) {
         model.addAttribute("roleUser", baseService.getCurrentRole());
