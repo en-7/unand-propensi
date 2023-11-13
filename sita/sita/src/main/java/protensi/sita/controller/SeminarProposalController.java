@@ -68,21 +68,29 @@ public class SeminarProposalController {
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaByUsername(user.getUsername());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproByUgb(ugb);
-            if (ugb.getStatusDokumen().equals("EVALUATED")) {
-                if (seminarProposal != null) {
-                    model.addAttribute("roleUser", baseService.getCurrentRole());
-                    model.addAttribute("seminarProposal", seminarProposal);
-                    return "sempro/detail-sempro-mahasiswa";
+            if (ugb != null) {
+                if (ugb.getStatusDokumen().equals("EVALUATED")) {
+                    if (seminarProposal != null) {
+                        model.addAttribute("roleUser", baseService.getCurrentRole());
+                        model.addAttribute("seminarProposal", seminarProposal);
+                        return "sempro/detail-sempro-mahasiswa";
+                    } else {
+                        seminarProposal = new SeminarProposalModel();
+                        model.addAttribute("roleUser", baseService.getCurrentRole());
+                        model.addAttribute("seminarProposal", seminarProposal);
+                        return "sempro/add-sempro-form";
+                    }
                 } else {
-                    seminarProposal = new SeminarProposalModel();
                     model.addAttribute("roleUser", baseService.getCurrentRole());
-                    model.addAttribute("seminarProposal", seminarProposal);
-                    return "sempro/add-sempro-form";
+                    return "sempro/error-sempro";
                 }
             } else {
+                model.addAttribute("roleUser", baseService.getCurrentRole());
                 return "sempro/error-sempro";
             }
+
         } else {
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "sempro/error-sempro";
         }
 
@@ -149,22 +157,29 @@ public class SeminarProposalController {
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
-            String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
-            String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
-            String namaFilePersetujuanPembimbing = StringUtils
-                    .cleanPath(persetujuanPembimbingFile.getOriginalFilename());
 
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
-            seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
-            seminarProposal.setNameFileDraftProposalTa(namaFiledraftProposalTa);
-            seminarProposal.setDraftProposalTa(draftProposalTaBytes);
-            seminarProposal.setBuktiKrs(buktiKrsBytes);
-            seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
+            if (!draftProposalTaFile.isEmpty()) {
+                String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
+                seminarProposal.setNameFileDraftProposalTa(namaFiledraftProposalTa);
+                seminarProposal.setDraftProposalTa(draftProposalTaBytes);
+            }
+            if (!buktiKrsFile.isEmpty()) {
+                String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
+                seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
+                seminarProposal.setBuktiKrs(buktiKrsBytes);
+            }
+            if (!persetujuanPembimbingFile.isEmpty()) {
+                String namaFilePersetujuanPembimbing = StringUtils
+                        .cleanPath(persetujuanPembimbingFile.getOriginalFilename());
+                seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
+                seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
+            }
+
             seminarProposal.setCatatan(null);
             seminarProposal.setStatusDokumen("SUBMITTED");
-
             seminarProposalService.updateSempro(seminarProposal);
+
             model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-mahasiswa";
@@ -194,6 +209,7 @@ public class SeminarProposalController {
             model.addAttribute("listSempro", listSempro);
             return "sempro/viewall-sempro-dosen";
         }
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "sempro/error-sempro";
     }
 

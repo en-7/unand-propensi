@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <title>SITA | Sidang TA</title>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+
+</head>
+
+<body>
+<div th:replace="fragments/fragment :: navbar(${'/tugas-akhir'})"></div>
+<!--body-->
+<div class="container">
+    <div class="card m-4 p-4">
+        <div class="card-body">
+            <div class="justify-content-center">
+                <h2 class="text-center">Add Jadwal Sidang Tugas Akhir</h2>
+                <br>
+                <div th:object="${addJadwalSidangTa}">
+                    Judul :
+                    <span class="font-weight-bold" th:text="*{tugasAkhir.ugb.judulUgb}" />
+                    <br><br>
+
+                    Mahasiswa :
+                    <span class="font-weight-bold" th:text="*{tugasAkhir.ugb.mahasiswa.nama}" />
+                    <br><br>
+
+                    Dosen Penguji :<br><br>
+                    <ul th:each="penguji: ${getPengujiTa}">
+                        <li class="font-weight-bold" th:text="${penguji.nama}"></li>
+                    </ul>
+
+                    Status Dokumen:
+                    <span class="text-success font-weight-bold " th:text="*{tugasAkhir.statusDokumen}" />
+                    <br><br>
+                </div>
+
+                <form th:action="@{/jadwalSidangTugasAkhir/create}" th:object="${addJadwalSidangTa}" method="POST">
+                    <input class="form-control" type="text" th:field="*{tugasAkhir.idTugasAkhir}" hidden />
+
+                    Jadwal: <br>
+                    <input required class="form-control" type="datetime-local" name="tanggalSidangTa" th:value="*{tanggalSidangTa}"/>
+                    <br><br>
+
+                    Tempat: <br>
+                    <input required class="form-control" type="text" name="tempatSidangTA" th:value="*{tempatSidangTA}"/>
+                    <br><br>
+
+                    <button class="btn btn-primary float-right" type="submit">Submit</button>
+                    <a class="btn btn-secondary" href="/jadwalSidangTA-pendaftar">Kembali</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--body-->
+</body>
+</html>
