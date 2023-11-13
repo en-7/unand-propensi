@@ -4,7 +4,7 @@ import protensi.sita.model.JadwalSidangModel;
 
 import java.util.List;
 
-public interface jadwalSidangSeminarService {
+public interface JadwalSidangSeminarService {
 
     //Method get List Mahasiswa mendaftar Sidang/Seminar;
     List<JadwalSidangModel> getListJadwalSidang();
