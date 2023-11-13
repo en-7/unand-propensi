@@ -18,7 +18,7 @@ import java.util.List;
 public class PenjadwalanSeminarSidang {
 
     @Autowired
-    private jadwalSidangSeminarService jadwalSidangSeminarService;
+    private JadwalSidangSeminarService jadwalSidangSeminarService;
 
     @Autowired
     private SeminarProposalService seminarProposalService;
@@ -81,7 +81,7 @@ public class PenjadwalanSeminarSidang {
             List<SeminarProposalModel> listPendaftarSempro = seminarProposalService.findAllSempro();
             List<SeminarProposalModel> newListPendaftarSempro = new ArrayList<SeminarProposalModel>();
             for(SeminarProposalModel i : listPendaftarSempro){
-                if(i.getJadwalSidang() == null && i.getStatusDokumen().equalsIgnoreCase("EVALUATED")){
+                if(i.getJadwalSidang() == null && i.getStatusDokumen().equalsIgnoreCase("APPROVED")){
                     newListPendaftarSempro.add(i);
                 }
             }
@@ -166,7 +166,7 @@ public class PenjadwalanSeminarSidang {
             List<SeminarHasilModel> listPedaftarSemhas = seminarHasilService.findAllSeminarHasil();
             List<SeminarHasilModel> newLisPendaftarSemhas = new ArrayList<>();
             for(SeminarHasilModel j : listPedaftarSemhas){
-                if(j.getJadwalSidang() == null && j.getStatusDokumen().equalsIgnoreCase("EVALUATED")){
+                if(j.getJadwalSidang() == null && j.getStatusDokumen().equalsIgnoreCase("APPROVED")){
                     newLisPendaftarSemhas.add(j);
                 }
             }
@@ -246,7 +246,7 @@ public class PenjadwalanSeminarSidang {
             List<TugasAkhirModel> listPendaftarTugasAkhir = tugasAkhirService.findAllTugasAkhir();
             List<TugasAkhirModel> newListPendaftarTugasAkhir = new ArrayList<>();
             for (TugasAkhirModel k : listPendaftarTugasAkhir) {
-                if (k.getJadwalSidang() == null && k.getStatusDokumen().equalsIgnoreCase("EVALUATED")) {
+                if (k.getJadwalSidang() == null && k.getStatusDokumen().equalsIgnoreCase("APPROVED")) {
                     newListPendaftarTugasAkhir.add(k);
                 }
             }
