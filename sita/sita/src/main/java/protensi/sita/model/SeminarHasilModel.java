@@ -79,4 +79,8 @@ public class SeminarHasilModel {
     @JoinColumn(name = "id_seminar_proposal")
     private SeminarProposalModel seminarProposal;
 
+    @OneToOne(mappedBy = "seminarHasil")
+    private JadwalSidangModel jadwalSidang;
+    
+
 }
