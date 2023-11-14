@@ -70,27 +70,27 @@
                 <form th:action="@{/seminar-hasil/add}" th:object="${seminarHasil}" method="POST" enctype="multipart/form-data">
 
                     File Persetujuan Pembimbing (PDF):
-                    <input required class="form-control" type="file" name="acc_pembimbing" accept=".pdf" />
+                    <input required class="form-control" type="file" id="persetujuanPembimbingFile" name="acc_pembimbing" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Tanda Terima Laporan KP (PDF):
-                    <input required class="form-control" type="file" name="bukti_kp" accept=".pdf" />
+                    <input required class="form-control" type="file" id="buktiKpFile" name="bukti_kp" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Risalah Seminar Proposal (PDF):
-                    <input required class="form-control" type="file" name="risalah_sempro" accept=".pdf" />
+                    <input required class="form-control" type="file" id="risalahSemproFile" name="risalah_sempro" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Catatan setelah Seminar Proposal (PDF)
-                    <input required class="form-control" type="file" name="notes_sempro" accept=".pdf" />
+                    <input required class="form-control" type="file" id="notesSemproFile" name="notes_sempro" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
                     
                     Form SAPS (PDF):
-                    <input required class="form-control" type="file" name="form_saps" accept=".pdf" />
+                    <input required class="form-control" type="file" id="formSapsFile" name="form_saps" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Draft Proposal TA (PDF):
-                    <input required class="form-control" type="file" name="draft_TA" accept=".pdf" />
+                    <input required class="form-control" type="file" id="draftTAFile" name="draft_TA" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     <div class="pb-2 d-flex justify-content-center">
@@ -105,3 +105,63 @@
 
 </body>
 </html>
+
+<script>
+    function validateFile() {
+        var persetujuanPembimbing = document.getElementById("persetujuanPembimbingFile");
+        var buktiKp = document.getElementById("buktiKpFile");
+        var risalahSempro = document.getElementById("risalahSemproFile");
+        var notesSempro = document.getElementById("notesSemproFile");
+        var formSaps = document.getElementById("formSapsFile");
+        var draftTA = document.getElementById("draftTAFile");
+
+        var isValid = true;
+
+        if (!isValidFileType(persetujuanPembimbing, 'application/pdf')) {
+            isValid = false;
+            persetujuanPembimbing.value = '';
+        }
+
+        if (!isValidFileType(buktiKp, 'application/pdf')) {
+            isValid = false;
+            buktiKp.value = ''; 
+        }
+
+        if (!isValidFileType(risalahSempro, 'application/pdf')) {
+            isValid = false;
+            risalahSempro.value = ''; 
+        }
+
+        if (!isValidFileType(notesSempro, 'application/pdf')) {
+            isValid = false;
+            notesSempro.value = ''; 
+        }
+        
+        if (!isValidFileType(formSaps, 'application/pdf')) {
+            isValid = false;
+            formSaps.value = ''; 
+        }
+
+        if (!isValidFileType(draftTA, 'application/pdf')) {
+            isValid = false;
+            draftTA.value = ''; 
+        }
+
+        // Nonaktifkan tombol submit jika file tidak valid
+        submitButton.disabled = !isValid;
+
+        // Tampilkan alert jika ada file yang tidak valid
+        if (!isValid) {
+            alert("Invalid file type. Please choose PDF files for all attachments.");
+        }
+
+    }
+
+    function isValidFileType(input, validType) {
+        if (input.files.length > 0) {
+            var fileType = input.files[0].type;
+            return fileType === validType;
+        } 
+        return true;
+    } 
+</script>

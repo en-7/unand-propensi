@@ -6,32 +6,27 @@ import java.util.List;
 
 public interface JadwalSidangSeminarService {
 
-    //Method get List Mahasiswa mendaftar Sidang/Seminar;
+    // Method get List Mahasiswa mendaftar Sidang/Seminar;
     List<JadwalSidangModel> getListJadwalSidang();
 
-    //Method getUserbyId
+    // Method getUserbyId
     JadwalSidangModel getJadwalSidangById(long id);
 
-
-    //Method set Jadwal Sempro
+    // Method set Jadwal Sempro
     JadwalSidangModel setJadwalSidang(JadwalSidangModel jadwalSidangSeminar);
 
-    //Method delete penjadwalan Sempro
+    // Method delete penjadwalan Sempro
     void deletesJadwalSidangSeminar(Long id);
 
-
-    //add-sempro
+    // add-sempro
     void addJadwalSidangSeminar(JadwalSidangModel jadwalSidangSeminar);
 
     void saverid(JadwalSidangModel jadwalSidangModel);
 
-    //add-semhas
+    // add-semhas
     void addJadwalSemhas(JadwalSidangModel jadwalSidangSemhas);
 
-    //add-sidang
+    // add-sidang
     void addJadwalSidangTa(JadwalSidangModel jadwalSidangTa);
 
 }
-
-
-
