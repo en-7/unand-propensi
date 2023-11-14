@@ -62,7 +62,6 @@ public class UGBController {
             UgbModel ugbModel = new UgbModel();
             model.addAttribute("ugb", ugbModel);
             model.addAttribute("listPembimbing", ugbService.getListPembimbing());
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "ugb/add-ugb-form";
         }
     }
