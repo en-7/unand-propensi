@@ -32,57 +32,93 @@ public class TugasAkhirModel {
     @Column(name = "risalah_semhas", nullable = false)
     private byte[] risalahSemhas;
 
+    @Column(name = "nama_file_risalah_semhas", nullable = false)
+    private String nameFileRisalahSemhas;
+
     @Lob
     @Column(name = "perbaikan_laporan_ta", nullable = false)
     private byte[] perbaikanLaporanTa;
+
+    @Column(name = "nama_file_perbaikan_laporan_ta", nullable = false)
+    private String nameFilePerbaikanLaporanTa;
 
     @Lob
     @Column(name = "krs_pengambilan_ta", nullable = false)
     private byte[] krsPengambilanTa;
 
+    @Column(name = "nama_file_krs_pengambilan_ta", nullable = false)
+    private String nameFileKrsPengambilanTa;
+
     @Lob
     @Column(name = "surat_bebas_lab", nullable = false)
     private byte[] suratBebasLab;
+
+    @Column(name = "nama_file_surat_bebas_lab", nullable = false)
+    private String nameFileSuratBebasLab;
 
     @Lob
     @Column(name = "surat_persetujuan_sidang", nullable = false)
     private byte[] suratPersetujuanSidang;
 
+    @Column(name = "nama_file_surat_persetujuan_sidang", nullable = false)
+    private String nameFileSuratPersetujuanSidang;
+
     @Lob
     @Column(name = "kartu_mengikuti_seminar", nullable = false)
     private byte[] kartuMengikutiSeminar;
+
+    @Column(name = "nama_file_kartu_mengikuti_seminar", nullable = false)
+    private String nameFileKartuMengikutiSeminar;
 
     @Lob
     @Column(name = "bukti_nilai_kp", nullable = false)
     private byte[] buktiNilaiKp;
 
+    @Column(name = "nama_file_bukti_nilai_kp", nullable = false)
+    private String nameFileBuktiNilaiKp;
+
     @Lob
     @Column(name = "draft_laporan_ta", nullable = false)
     private byte[] draftLaporanTA;
+
+    @Column(name = "nama_file_draft_laporan_ta", nullable = false)
+    private String nameFileDraftLaporanTA;
 
     @Lob
     @Column(name = "bukti_lembar_asistensi", nullable = false)
     private byte[] buktiLembarAsistensi;
 
+    @Column(name = "nama_file_bukti_lembar_asistensi", nullable = false)
+    private String nameFileBuktiLembarAsistensi;
+
     @Lob
     @Column(name = "bukti_toefl", nullable = false)
     private byte[] buktiToefl;
+
+    @Column(name = "nama_file_bukti_toefl", nullable = false)
+    private String nameFileBuktiToefl;
 
     @Lob
     @Column(name = "lembar_konversi_nilai", nullable = false)
     private byte[] lembarKonversiNilai;
 
+    @Column(name = "nama_file_lembar_konversi_nilai", nullable = false)
+    private String nameFileLembarKonversiNilai;
+
     @Lob
     @Column(name = "transkrip_nilai_terbaru", nullable = false)
     private byte[] transkripNilaiTerbaru;
+
+    @Column(name = "nama_file_transkrip_nilai_terbaru", nullable = false)
+    private String nameFileTranskripNilaiTerbaru;
 
     @Size(max = 100)
     @Column(name = "status_dokumen")
     private String statusDokumen;
 
     @Size(max = 100)
-    @Column(name = "status_ta")
-    private String statusTa;
+    @Column(name = "status_tugas_akhir")
+    private String statusTugasAkhir;
 
     @Lob
     @Column(name = "catatan")
@@ -112,5 +148,5 @@ public class TugasAkhirModel {
 
     @OneToOne(mappedBy = "tugasAkhir")
     private JadwalSidangModel jadwalSidang;
-    
+
 }
