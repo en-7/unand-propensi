@@ -81,7 +81,7 @@
     </style>
 </head>
 <body>
-    <div th:replace="fragments/fragment :: navbar(${'/seminar-proposal'})"></div>
+    <div th:replace="fragments/fragment :: navbar(${'/tugas-akhir'})"></div>
 
 <div class="container">
     <div class="card m-4 p-4">
@@ -330,9 +330,9 @@
             }
 
         var d = document.getElementById('buktiNilaiKpFile');
-        if(c.value != "")
+        if(d.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = d.value.split('\\');
                 fileLabelBuktiNilaiKp.innerHTML = theSplit[theSplit.length-1];
                 fileLabelBuktiNilaiKp.href = "";
                 fileLabelBuktiNilaiKp.style.textDecoration = 'none';
@@ -347,9 +347,9 @@
             }
 
         var e = document.getElementById('buktiLembarAsistensiFile');
-        if(c.value != "")
+        if(e.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = e.value.split('\\');
                 fileLabelBuktiLembarAsistensi.innerHTML = theSplit[theSplit.length-1];
                 fileLabelBuktiLembarAsistensi.href = "";
                 fileLabelBuktiLembarAsistensi.style.textDecoration = 'none';
@@ -364,9 +364,9 @@
             }
 
         var f = document.getElementById('lembarKonversiNilaiFile');
-        if(c.value != "")
+        if(f.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = f.value.split('\\');
                 fileLabelLembarKonversiNilai.innerHTML = theSplit[theSplit.length-1];
                 fileLabelLembarKonversiNilai.href = "";
                 fileLabelLembarKonversiNilai.style.textDecoration = 'none';
@@ -381,9 +381,9 @@
             }
 
         var g = document.getElementById('perbaikanLaporanTaFile');
-        if(c.value != "")
+        if(g.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = g.value.split('\\');
                 fileLabelPerbaikanLaporanTa.innerHTML = theSplit[theSplit.length-1];
                 fileLabelPerbaikanLaporanTa.href = "";
                 fileLabelPerbaikanLaporanTa.style.textDecoration = 'none';
@@ -398,9 +398,9 @@
             }
 
         var h = document.getElementById('suratBebasLabFile');
-        if(c.value != "")
+        if(h.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = h.value.split('\\');
                 fileLabelSuratBebasLab.innerHTML = theSplit[theSplit.length-1];
                 fileLabelSuratBebasLab.href = "";
                 fileLabelSuratBebasLab.style.textDecoration = 'none';
@@ -414,10 +414,10 @@
                 }
             }
 
-        var i = document.getElementById('kartuMengikutiSeminarFile');
-        if(c.value != "")
+        var v = document.getElementById('kartuMengikutiSeminarFile');
+        if(v.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = v.value.split('\\');
                 fileLabelKartuMengikutiSeminar.innerHTML = theSplit[theSplit.length-1];
                 fileLabelKartuMengikutiSeminar.href = "";
                 fileLabelKartuMengikutiSeminar.style.textDecoration = 'none';
@@ -432,9 +432,9 @@
             }
 
         var j = document.getElementById('draftLaporanTAFile');
-        if(c.value != "")
+        if(j.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = j.value.split('\\');
                 fileLabeldraftLaporanTA.innerHTML = theSplit[theSplit.length-1];
                 fileLabeldraftLaporanTA.href = "";
                 fileLabeldraftLaporanTA.style.textDecoration = 'none';
@@ -449,9 +449,9 @@
             }
 
         var k = document.getElementById('buktiToeflFile');
-        if(c.value != "")
+        if(k.value != "")
             {
-                var theSplit = c.value.split('\\');
+                var theSplit = k.value.split('\\');
                 fileLabelBuktiToefl.innerHTML = theSplit[theSplit.length-1];
                 fileLabelBuktiToefl.href = "";
                 fileLabelBuktiToefl.style.textDecoration = 'none';
@@ -466,13 +466,13 @@
             }
 
         var l = document.getElementById('transkripNilaiTerbaruFile');
-        if(c.value != "")
+        if(l.value != "")
             {
-                var theSplit = c.value.split('\\');
-                yyyy.innerHTML = theSplit[theSplit.length-1];
-                yyyy.href = "";
-                yyyy.style.textDecoration = 'none';
-                yyyy.style.color = 'black';
+                var theSplit = l.value.split('\\');
+                fileLabelTranskripNilaiTerbaru.innerHTML = theSplit[theSplit.length-1];
+                fileLabelTranskripNilaiTerbaru.href = "";
+                fileLabelTranskripNilaiTerbaru.style.textDecoration = 'none';
+                fileLabelTranskripNilaiTerbaru.style.color = 'black';
 
                 for (var i = 0; i < document.getElementsByClassName("ignore-click-transkrip-nilai-terbaru").length; i++) {
                     document.getElementsByClassName("ignore-click-transkrip-nilai-terbaru")[i].addEventListener('click', function (event) {
