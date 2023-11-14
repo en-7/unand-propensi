@@ -5,6 +5,8 @@ import protensi.sita.model.SeminarProposalModel;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 public interface SeminarHasilService {
 
     void addSeminarHasil(SeminarHasilModel seminarHasil);
@@ -18,6 +20,8 @@ public interface SeminarHasilService {
     List<SeminarHasilModel> findAllByPenguji(Long pengujiId);
 
     SeminarHasilModel findSemhasById(Long idSeminarHasil);
+
+    SeminarHasilModel findSemhasBySempro(SeminarProposalModel sempro);
 
     List<SeminarHasilModel> findSemhasByStatusDokumen(String statusDokumen);
 
