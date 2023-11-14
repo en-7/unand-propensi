@@ -68,7 +68,7 @@ public class SeminarProposalController {
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaByUsername(user.getUsername());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproByUgb(ugb);
-            if (ugb != null){
+            if (ugb != null) {
                 if (ugb.getStatusDokumen().equals("EVALUATED")) {
                     if (seminarProposal != null) {
                         model.addAttribute("seminarProposal", seminarProposal);
@@ -84,7 +84,7 @@ public class SeminarProposalController {
             } else {
                 return "sempro/error-sempro";
             }
-            
+
         } else {
             return "sempro/error-sempro";
         }
@@ -93,17 +93,18 @@ public class SeminarProposalController {
 
     @PostMapping("/add")
     public String addSemproSubmitPage(@ModelAttribute SeminarProposalModel seminarProposal,
-        @RequestParam("draftProposalTaFile") MultipartFile draftProposalTaFile,
-        @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
-        @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
-        Model model, Authentication authentication) {
+            @RequestParam("draftProposalTaFile") MultipartFile draftProposalTaFile,
+            @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
+            @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
+            Model model, Authentication authentication) {
         try {
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
             String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
             String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
-            String namaFilePersetujuanPembimbing = StringUtils.cleanPath(persetujuanPembimbingFile.getOriginalFilename());
+            String namaFilePersetujuanPembimbing = StringUtils
+                    .cleanPath(persetujuanPembimbingFile.getOriginalFilename());
 
             seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
             seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
@@ -149,24 +150,25 @@ public class SeminarProposalController {
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
-            
+
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            if(!draftProposalTaFile.isEmpty()){
+            if (!draftProposalTaFile.isEmpty()) {
                 String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
                 seminarProposal.setNameFileDraftProposalTa(namaFiledraftProposalTa);
                 seminarProposal.setDraftProposalTa(draftProposalTaBytes);
             }
-            if(!buktiKrsFile.isEmpty()){
+            if (!buktiKrsFile.isEmpty()) {
                 String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
                 seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
                 seminarProposal.setBuktiKrs(buktiKrsBytes);
             }
-            if(!persetujuanPembimbingFile.isEmpty()){
-                String namaFilePersetujuanPembimbing = StringUtils.cleanPath(persetujuanPembimbingFile.getOriginalFilename());
+            if (!persetujuanPembimbingFile.isEmpty()) {
+                String namaFilePersetujuanPembimbing = StringUtils
+                        .cleanPath(persetujuanPembimbingFile.getOriginalFilename());
                 seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
                 seminarProposal.setPersetujuanPembimbing(persetujuanPembimbingBytes);
             }
-    
+
             seminarProposal.setCatatan(null);
             seminarProposal.setStatusDokumen("SUBMITTED");
             seminarProposalService.updateSempro(seminarProposal);
@@ -331,4 +333,3 @@ public class SeminarProposalController {
     }
 
 }
-
