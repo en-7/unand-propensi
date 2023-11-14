@@ -1,11 +1,5 @@
 package protensi.sita.controller;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +33,12 @@ import protensi.sita.service.SeminarProposalServiceImpl;
 import protensi.sita.service.SeminarHasilServiceImpl;
 import protensi.sita.service.TugasAkhirServiceImpl;
 import protensi.sita.service.UgbServiceImpl;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class TugasAkhirController {
@@ -235,7 +235,7 @@ public class TugasAkhirController {
         return "tugasakhir/viewall-ta";
     }
 
-    @PostMapping("/input-nilai/{idTugasAkhir}")
+    @PostMapping("/tugas-akhir/input-nilai/{idTugasAkhir}")
     public String inputNilai(@PathVariable Long idTugasAkhir, @RequestBody Map<String, Object> data, Model model) {
         TugasAkhirModel tugasAkhir = tugasAkhirService.findTugasAkhirById(idTugasAkhir);
         Long nilai = ((Integer) data.get("nilai")).longValue();
