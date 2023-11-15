@@ -332,7 +332,7 @@ public class TugasAkhirController {
         TugasAkhirModel tugasAkhir = tugasAkhirService.findTugasAkhirById(idTugasAkhir);
         model.addAttribute("roleUser", baseService.getCurrentRole());
         model.addAttribute("tugasAkhir", tugasAkhir);
-        return "update-ta-form";
+        return "tugasakhir/update-ta-form";
     }
 
     @PostMapping("/tugas-akhir/update/{idTugasAkhir}")
@@ -367,24 +367,79 @@ public class TugasAkhirController {
             byte[] transkripNilaiTerbaruBytes = transkripNilaiTerbaruFile.getBytes();
 
             TugasAkhirModel tugasAkhir = tugasAkhirService.findTugasAkhirById(idTugasAkhir);
-            tugasAkhir.setRisalahSemhas(risalahSemhasBytes);
-            tugasAkhir.setKrsPengambilanTa(krsPengambilanTaBytes);
-            tugasAkhir.setSuratPersetujuanSidang(suratPersetujuanSidangBytes);
-            tugasAkhir.setBuktiNilaiKp(buktiNilaiKpBytes);
-            tugasAkhir.setBuktiLembarAsistensi(buktiLembarAsistensiBytes);
-            tugasAkhir.setLembarKonversiNilai(lembarKonversiNilaiBytes);
-            tugasAkhir.setPerbaikanLaporanTa(perbaikanLaporanTaBytes);
-            tugasAkhir.setSuratBebasLab(suratBebasLabBytes);
-            tugasAkhir.setKartuMengikutiSeminar(kartuMengikutiSeminarBytes);
-            tugasAkhir.setDraftLaporanTA(draftLaporanTABytes);
-            tugasAkhir.setBuktiToefl(buktiToeflBytes);
-            tugasAkhir.setTranskripNilaiTerbaru(transkripNilaiTerbaruBytes);
+            if (!risalahSemhasFile.isEmpty()) {
+                String namaFileRisalahSemhas = StringUtils.cleanPath(risalahSemhasFile.getOriginalFilename());
+                tugasAkhir.setNameFileRisalahSemhas(namaFileRisalahSemhas);
+                tugasAkhir.setRisalahSemhas(risalahSemhasBytes);
+            }
+            if (!krsPengambilanTaFile.isEmpty()) {
+                String namaFileKrsPengambilanTa = StringUtils.cleanPath(krsPengambilanTaFile.getOriginalFilename());
+                tugasAkhir.setNameFileKrsPengambilanTa(namaFileKrsPengambilanTa);
+                tugasAkhir.setKrsPengambilanTa(krsPengambilanTaBytes);
+            }
+            if (!suratPersetujuanSidangFile.isEmpty()) {
+                String namaFileSuratPersetujuanSidang = StringUtils
+                        .cleanPath(suratPersetujuanSidangFile.getOriginalFilename());
+                tugasAkhir.setNameFileSuratPersetujuanSidang(namaFileSuratPersetujuanSidang);
+                tugasAkhir.setSuratPersetujuanSidang(suratPersetujuanSidangBytes);
+            }
+            if (!buktiNilaiKpFile.isEmpty()) {
+                String namaFileBuktiNilaiKp = StringUtils.cleanPath(buktiNilaiKpFile.getOriginalFilename());
+                tugasAkhir.setNameFileBuktiNilaiKp(namaFileBuktiNilaiKp);
+                tugasAkhir.setBuktiNilaiKp(buktiNilaiKpBytes);
+            }
+            if (!buktiLembarAsistensiFile.isEmpty()) {
+                String namaFileBuktiLembarAsistensi = StringUtils
+                        .cleanPath(buktiLembarAsistensiFile.getOriginalFilename());
+                tugasAkhir.setNameFileBuktiLembarAsistensi(namaFileBuktiLembarAsistensi);
+                tugasAkhir.setBuktiLembarAsistensi(buktiLembarAsistensiBytes);
+            }
+            if (!lembarKonversiNilaiFile.isEmpty()) {
+                String namaFileLembarKonversiNilai = StringUtils
+                        .cleanPath(lembarKonversiNilaiFile.getOriginalFilename());
+                tugasAkhir.setNameFileLembarKonversiNilai(namaFileLembarKonversiNilai);
+                tugasAkhir.setLembarKonversiNilai(lembarKonversiNilaiBytes);
+            }
+            if (!perbaikanLaporanTaFile.isEmpty()) {
+                String namaFilePerbaikanLaporanTa = StringUtils.cleanPath(perbaikanLaporanTaFile.getOriginalFilename());
+                tugasAkhir.setNameFilePerbaikanLaporanTa(namaFilePerbaikanLaporanTa);
+                tugasAkhir.setPerbaikanLaporanTa(perbaikanLaporanTaBytes);
+            }
+            if (!suratBebasLabFile.isEmpty()) {
+                String namaFileSuratBebasLab = StringUtils.cleanPath(suratBebasLabFile.getOriginalFilename());
+                tugasAkhir.setNameFileSuratBebasLab(namaFileSuratBebasLab);
+                tugasAkhir.setSuratBebasLab(suratBebasLabBytes);
+            }
+            if (!kartuMengikutiSeminarFile.isEmpty()) {
+                String namaFileKartuMengikutiSeminar = StringUtils
+                        .cleanPath(kartuMengikutiSeminarFile.getOriginalFilename());
+                tugasAkhir.setNameFileKartuMengikutiSeminar(namaFileKartuMengikutiSeminar);
+                tugasAkhir.setKartuMengikutiSeminar(kartuMengikutiSeminarBytes);
+            }
+            if (!draftLaporanTAFile.isEmpty()) {
+                String namaFileDraftLaporanTA = StringUtils.cleanPath(draftLaporanTAFile.getOriginalFilename());
+                tugasAkhir.setNameFileDraftLaporanTA(namaFileDraftLaporanTA);
+                tugasAkhir.setDraftLaporanTA(draftLaporanTABytes);
+            }
+            if (!buktiToeflFile.isEmpty()) {
+                String namaFileBuktiToefl = StringUtils.cleanPath(buktiToeflFile.getOriginalFilename());
+                tugasAkhir.setNameFileBuktiToefl(namaFileBuktiToefl);
+                tugasAkhir.setBuktiToefl(buktiToeflBytes);
+            }
+            if (!transkripNilaiTerbaruFile.isEmpty()) {
+                String namaFileTranskripNilaiTerbaru = StringUtils
+                        .cleanPath(transkripNilaiTerbaruFile.getOriginalFilename());
+                tugasAkhir.setNameFileTranskripNilaiTerbaru(namaFileTranskripNilaiTerbaru);
+                tugasAkhir.setTranskripNilaiTerbaru(transkripNilaiTerbaruBytes);
+            }
 
+            tugasAkhir.setCatatan(null);
             tugasAkhir.setStatusDokumen("SUBMITTED");
+            tugasAkhirService.updateTugasAkhir(tugasAkhir);
 
-            tugasAkhirService.addSidangTA(tugasAkhir);
-            model.addAttribute("id", tugasAkhir.getIdTugasAkhir());
-            return "detail-ta-mahasiswa";
+            model.addAttribute("roleUser", baseService.getCurrentRole());
+            model.addAttribute("tugasAkhir", tugasAkhir);
+            return "tugasakhir/detail-ta-mahasiswa";
         } catch (IOException e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
