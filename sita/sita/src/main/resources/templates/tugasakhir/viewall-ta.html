@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
     <style>
         body {
-            background-color: #ffffff;
+            background-color: #e0e0e0;
         }
         .container-content {
             width: 850px;
@@ -34,7 +34,7 @@
 
         .table {
             margin-top: 20px;
-            width: 1000px;
+            width: 1100px;
             height: auto;
         }
 
@@ -46,6 +46,55 @@
         td {
             text-align: center;
         }
+
+        .filter-bar {
+            border-radius: 15px 15px 0 0;
+
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            width: 1100px;
+            margin: 20px auto 0;
+            background-color: rgb(38, 63, 14);
+            padding: 0 0;
+        }
+
+        .filter-bar button {
+            color: #ffffff;
+            border: none;
+            padding: 10px 0;
+            cursor: pointer;
+            text-align: center;
+            background-color: #3c7850;
+            width: 100%;
+        }
+
+        .filter-bar button.active {
+            border-bottom: 3px solid #000000;
+        }
+
+        .filter-bar button:hover {
+            background-color:  rgb(38, 63, 14);
+        }
+
+        .table-row-hidden {
+            display: none;
+        }
+
+        #filterDenied{
+            border-radius: 0 15px 0 0;
+        }
+
+        #filterAll{
+            border-radius: 15px 0 0 0;
+        }
+
+        .filter-bar {
+            border-radius: 15px 15px 0 0;
+        }
+
+        .table{
+            margin-top: 0px;
+        }
     </style>
 </head>
 <body>
@@ -53,9 +102,14 @@
 
 
 <div class="container">
-<div class="container">
     <div class="d-flex justify-content-center">
-        <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta Tugas Akhir</h2>
+        <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta Sidang Tugas Akhir</h2>
+    </div>
+    <div class="filter-bar">
+        <button id="filterAll">ALL</button>
+        <button id="filterApprove">APPROVE</button>
+        <button id="filterApproved">APPROVED</button>
+        <button id="filterDenied">DENIED</button>
     </div>
     <div class="d-flex justify-content-center">
         <div class="content-container-table">
@@ -72,8 +126,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="tugasAkhir, iterationStatus : ${listTugasAkhir}" 
-                    th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'"
-                    data-status="${tugasAkhir.statusDokumen}">
+                    th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'">
                         <td th:text="${tugasAkhir != null ? (tugasAkhir.ugb != null ? (tugasAkhir.ugb.mahasiswa != null ? tugasAkhir.ugb.mahasiswa.nim : '') : '') : ''}"></td>
                         <td>
                             <a th:href="@{/profile/{parameter}(parameter=${tugasAkhir.ugb.mahasiswa.idUser})}" th:text="${tugasAkhir?.ugb?.mahasiswa?.nama}" style="text-decoration: none; color: black;"></a>
@@ -92,19 +145,26 @@
                             </ul>
                         </td>
                         <td>
-                            <span th:if="${tugasAkhir.nilai == null}">
+                            <span th:if="${tugasAkhir.statusDokumen == 'SUBMITTED' || tugasAkhir.statusDokumen == 'DENY'}">
                                 <div class="btn-group">
-                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#inputNilaiModal"
-                                        th:attr="data-id=${tugasAkhir.idTugasAkhir}"
-                                    >Input Nilai</button>
+                                    <a class="btn btn-sm btn-primary" th:href="@{/tugas-akhir/detail/} + ${tugasAkhir.idTugasAkhir}">Detail</a>
                                 </div>
                             </span>
-                            <span th:unless="${tugasAkhir.nilai == null}">
-                                <div class="btn-group">
-                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateNilaiModal"
-                                        th:attr="data-id=${tugasAkhir.idTugasAkhir}"
-                                    >Update Nilai</button>
-                                </div>
+                            <span th:unless="${tugasAkhir.statusDokumen == 'SUBMITTED' || tugasAkhir.statusDokumen == 'DENY'}">
+                                <span th:if="${tugasAkhir.nilai == null}">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-success input-button" data-toggle="modal" data-target="#inputNilaiModal"
+                                            th:attr="data-id=${tugasAkhir.idTugasAkhir}"
+                                        >Input Nilai</button>
+                                    </div>
+                                </span>
+                                <span th:unless="${tugasAkhir.nilai == null}">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-success update-button" data-toggle="modal" data-target="#updateNilaiModal"
+                                        th:attr="data-id=${tugasAkhir.idTugasAkhir}, data-nilai=${tugasAkhir.nilai}, data-status=${tugasAkhir.statusTugasAkhir}"
+                                        >Update Nilai</button>
+                                    </div>
+                                </span>
                             </span>
                         </td>
                     </tr>
@@ -113,12 +173,11 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
 <div class="modal fade" id="inputNilaiModal" tabindex="-1" role="dialog" aria-labelledby="inputNilaiModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="inputNilaiModalLabel">Input Nilai Tugas Akhir</h5>
+                <h5 class="modal-title" id="inputNilaiModalLabel">Input Nilai Sidang Tugas Akhir</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -144,7 +203,6 @@
     </div>
 </div>
 
-<!-- Modal Update Nilai -->
 <div class="modal fade" id="updateNilaiModal" tabindex="-1" role="dialog" aria-labelledby="updateNilaiModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -167,10 +225,10 @@
                     </select>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary" id="simpanUpdateNilai">Simpan</button>
-            </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-primary" id="simpanUpdateNilai">Simpan</button>
+    </div>
         </div>
     </div>
 </div>
@@ -179,35 +237,28 @@
 </html>
 
 <script>
-// Menangani klik tombol "Input Nilai" pada modal
-document.querySelectorAll(".btn-success").forEach(function(button) {
+document.querySelectorAll(".input-button").forEach(function(button) {
     button.addEventListener("click", function() {
-        var tugasAkhhirId = this.getAttribute("data-id");
-        document.getElementById("simpanNilai").setAttribute("data-id", tugasAkhirId); // Menambahkan data-id ke tombol "Simpan"
+        var tugasAkhirId = this.getAttribute("data-id");
+        document.getElementById("simpanNilai").setAttribute("data-id", tugasAkhirId);
     });
 });
 
-// Menangani klik tombol "Simpan" pada modal input nilai
 document.getElementById("simpanNilai").addEventListener("click", function () {
-    // Mendapatkan data yang diperlukan dari modal
     var tugasAkhirId = this.getAttribute("data-id");
     var nilai = document.getElementById("nilai").value;
     var statusTugasAkhir = document.getElementById("statusTugasAkhir").value;
 
-    // Validasi apakah nilai adalah angka dan tidak kosong
     if (isNaN(parseFloat(nilai)) || nilai === "") {
         alert("Nilai harus berupa angka.");
         return;
     }
 
-    // Membuat objek data yang akan dikirim
     var data = {
         idTugasAkhir: tugasAkhirId,
         nilai: parseFloat(nilai),
         statusTugasAkhir: statusTugasAkhir
     };
-
-    // Lakukan permintaan AJAX untuk menyimpan nilai
     fetch("/tugas-akhir/input-nilai/" + tugasAkhirId, {
         method: "POST",
         headers: {
@@ -217,12 +268,59 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
     })
     .then(function (response) {
         if (response.ok) {
-            // Setelah berhasil, Anda dapat menutup modal
             $("#inputNilaiModal").modal("hide");
-            // Atau lakukan tindakan lain yang sesuai
             window.location.href = "/tugas-akhir/detail/" + tugasAkhirId;
         } else {
             alert("Gagal menyimpan nilai.");
+        }
+    })
+    .catch(function (error) {
+        console.error("Error:", error);
+    });
+
+});
+
+</script>
+<script>
+document.querySelectorAll(".update-button").forEach(function(button) {
+    button.addEventListener("click", function() {
+        var tugasAkhirId = this.getAttribute("data-id");
+        var nilai = this.getAttribute("data-nilai");
+        var statusTugasAkhir = this.getAttribute("data-status");
+
+        document.getElementById("updateNilai").value = nilai;
+        document.getElementById("updateStatusTugasAkhir").value = statusTugasAkhir;
+
+        document.getElementById("simpanUpdateNilai").setAttribute("data-id", tugasAkhirId);
+    });
+});
+
+document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
+    var tugasAkhirId = this.getAttribute("data-id");
+    var nilai = document.getElementById("updateNilai").value;
+    var statusTugasAkhir = document.getElementById("updateStatusTugasAkhir").value;
+
+    if (isNaN(parseFloat(nilai)) || nilai === "") {
+        alert("Nilai harus berupa angka.");
+        return;
+    }
+    var data = {
+        idTugasAkhir: tugasAkhirId,
+        nilai: parseFloat(nilai),
+        statusTugasAkhir: statusTugasAkhir
+    };
+
+    fetch("/tugas-akhir/update-nilai/" + tugasAkhirId, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(function (response) {
+        if (response.ok) {
+            $("#updateNilaiModal").modal("hide");
+            window.location.href = "/tugas-akhir/detail/" + tugasAkhirId;
         }
     })
     .catch(function (error) {
@@ -232,73 +330,39 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
 
 </script>
 <script>
-    // Menangani klik tombol "Update Nilai" pada modal
-    document.querySelectorAll(".btn-success").forEach(function(button) {
-        button.addEventListener("click", function() {
-            var tugasAkhirId = this.getAttribute("data-id");
-    
-            // Ambil nilai dan status dari listTugasAkhir berdasarkan TugasAkhirId
-            var tugasAkhirData = listSempro.find(function(item) {
-                return item.idTugasAkhir === tugasAkhirId;
-            });
-    
-            // Periksa apakah data ditemukan
-            if (tugasAkhirData) {
-                var nilaiDatabase = tugasAkhirData.nilai;
-                var statusDatabase = tugasAkhirData.statusTugasAkhir;
-    
-                // Mengisi nilai awal di dalam modal update
-                document.getElementById("updateNilai").value = nilaiDatabase;
-                document.getElementById("updateStatusTugasAkhir").value = statusDatabase;
-    
-                // Simpan ID TugasAkhirId ke tombol "Simpan" pada modal update
-                document.getElementById("simpanUpdateNilai").setAttribute("data-id", tugasAkhirId);
-            } else {
-                alert("Data sidang tugas akhir tidak ditemukan.");
+    function filterDaftar(status) {
+        var rows = document.querySelectorAll('.table tbody tr');
+
+        rows.forEach(function (row) {
+            var statusDokumen = row.getAttribute('data-status');
+
+            if (status === 'ALL') {
+                row.style.display = '';
+            } else if(status === statusDokumen) {
+                row.style.display = '';
+            } else{
+                row.style.display = 'none';
             }
         });
+    }
+
+    document.getElementById("filterApprove").addEventListener("click", function () {
+        filterDaftar("SUBMITTED");
+        window.location.href = "/tugas-akhir/filter?status=SUBMITTED";
     });
-    
-    // Menangani klik tombol "Simpan" pada modal update nilai
-    document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
-        var tugasAkhirId = this.getAttribute("data-id");
-        var updateNilai = document.getElementById("updateNilai").value;
-        var updateStatusTugasAkhir = document.getElementById("updateStatusTugasAkhir").value;
-    
-        // Validasi apakah updateNilai adalah angka dan tidak kosong
-        if (isNaN(parseFloat(updateNilai)) || updateNilai === "") {
-            alert("Nilai harus berupa angka.");
-            return;
-        }
-    
-        // Membuat objek data yang akan dikirim
-        var data = {
-            idTugasAkhir: tugasAkhirId,
-            nilai: parseFloat(updateNilai),
-            statusTugasAkhir: updateStatusTugasAkhir
-        };
-    
-        // Lakukan permintaan AJAX untuk menyimpan nilai yang diperbarui
-        fetch("/tugas-akhir/update-nilai/" + tugasAkhirId, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(function (response) {
-            if (response.ok) {
-                // Setelah berhasil, Anda dapat menutup modal
-                $("#updateNilaiModal").modal("hide");
-                // Atau lakukan tindakan lain yang sesuai
-                window.location.href = "/tugas-akhir/detail/" + tugasAkhirId;
-            } else {
-                alert("Gagal menyimpan nilai yang diperbarui.");
-            }
-        })
-        .catch(function (error) {
-            console.error("Error:", error);
-        });
+
+    document.getElementById("filterApproved").addEventListener("click", function () {
+        filterDaftar("APPROVED");
+        window.location.href = "/tugas-akhir/filter?status=APPROVED";
     });
-    
+
+    document.getElementById("filterDenied").addEventListener("click", function () {
+        filterDaftar("DENY");
+        window.location.href = "/tugas-akhir/filter?status=DENY";
+    });
+    document.getElementById("filterAll").addEventListener("click", function () {
+        filterDaftar("ALL");
+        window.location.href = "/tugas-akhir/viewall";
+    });
+
 </script>

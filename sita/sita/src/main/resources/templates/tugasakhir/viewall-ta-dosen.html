@@ -53,12 +53,12 @@
     </style>
 </head>
 <body>
-<nav th:replace="fragments/fragment :: navbar (${'/seminar-proposal'})"></nav>
+<nav th:replace="fragments/fragment :: navbar (${'/tugas-akhir'})"></nav>
 
 
 <div class="container">
     <div class="d-flex justify-content-center">
-        <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta Seminar Proposal</h2>
+        <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta Sidang Tugas Akhir</h2>
     </div>
     <div class="d-flex justify-content-center">
         <div class="content-container-table">
@@ -74,28 +74,28 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="seminarProposal, iterationStatus : ${listSempro}" 
+                    <tr th:each="tugasAkhir, iterationStatus : ${listTugasAkhir}" 
                     th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'">
-                        <td th:text="${seminarProposal != null ? (seminarProposal.ugb != null ? (seminarProposal.ugb.mahasiswa != null ? seminarProposal.ugb.mahasiswa.nim : '') : '') : ''}"></td>
+                        <td th:text="${tugasAkhir != null ? (tugasAkhir.ugb != null ? (tugasAkhir.ugb.mahasiswa != null ? tugasAkhir.ugb.mahasiswa.nim : '') : '') : ''}"></td>
                         <td>
-                            <a th:href="@{/profile/{parameter}(parameter=${seminarProposal.ugb.mahasiswa.idUser})}" th:text="${seminarProposal?.ugb?.mahasiswa?.nama}" style="text-decoration: none; color: black;"></a>
+                            <a th:href="@{/profile/{parameter}(parameter=${tugasAkhir.ugb.mahasiswa.idUser})}" th:text="${tugasAkhir?.ugb?.mahasiswa?.nama}" style="text-decoration: none; color: black;"></a>
                         </td>        
                         <td>
-                            <a th:href="@{/seminar-proposal/detail/{parameter}(parameter=${seminarProposal.idSeminarProposal})}" th:text="${seminarProposal.ugb.judulUgb}" style="text-decoration: none; color: black;"></a>
+                            <a th:href="@{/tugas-akhir/detail/{parameter}(parameter=${tugasAkhir.idTugasAkhir})}" th:text="${tugasAkhir.ugb.judulUgb}" style="text-decoration: none; color: black;"></a>
                         </td>                    
                         <td style="text-align: left;">
                             <ul>
-                                <li th:each="pembimbing : ${seminarProposal.ugb.pembimbing}" th:text="${pembimbing.nama}" ></li>
+                                <li th:each="pembimbing : ${tugasAkhir.ugb.pembimbing}" th:text="${pembimbing.nama}" ></li>
                             </ul>
                         </td>
                         <td style="text-align: left;">
                             <ul>
-                                <li th:each="penguji : ${seminarProposal.ugb.penguji}" th:text="${penguji.nama}"></li>
+                                <li th:each="penguji : ${tugasAkhir.ugb.penguji}" th:text="${penguji.nama}"></li>
                             </ul>
                         </td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-sm btn-primary" th:href="@{/seminar-proposal/detail/} + ${seminarProposal.idSeminarProposal}">Detail</a>
+                                <a class="btn btn-sm btn-primary" th:href="@{/tugas-akhir/detail/} + ${tugasAkhir.idTugasAkhir}">Detail</a>
                             </div>
                         </td>
                     </tr>

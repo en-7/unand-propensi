@@ -26,11 +26,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.util.StringUtils;
 
 import protensi.sita.service.UgbServiceImpl;
+import protensi.sita.service.BaseService;
 import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.security.UserDetailsServiceImpl;
+import protensi.sita.service.BaseService;
 import protensi.sita.service.SeminarHasilServiceImpl;
+import protensi.sita.service.SeminarProposalServiceImpl;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,11 +42,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class SeminarHasilController {
 
     @Autowired
     private UgbServiceImpl ugbService;
+
+    @Autowired
+    private SeminarProposalServiceImpl seminarProposalService;
 
     @Autowired
     private MahasiswaServiceImpl mahasiswaService;
@@ -53,6 +63,9 @@ public class SeminarHasilController {
     @Autowired
     private SeminarHasilServiceImpl seminarHasilService;
 
+    @Autowired
+    public BaseService baseService;
+
     @GetMapping("/seminar-hasil/add")
     public String addSeminarHasilFormPage(Model model, Authentication authentication) {
         String namaUser = authentication.getName();
@@ -60,17 +73,31 @@ public class SeminarHasilController {
         if (user.getRoles().contains(EnumRole.MAHASISWA)) {
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaByUsername(user.getUsername());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
-            if (ugb.getStatusDokumen().equals("EVALUATED")) {
-                SeminarHasilModel seminarHasil = new SeminarHasilModel();
-                model.addAttribute("seminarHasil", seminarHasil);
-                return "add-semhas-form";
+            SeminarProposalModel sempro = seminarProposalService.findSemproByUgb(ugb);
+            SeminarHasilModel seminarHasil = seminarHasilService.findSemhasBySempro(sempro);
+            if (sempro != null) {
+                if (sempro.getStatusDokumen().equals("APPROVED")) {
+                    if (seminarHasil != null) {
+                        model.addAttribute("roleUser", baseService.getCurrentRole());
+                        model.addAttribute("seminarHasil", seminarHasil);
+                        return "detail-semhas-mahasiswa";
+                    } else {
+                        seminarHasil = new SeminarHasilModel();
+                        model.addAttribute("roleUser", baseService.getCurrentRole());
+                        model.addAttribute("seminarHasil", seminarHasil);
+                        return "add-semhas-form";
+                    }
+                } else {
+                    model.addAttribute("roleUser", baseService.getCurrentRole());
+                    return "error-semhas";
+                }
             } else {
-                return "error";
+                model.addAttribute("roleUser", baseService.getCurrentRole());
+                return "error-semhas";
             }
-        }
-
-        else {
-            return "error";
+        } else {
+            model.addAttribute("roleUser", baseService.getCurrentRole());
+            return "error-semhas";
         }
     }
 
@@ -83,8 +110,23 @@ public class SeminarHasilController {
             @RequestParam("form_saps") MultipartFile form_saps,
             @RequestParam("draft_TA") MultipartFile draft_TA,
             Model model, Authentication authentication) throws IOException {
+
+        String namaFileAccPembimbing = StringUtils.cleanPath(acc_pembimbing.getOriginalFilename());
+        String namaFileLaporanKp = StringUtils.cleanPath(bukti_kp.getOriginalFilename());
+        String namaFileRisalahSempro = StringUtils.cleanPath(risalah_sempro.getOriginalFilename());
+        String namaFileCttSempro = StringUtils.cleanPath(notes_sempro.getOriginalFilename());
+        String namaFileSaps = StringUtils.cleanPath(form_saps.getOriginalFilename());
+        String namaFileDraftTa = StringUtils.cleanPath(draft_TA.getOriginalFilename());
+
+        seminarHasil.setNameFilePersetujuanPembimbing(namaFileAccPembimbing);
+        seminarHasil.setNameFileLaporanKp(namaFileLaporanKp);
+        seminarHasil.setNameFileRisalahSempro(namaFileRisalahSempro);
+        seminarHasil.setNameFileCatatanSempro(namaFileCttSempro);
+        seminarHasil.setNameFileSaps(namaFileSaps);
+        seminarHasil.setNameFileDraftLaporanTa(namaFileDraftTa);
+
         seminarHasil.setPersetujuanPembimbing(acc_pembimbing.getBytes());
-        seminarHasil.setLaporanKP(bukti_kp.getBytes());
+        seminarHasil.setLaporanKp(bukti_kp.getBytes());
         seminarHasil.setRisalahSempro(risalah_sempro.getBytes());
         seminarHasil.setCatatanSempro(notes_sempro.getBytes());
         seminarHasil.setSaps(form_saps.getBytes());
@@ -94,7 +136,9 @@ public class SeminarHasilController {
         UserModel user = userDetailsService.findByUsername(namaUser);
         MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
         UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
+        SeminarProposalModel sempro = seminarProposalService.findSemproByUgb(ugb);
         seminarHasil.setUgb(ugb);
+        seminarHasil.setSeminarProposal(sempro);
 
         seminarHasil.getUgb().getMahasiswa().setTahap("SEMHAS");
         seminarHasil.setStatusDokumen("SUBMITTED");
@@ -151,6 +195,7 @@ public class SeminarHasilController {
 
     @PostMapping("/seminar-hasil/update")
     public String updateSeminarHasilSubmitPage(@ModelAttribute SeminarHasilModel seminarHasil,
+            @PathVariable Long idSeminarHasil,
             @RequestParam("acc_pembimbing") MultipartFile acc_pembimbing,
             @RequestParam("bukti_kp") MultipartFile bukti_kp,
             @RequestParam("risalah_sempro") MultipartFile risalah_sempro,
@@ -158,17 +203,61 @@ public class SeminarHasilController {
             @RequestParam("form_saps") MultipartFile form_saps,
             @RequestParam("draft_TA") MultipartFile draft_TA,
             Model model, Authentication authentication) throws IOException {
-        seminarHasil.setPersetujuanPembimbing(acc_pembimbing.getBytes());
-        seminarHasil.setLaporanKP(bukti_kp.getBytes());
-        seminarHasil.setRisalahSempro(risalah_sempro.getBytes());
-        seminarHasil.setCatatanSempro(notes_sempro.getBytes());
-        seminarHasil.setSaps(form_saps.getBytes());
-        seminarHasil.setDraftLaporanTa(draft_TA.getBytes());
+        try {
+            seminarHasil.setPersetujuanPembimbing(acc_pembimbing.getBytes());
+            seminarHasil.setLaporanKp(bukti_kp.getBytes());
+            seminarHasil.setRisalahSempro(risalah_sempro.getBytes());
+            seminarHasil.setCatatanSempro(notes_sempro.getBytes());
+            seminarHasil.setSaps(form_saps.getBytes());
+            seminarHasil.setDraftLaporanTa(draft_TA.getBytes());
 
-        seminarHasilService.updateSemhas(seminarHasil);
-        model.addAttribute("id", seminarHasil.getIdSeminarHasil());
+            seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
 
-        return "update-semhas-success";
+            if (!acc_pembimbing.isEmpty()) {
+                String namaFilePersetujuanPembimbing = StringUtils.cleanPath(acc_pembimbing.getOriginalFilename());
+                seminarHasil.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
+                seminarHasil.setPersetujuanPembimbing(namaFilePersetujuanPembimbing.getBytes());
+            }
+
+            if (!bukti_kp.isEmpty()) {
+                String namaFileBuktiKp = StringUtils.cleanPath(bukti_kp.getOriginalFilename());
+                seminarHasil.setNameFileLaporanKp(namaFileBuktiKp);
+                seminarHasil.setLaporanKp(namaFileBuktiKp.getBytes());
+            }
+
+            if (!risalah_sempro.isEmpty()) {
+                String namaFileRisalahSempro = StringUtils.cleanPath(risalah_sempro.getOriginalFilename());
+                seminarHasil.setNameFileRisalahSempro(namaFileRisalahSempro);
+                seminarHasil.setRisalahSempro(namaFileRisalahSempro.getBytes());
+            }
+
+            if (!notes_sempro.isEmpty()) {
+                String namaFileNotesSempro = StringUtils.cleanPath(notes_sempro.getOriginalFilename());
+                seminarHasil.setNameFileCatatanSempro(namaFileNotesSempro);
+                seminarHasil.setCatatanSempro(namaFileNotesSempro.getBytes());
+            }
+
+            if (!form_saps.isEmpty()) {
+                String namaFileFormSaps = StringUtils.cleanPath(form_saps.getOriginalFilename());
+                seminarHasil.setNameFileSaps(namaFileFormSaps);
+                seminarHasil.setSaps(namaFileFormSaps.getBytes());
+            }
+
+            if (!draft_TA.isEmpty()) {
+                String namaFileDraftTA = StringUtils.cleanPath(draft_TA.getOriginalFilename());
+                seminarHasil.setNameFileDraftLaporanTa(namaFileDraftTA);
+                seminarHasil.setDraftLaporanTa(namaFileDraftTA.getBytes());
+            }
+
+            seminarHasil.setCatatan(null);
+            seminarHasil.setStatusDokumen("SUBMITTED");
+            seminarHasilService.updateSemhas(seminarHasil);
+            model.addAttribute("seminarHasil", seminarHasil);
+            return "detail-semhas-mahasiswa";
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
     }
 
     @GetMapping("/seminar-hasil/filter")
@@ -254,10 +343,74 @@ public class SeminarHasilController {
             seminarHasilService.updateSemhas(seminarHasil);
 
             model.addAttribute("seminarHasil", seminarHasil);
-            return "detail-sempro-koordinator";
+            return "detail-semhas-koordinator";
         } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
+        }
+    }
+
+    @GetMapping("/seminar-hasil/downloadFile")
+    public void downloadFile(@RequestParam("type") String type,
+            @RequestParam("id") Long id,
+            HttpServletResponse response) {
+        try {
+            SeminarHasilModel retrievedSemhas = seminarHasilService.findSemhasById(id);
+            response.setContentType("application/ocetet-stream");
+            String headerKey = "Content-Disposition";
+
+            if (type.equals("FILE PERSETUJUAN PEMBIMBING")) {
+                String headerValue = "attachment; filename=" + retrievedSemhas.getNameFilePersetujuanPembimbing();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSemhas.getPersetujuanPembimbing());
+                outputStream.close();
+            }
+
+            else if (type.equals("FILE TANDA TERIMA LAPORAN KP")) {
+                String headerValue = "attachment; filename=" + retrievedSemhas.getNameFileLaporanKp();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSemhas.getLaporanKp());
+                outputStream.close();
+            }
+
+            else if (type.equals("FILE RISALAH SEMINAR PROPOSAL")) {
+                String headerValue = "attachment; filename=" + retrievedSemhas.getNameFileRisalahSempro();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSemhas.getRisalahSempro());
+                outputStream.close();
+            }
+
+            else if (type.equals("FILE CATATAN SETELAH SEMINAR PROPOSAL")) {
+                String headerValue = "attachment; filename=" + retrievedSemhas.getNameFileCatatanSempro();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSemhas.getCatatanSempro());
+                outputStream.close();
+            }
+
+            else if (type.equals("FILE FORM SAPS")) {
+                String headerValue = "attachment; filename=" + retrievedSemhas.getNameFileSaps();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSemhas.getSaps());
+                outputStream.close();
+            }
+
+            else if (type.equals("FILE DRAFT LAPORAN TA")) {
+                String headerValue = "attachment; filename=" + retrievedSemhas.getNameFileDraftLaporanTa();
+                response.setHeader(headerKey, headerValue);
+                ServletOutputStream outputStream = response.getOutputStream();
+                outputStream.write(retrievedSemhas.getDraftLaporanTa());
+                outputStream.close();
+            }
+        }
+
+        catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 }

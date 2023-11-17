@@ -29,25 +29,43 @@ public class SeminarHasilModel {
     @Column(name = "persetujuan_pembimbing", nullable = false)
     private byte[] persetujuanPembimbing;
 
+    @Column(name = "nama_file_persetujuan_pembimbing", nullable = false)
+    private String nameFilePersetujuanPembimbing;
+
     @Lob
     @Column(name = "laporan_kp", nullable = false)
-    private byte[] laporanKP;
+    private byte[] laporanKp;
+
+    @Column(name = "nama_file_laporan_kp", nullable = false)
+    private String nameFileLaporanKp;
 
     @Lob
     @Column(name = "risalah_sempro", nullable = false)
     private byte[] risalahSempro;
 
+    @Column(name = "nama_file_risalah_sempro", nullable = false)
+    private String nameFileRisalahSempro;
+
     @Lob
     @Column(name = "catatan_sempro", nullable = false)
     private byte[] catatanSempro;
+
+    @Column(name = "nama_file_catatan_sempro", nullable = false)
+    private String nameFileCatatanSempro;
 
     @Lob
     @Column(name = "saps", nullable = false)
     private byte[] saps;
 
+    @Column(name = "nama_file_saps", nullable = false)
+    private String nameFileSaps;
+
     @Lob
     @Column(name = "draft_laporan_ta", nullable = false)
     private byte[] draftLaporanTa;
+
+    @Column(name = "nama_file_draft_laporan_ta", nullable = false)
+    private String nameFileDraftLaporanTa;
 
     @Size(max = 100)
     @Column(name = "status_dokumen")
@@ -81,6 +99,5 @@ public class SeminarHasilModel {
 
     @OneToOne(mappedBy = "seminarHasil")
     private JadwalSidangModel jadwalSidang;
-    
 
 }
