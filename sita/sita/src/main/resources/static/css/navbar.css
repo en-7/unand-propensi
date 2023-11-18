@@ -8,7 +8,7 @@
 }
 
 #navbarDropdown{
-    margin-top: 20px;
+    margin-top: 2px;
 }
 
 #navbarSupportedContent{
@@ -18,6 +18,13 @@
 .dropdown-menu{
     margin-top: 7px;
     border: none;
+}
+
+#profileDropdown{
+  color: #4A4A4B;
+  margin-top: 5px;
+  margin-right: 5px;
+  margin-left: 12px;
 }
 
 /* .dropbtn {
