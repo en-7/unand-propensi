@@ -1,7 +1,7 @@
 package protensi.sita.repository;
 
-import protensi.sita.model.SeminarHasilModel;
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.SeminarHasilModel;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface SeminarHasilDb extends JpaRepository<SeminarHasilModel, Long> {
     Optional<SeminarHasilModel> findByIdSeminarHasil(Long idSeminarHasil);
+
+    Optional<SeminarHasilModel> findBySeminarProposal(SeminarProposalModel sempro);
 
     List<SeminarHasilModel> findAllByStatusDokumen(String statusDokumen);
 

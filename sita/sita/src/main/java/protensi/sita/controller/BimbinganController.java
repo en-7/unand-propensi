@@ -66,7 +66,6 @@ public class BimbinganController {
     @GetMapping("/atur-jadwal/add")
     public String addAvailableBimbinganFormPage(Model model) {
         AvailableBimbinganModel availableBimbingan = new AvailableBimbinganModel();
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         model.addAttribute("availableBimbingan", availableBimbingan);
         return "bimbingan/add-available-bimbingan-form";
     }
@@ -142,11 +141,9 @@ public class BimbinganController {
             PembimbingModel pembimbing = pembimbingService.findPembimbingById(user.getIdUser());
             List<AvailableBimbinganModel> listAvailable = availableBimbinganService.findAllByIdPembimbing(pembimbing.getIdUser());
             if (listAvailable.isEmpty()){
-                model.addAttribute("roleUser", baseService.getCurrentRole());
                 return "bimbingan/error-bimbingan";
             }else {
                 model.addAttribute("listAvailable", listAvailable);
-                model.addAttribute("roleUser", baseService.getCurrentRole());
                 return "bimbingan/viewall-available-bimbingan";
             }
            
@@ -155,7 +152,6 @@ public class BimbinganController {
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             if (ugb == null){
-                model.addAttribute("roleUser", baseService.getCurrentRole());
                 return "bimbingan/error-bimbingan";
             }else {
                 List<AvailableBimbinganModel> listAvailable = availableBimbinganService.listAvailablePembimbing(ugb);
@@ -163,7 +159,6 @@ public class BimbinganController {
                 model.addAttribute("user", mahasiswa);
                 model.addAttribute("listBimbingan", listBimbingan);
                 model.addAttribute("listAvailable", listAvailable);
-                model.addAttribute("roleUser", baseService.getCurrentRole());
                 return "bimbingan/viewall-booking-bimbingan";
             }
 
@@ -177,7 +172,6 @@ public class BimbinganController {
     public String deleteAvailableBimbingan(@PathVariable Long idAvailableBimbingan, Model model) {
         AvailableBimbinganModel availableBimbingan = availableBimbinganService.findById(idAvailableBimbingan);
         availableBimbinganService.delete(idAvailableBimbingan);
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         model.addAttribute("availableBimbingan", availableBimbingan);
         return "redirect:/bimbingan/atur-jadwal/";
     }
@@ -196,7 +190,6 @@ public class BimbinganController {
 
         availableBimbingan.setBookingStatus("BOOKED");
         availableBimbinganService.save(availableBimbingan);
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         model.addAttribute("availableBimbingan", availableBimbingan);
         return "redirect:/bimbingan/atur-jadwal/";
     }
@@ -209,7 +202,6 @@ public class BimbinganController {
         AvailableBimbinganModel availableBimbingan = availableBimbinganService.findById(idAvailableBimbingan);
         availableBimbingan.setBookingStatus("AVAILABLE");
         availableBimbinganService.save(availableBimbingan);
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         model.addAttribute("availableBimbingan", availableBimbingan);
         return "redirect:/bimbingan/atur-jadwal/";
     }

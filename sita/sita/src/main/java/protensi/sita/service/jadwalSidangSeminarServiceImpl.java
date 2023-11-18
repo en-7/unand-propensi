@@ -1,6 +1,5 @@
 package protensi.sita.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import protensi.sita.model.JadwalSidangModel;
@@ -18,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class JadwalSidangSeminarServiceImpl implements JadwalSidangSeminarService{
+public class JadwalSidangSeminarServiceImpl implements JadwalSidangSeminarService {
 
     @Autowired
     JadwalSeminarSidangDb jadwalSeminarSidangDb;
@@ -40,7 +39,7 @@ public class JadwalSidangSeminarServiceImpl implements JadwalSidangSeminarServic
     @Override
     public JadwalSidangModel getJadwalSidangById(long id) {
         Optional<JadwalSidangModel> jadwalSidangid = jadwalSeminarSidangDb.findById(id);
-        if(jadwalSidangid.isPresent()){
+        if (jadwalSidangid.isPresent()) {
             return jadwalSidangid.get();
         }
         return null;
@@ -59,18 +58,20 @@ public class JadwalSidangSeminarServiceImpl implements JadwalSidangSeminarServic
 
     @Override
     public void addJadwalSidangSeminar(JadwalSidangModel jadwalSidangSeminar) {
-//        System.out.println(jadwalSidangSeminar.getTanggalSempro());
-//        System.out.println(jadwalSidangSeminar.getSeminarProposal());
-        SeminarProposalModel semprobyId = seminarProposalDb.findByIdSeminarProposal(jadwalSidangSeminar.getSeminarProposal().getIdSeminarProposal()).get();
+        // System.out.println(jadwalSidangSeminar.getTanggalSempro());
+        // System.out.println(jadwalSidangSeminar.getSeminarProposal());
+        SeminarProposalModel semprobyId = seminarProposalDb
+                .findByIdSeminarProposal(jadwalSidangSeminar.getSeminarProposal().getIdSeminarProposal()).get();
         semprobyId.setJadwalSidang(jadwalSidangSeminar);
         seminarProposalDb.save(semprobyId);
-//        System.out.println(jadwalSidangSeminar.getUgb());
+        // System.out.println(jadwalSidangSeminar.getUgb());
         jadwalSeminarSidangDb.save(jadwalSidangSeminar);
     }
 
     @Override
     public void addJadwalSemhas(JadwalSidangModel jadwalSemhas) {
-        SeminarHasilModel semhasbyId = seminarHasilDb.findById(jadwalSemhas.getSeminarHasil().getIdSeminarHasil()).get();
+        SeminarHasilModel semhasbyId = seminarHasilDb.findById(jadwalSemhas.getSeminarHasil().getIdSeminarHasil())
+                .get();
         semhasbyId.setJadwalSidang(jadwalSemhas);
         seminarHasilDb.save(semhasbyId);
         jadwalSeminarSidangDb.save(jadwalSemhas);

@@ -60,9 +60,13 @@
         #update-btn-m{
             margin-bottom: 40px;
         }
+        #denyButton, #approveButton{
+            margin-bottom: 0;
+        }
         .buttonHolder{ 
             text-align: center; 
         }
+
     </style>
 </head>
 <body>
@@ -158,7 +162,7 @@
         </table>
         <br>
         <div th:switch="${roleUser}">
-            <div class="filter-bar" th:case="'[ROLE_[KOORDINATOR]]'">
+            <div th:case="'[ROLE_[KOORDINATOR]]'">
                 <div class="pb-2 d-flex justify-content-center">
                     <span th:if="${ugb.statusUgb == 'SUBMITTED'}">
                         <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Approve</a>
@@ -167,7 +171,7 @@
                     </span>
                 </div>
             </div>
-            <div class="filter-bar" th:case="'[ROLE_[MAHASISWA]]'">
+            <div th:case="'[ROLE_[MAHASISWA]]'">
                 <div class="buttonHolder">
                     <a th:if="${ugb.statusUgb == 'DENIED'}" class="btn btn-primary mx-1" id="update-btn-m" th:href="@{'/ugb/update/'+ ${ugb.idUgb}}">Update</a>
                 </div>
@@ -190,7 +194,7 @@
           Apakah Anda yakin ingin menyetujui UGB ini?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <button type="button" id="denyButton" class="btn btn-secondary" data-dismiss="modal">Batal</button>
           <a class="btn btn-primary" href="#" id="approveButton">Ya, Setujui</a>
           <input type="hidden" id="ugbId" th:value="${ugb.idUgb}">
         </div>
