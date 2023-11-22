@@ -15,11 +15,9 @@ public interface SeminarProposalDb extends JpaRepository<SeminarProposalModel, L
     Optional<SeminarProposalModel> findByUgb(UgbModel ugb);
     List<SeminarProposalModel> findAllByStatusDokumen(String statusDokumen);
     
-     // Mencari proposal seminar berdasarkan pembimbing
     @Query("SELECT sp FROM SeminarProposalModel sp JOIN sp.ugb ugb JOIN ugb.pembimbing pembimbing WHERE pembimbing.id = :pembimbingId")
     List<SeminarProposalModel> findAllByPembimbing(@Param("pembimbingId") Long pembimbingId);
 
-    // Mencari proposal seminar berdasarkan penguji
     @Query("SELECT sp FROM SeminarProposalModel sp JOIN sp.ugb ugb JOIN ugb.penguji penguji WHERE penguji.id = :pengujiId")
     List<SeminarProposalModel> findAllByPenguji(@Param("pengujiId") Long pengujiId);
 }
