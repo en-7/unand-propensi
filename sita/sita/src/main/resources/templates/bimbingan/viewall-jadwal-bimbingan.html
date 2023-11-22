@@ -35,7 +35,7 @@
 
         .table {
             margin-top: 20px;
-            width: 1000px;
+            width: 1200px;
             height: auto;
         }
 
@@ -64,8 +64,10 @@
                 <thead>
                 <tr>
                     <th>Nama Mahasiswa</th>
-                    <th>Hari</th>
-                    <th>Tanggal Bimbingan</th>
+                    <th>Hari, Tanggal</th>
+                    <th>Waktu Bimbingan</th>
+                    <th>Catatan</th>
+                    <th>Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -74,11 +76,157 @@
                     <td>
                         <a th:href="@{/profile/{parameter}(parameter=${jadwalBimbingan.mahasiswa.idUser})}" th:text="${jadwalBimbingan.mahasiswa.nama}" style="text-decoration: none; color: black;"></a>
                     </td>  
-                    <td th:text="${#temporals.format(jadwalBimbingan.availableBimbingan.availableTime, 'EEEE')}"></td>
-                    <td th:text="${#temporals.format(jadwalBimbingan.availableBimbingan.availableTime, 'dd MMMM yyyy HH:mm:ss')}"></td>
-                    </tr>
+                    <td th:text="${#temporals.format(jadwalBimbingan.availableBimbingan.startBimbinganTime, 'EEEE, dd MMMM yyyy')}"></td>
+                    <td th:text="${#temporals.format(jadwalBimbingan.availableBimbingan.startBimbinganTime, 'HH:mm')} + ' - ' + ${#temporals.format(jadwalBimbingan.availableBimbingan.endBimbinganTime, 'HH:mm')}"></td>
+
+                    <td>
+                        <span th:if="${jadwalBimbingan?.catatanBimbingan == null}">-</span>
+                        <span th:unless="${jadwalBimbingan?.catatanBimbingan == null}" th:text="${jadwalBimbingan?.catatanBimbingan}"></span>
+                    </td>
+                    <td>
+                        <div class="pb-2 d-flex justify-content-center">
+                            <span th:if="${jadwalBimbingan?.catatanBimbingan == null}">
+                                <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#catatanModal">Isi Catatan</a>
+                            </span>  
+                            <span th:unless="${jadwalBimbingan?.catatanBimbingan == null}">
+                                <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#updateModal">Ubah Catatan</a>
+                            </span>  
+                        </div> 
+                        <div class="modal fade" id="catatanModal" tabindex="-1" role="dialog" aria-labelledby="catatanModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="catatanModalLabel">Catatan Bimbingan</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <h5>Nama:</h5>
+                                            <p th:text="${jadwalBimbingan?.mahasiswa?.nama}"></p>
+                                        </div>
+                                        <div>
+                                            <h5>NIM:</h5>
+                                            <p th:text="${jadwalBimbingan?.mahasiswa?.nim}"></p>
+                                        </div>
+                                        <div>
+                                            <h5>Dosen Pembimbing:</h5>
+                                            <p th:text="${jadwalBimbingan?.availableBimbingan?.pembimbing?.nama}"></p>
+                                        </div>
+                                        <div>
+                                            <h5>Catatan:</h5>
+                                            <textarea id="catatan-bimbingan" rows="4" cols="50"></textarea>
+                                        </div>
+                                        <input type="hidden" id="jadwalBimbinganId" th:value="${jadwalBimbingan.idJadwalBimbingan}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-danger" id="catatanSimpanButton">Simpan</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="updateModalLabel">Catatan Bimbingan</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <h5>Nama:</h5>
+                                            <p th:text="${jadwalBimbingan?.mahasiswa?.nama}"></p>
+                                        </div>
+                                        <div>
+                                            <h5>NIM:</h5>
+                                            <p th:text="${jadwalBimbingan?.mahasiswa?.nim}"></p>
+                                        </div>
+                                        <div>
+                                            <h5>Dosen Pembimbing:</h5>
+                                            <p th:text="${jadwalBimbingan?.availableBimbingan?.pembimbing?.nama}"></p>
+                                        </div>
+                                        <div>
+                                            <h5>Catatan:</h5>
+                                            <textarea id="catatan-bimbingan-update" rows="4" cols="50" th:text="${jadwalBimbingan?.catatanBimbingan}"></textarea>
+                                        </div>
+                                        <input type="hidden" id="jadwalBimbinganId" th:value="${jadwalBimbingan.idJadwalBimbingan}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-danger" id="updateSimpanButton">Simpan</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+
+</body>
+</html>
+
+<script>
+    document.getElementById("catatanSimpanButton").addEventListener("click", function () {
+    var catatanBimbingan = document.getElementById("catatan-bimbingan").value;
+    var seminarProposalId = document.getElementById("jadwalBimbinganId").value;
+    if (catatanBimbingan) {
+        fetch("/bimbingan/isi-catatan/" + seminarProposalId, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'catatan-bimbingan=' + encodeURIComponent(catatanBimbingan)
+        })
+        .then(function (response) {
+            if (response.ok) {
+                $("#catatanModal").modal("hide");
+                window.location.href = "/bimbingan/viewall";
+            }
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    } else {
+        alert("Catatan tidak boleh kosong."); 
+    }
+});
+
+</script>
+
+<script>
+    document.getElementById("updateSimpanButton").addEventListener("click", function () {
+    var catatanBimbingan = document.getElementById("catatan-bimbingan-update").value;
+    var seminarProposalId = document.getElementById("jadwalBimbinganId").value;
+    if (catatanBimbingan) {
+        fetch("/bimbingan/update-catatan/" + seminarProposalId, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'catatan-bimbingan=' + encodeURIComponent(catatanBimbingan)
+        })
+        .then(function (response) {
+            if (response.ok) {
+                $("#catatanModal").modal("hide");
+                window.location.href = "/bimbingan/viewall";
+            }
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    } else {
+        alert("Catatan tidak boleh kosong."); 
+    }
+});
+
+</script>

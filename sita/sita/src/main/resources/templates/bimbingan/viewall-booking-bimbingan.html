@@ -62,26 +62,26 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Hari</th>
-                    <th>Tanggal Bimbingan</th>
+                    <th>Hari, Tanggal</th>
+                    <th>Waktu</th>
                     <th style="text-align: center">Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
                     <tr th:each="available, iterationStatus : ${listAvailable}" 
                     th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'">
-                    <td th:text="${#temporals.format(available.availableTime, 'EEEE')}"></td>
-                    <td th:text="${#temporals.format(available.availableTime, 'dd MMMM yyyy HH:mm:ss')}"></td>
+                    <td th:text="${#temporals.format(available.startBimbinganTime, 'EEEE, dd MMMM yyyy')}"></td>
+                    <td th:text="${#temporals.format(available.startBimbinganTime, 'HH:mm')} + ' - ' + ${#temporals.format(available.endBimbinganTime, 'HH:mm')}"></td>
                         <td>
-                            <div class="btn-group" th:if="${available.bookingStatus == 'AVAILABLE'}">
+                            <div class="btn-group" th:if="${available?.bookingStatus == 'AVAILABLE'}">
                                 <button class="btn btn-sm btn-primary booking-button" data-toggle="modal" data-target="#bookingConfirmationModal"
-                                th:attr="data-id=${available.idAvailableBimbingan}">Booking</button>
+                                th:attr="data-id=${available.idAvailableBimbingan}">Pilih</button>
                             </div>
-                            <div class="btn-group" th:if="${available.bookingStatus == 'BOOKED'}">
+                            <div class="btn-group" th:if="${available?.bookingStatus == 'BOOKED'}">
                                 <button th:each="jadwal, iterationStatus : ${listBimbingan}"
                                     th:if="${(jadwal?.availableBimbingan?.idAvailableBimbingan == available?.idAvailableBimbingan) && (jadwal?.mahasiswa?.idUser == user?.idUser)}" 
                                     class="btn btn-sm btn-primary cancel-button" data-toggle="modal" data-target="#cancelConfirmationModal"
-                                    th:attr="data-id=${availableBimbingan?.idAvailableBimbingan}">Cancel</button>
+                                    th:attr="data-id=${available?.idAvailableBimbingan}">Batal</button>
                             </div>
                         </td>
                     </tr>
@@ -173,6 +173,7 @@
             method: "GET",
         })
         .then(function(response) {
+            console.log(response);
             if (response.ok) {
                 $("#cancelConfirmationModal").modal("hide");
                 window.location.href = "/bimbingan/atur-jadwal";

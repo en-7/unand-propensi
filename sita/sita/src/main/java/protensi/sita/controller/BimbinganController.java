@@ -16,12 +16,12 @@ import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.service.PembimbingServiceImpl;
 import protensi.sita.service.UgbServiceImpl;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.core.Authentication;
 
 
@@ -74,38 +76,108 @@ public class BimbinganController {
     public String addAvailbaleBimbinganSubmitPage(
         @ModelAttribute AvailableBimbinganModel availableBimbingan, Model model,
         Authentication authentication) {
-        String namaUser = authentication.getName();
-        UserModel user = userDetailsService.findByUsername(namaUser);
-        PembimbingModel pembimbing = pembimbingService.findPembimbingById(user.getIdUser()); 
-        availableBimbingan.setPembimbing(pembimbing);
-        availableBimbingan.setBookingStatus("AVAILABLE");
-        availableBimbinganService.add(availableBimbingan);
 
-        List<AvailableBimbinganModel> listAvailable = availableBimbinganService.findAll();
-        model.addAttribute("roleUser", baseService.getCurrentRole());
-        model.addAttribute("listAvailable", listAvailable);
-        return "redirect:/bimbingan/atur-jadwal/";
+        LocalDateTime startBimbinganTime = availableBimbingan.getStartBimbinganTime();
+        LocalDateTime endBimbinganTime = availableBimbingan.getEndBimbinganTime();
+
+        List<AvailableBimbinganModel> overlappingBimbingan = availableBimbinganService.findByStartBimbinganTimeBetween(startBimbinganTime, endBimbinganTime);
+        overlappingBimbingan.addAll(availableBimbinganService.findByEndBimbinganTimeBetween(startBimbinganTime, endBimbinganTime));
+
+        AvailableBimbinganModel startBimbinganExist = availableBimbinganService.findByStartBimbinganTime(availableBimbingan.getStartBimbinganTime());
+        AvailableBimbinganModel endBimbinganExist = availableBimbinganService.findByEndBimbinganTime(availableBimbingan.getEndBimbinganTime());
+        AvailableBimbinganModel startBimbinganBentrok = availableBimbinganService.findByStartBimbinganTime(availableBimbingan.getEndBimbinganTime());
+        AvailableBimbinganModel endBimbinganBentrok = availableBimbinganService.findByEndBimbinganTime(availableBimbingan.getStartBimbinganTime());
+        
+        if (startBimbinganExist == null){
+            if (startBimbinganBentrok == null){
+                if (endBimbinganExist == null){
+                    if (endBimbinganBentrok == null){
+                        if (overlappingBimbingan.isEmpty()) {
+                            String namaUser = authentication.getName();
+                            UserModel user = userDetailsService.findByUsername(namaUser);
+                            PembimbingModel pembimbing = pembimbingService.findPembimbingById(user.getIdUser()); 
+                            availableBimbingan.setPembimbing(pembimbing);
+                            availableBimbingan.setBookingStatus("AVAILABLE");
+                            availableBimbinganService.add(availableBimbingan);
+
+                            List<AvailableBimbinganModel> listAvailable = availableBimbinganService.findAll();
+                            model.addAttribute("listAvailable", listAvailable);
+                            return "redirect:/bimbingan/atur-jadwal/";
+                        } else {
+                            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                            return "bimbingan/error-bimbingan";
+                        }
+                    } else {
+                        model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                        return "bimbingan/error-bimbingan";
+                    } 
+                } else {
+                    model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                    return "bimbingan/error-bimbingan";
+                }
+            } else {
+                model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                return "bimbingan/error-bimbingan";
+        }
+        } else {
+            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+            return "bimbingan/error-bimbingan";
+        }
     }
 
     @GetMapping("/atur-jadwal/update/{idAvailableBimbingan}")
     public String updateAvailableBimbinganFormPage(@PathVariable Long idAvailableBimbingan, Model model) {
         AvailableBimbinganModel availableBimbingan = availableBimbinganService.findById(idAvailableBimbingan);
         PembimbingModel pembimbing = availableBimbingan.getPembimbing();
+        model.addAttribute("bookingStatus", availableBimbingan.getBookingStatus());
         model.addAttribute("availableBimbingan", availableBimbingan);
         model.addAttribute("pembimbingId", pembimbing.getIdUser());
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "bimbingan/update-available-bimbingan-form";
     }
 
 
     @PostMapping("/atur-jadwal/update")
     public String updateAvailableBimbinganSubmitPage(@ModelAttribute AvailableBimbinganModel availableBimbingan, Model model) {
-        availableBimbinganService.save(availableBimbingan);
-        List<AvailableBimbinganModel> listAvailable = availableBimbinganService.findAll();
-        model.addAttribute("listAvailable", listAvailable);
-        model.addAttribute("roleUser", baseService.getCurrentRole());
-        return "redirect:/bimbingan/atur-jadwal/";
+        LocalDateTime startBimbinganTime = availableBimbingan.getStartBimbinganTime();
+        LocalDateTime endBimbinganTime = availableBimbingan.getEndBimbinganTime();
 
+        List<AvailableBimbinganModel> overlappingBimbingan = availableBimbinganService.findByStartBimbinganTimeBetween(startBimbinganTime, endBimbinganTime);
+        overlappingBimbingan.addAll(availableBimbinganService.findByEndBimbinganTimeBetween(startBimbinganTime, endBimbinganTime));
+
+        AvailableBimbinganModel startBimbinganExist = availableBimbinganService.findByStartBimbinganTime(availableBimbingan.getStartBimbinganTime());
+        AvailableBimbinganModel endBimbinganExist = availableBimbinganService.findByEndBimbinganTime(availableBimbingan.getEndBimbinganTime());
+        AvailableBimbinganModel startBimbinganBentrok = availableBimbinganService.findByStartBimbinganTime(availableBimbingan.getEndBimbinganTime());
+        AvailableBimbinganModel endBimbinganBentrok = availableBimbinganService.findByEndBimbinganTime(availableBimbingan.getStartBimbinganTime());
+        
+        if (startBimbinganExist == null){
+            if (startBimbinganBentrok == null){
+                if (endBimbinganExist == null){
+                    if (endBimbinganBentrok == null){
+                        if (overlappingBimbingan.isEmpty()) {
+                            availableBimbinganService.save(availableBimbingan);
+                            List<AvailableBimbinganModel> listAvailable = availableBimbinganService.findAll();
+                            model.addAttribute("listAvailable", listAvailable);
+                            return "redirect:/bimbingan/atur-jadwal/";
+                        } else {
+                            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                            return "bimbingan/error-bimbingan";
+                        }
+                    } else {
+                        model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                        return "bimbingan/error-bimbingan";
+                    } 
+                } else {
+                    model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                    return "bimbingan/error-bimbingan";
+                }
+            } else {
+                model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                return "bimbingan/error-bimbingan";
+        }
+        } else {
+            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+            return "bimbingan/error-bimbingan";
+        }
     }
 
     @GetMapping("/viewall")
@@ -116,19 +188,47 @@ public class BimbinganController {
             PembimbingModel pembimbing = pembimbingService.findPembimbingById(user.getIdUser());
             List<JadwalBimbinganModel> listBimbingan = jadwalBimbinganService.findBimbinganByIdPembimbing(pembimbing.getIdUser());
             model.addAttribute("listBimbingan", listBimbingan);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "bimbingan/viewall-jadwal-bimbingan";
 
         } else if (user.getRoles().contains(EnumRole.MAHASISWA)){
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
             List<JadwalBimbinganModel> listBimbingan = jadwalBimbinganService.findBimbinganByIdMahasiswa(mahasiswa.getIdUser());
             model.addAttribute("listBimbingan", listBimbingan);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "bimbingan/viewall-jadwal-bimbingan";
 
         } else{
-            model.addAttribute("roleUser", baseService.getCurrentRole());
+            model.addAttribute("pesan", "Halaman tidak dapat diakses");
             return "bimbingan/error-bimbingan";
+        }
+    }
+    
+    @PostMapping("/isi-catatan/{idJadwalBimbingan}")
+    public String isiCatatanBimbingan(@PathVariable Long idJadwalBimbingan, @RequestParam("catatan-bimbingan") String catatanBimbingan,
+            Model model) {
+        try {
+            JadwalBimbinganModel jadwalBimbingan = jadwalBimbinganService.findById(idJadwalBimbingan);
+            jadwalBimbingan.setCatatanBimbingan(catatanBimbingan);
+            jadwalBimbinganService.update(jadwalBimbingan);
+
+            return "redirect:/bimbingan/viewall/";
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+        }
+    }
+
+    @PostMapping("/update-catatan/{idJadwalBimbingan}")
+    public String updateCatatanBimbingan(@PathVariable Long idJadwalBimbingan, @RequestParam("catatan-bimbingan") String catatanBimbingan,
+            Model model) {
+        try {
+            JadwalBimbinganModel jadwalBimbingan = jadwalBimbinganService.findById(idJadwalBimbingan);
+            jadwalBimbingan.setCatatanBimbingan(catatanBimbingan);
+            jadwalBimbinganService.update(jadwalBimbingan);
+
+            return "redirect:/bimbingan/viewall/";
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
         }
     }
 
@@ -140,18 +240,13 @@ public class BimbinganController {
         if (user.getRoles().contains(EnumRole.PEMBIMBING)) {
             PembimbingModel pembimbing = pembimbingService.findPembimbingById(user.getIdUser());
             List<AvailableBimbinganModel> listAvailable = availableBimbinganService.findAllByIdPembimbing(pembimbing.getIdUser());
-            if (listAvailable.isEmpty()){
-                return "bimbingan/error-bimbingan";
-            }else {
-                model.addAttribute("listAvailable", listAvailable);
-                return "bimbingan/viewall-available-bimbingan";
-            }
-           
-
+            model.addAttribute("listAvailable", listAvailable);
+            return "bimbingan/viewall-available-bimbingan";
         } else if (user.getRoles().contains(EnumRole.MAHASISWA)){
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             if (ugb == null){
+                model.addAttribute("pesan", "Anda belum melakukan pendaftaran UGB");
                 return "bimbingan/error-bimbingan";
             }else {
                 List<AvailableBimbinganModel> listAvailable = availableBimbinganService.listAvailablePembimbing(ugb);
@@ -161,9 +256,8 @@ public class BimbinganController {
                 model.addAttribute("listAvailable", listAvailable);
                 return "bimbingan/viewall-booking-bimbingan";
             }
-
         } else{
-            model.addAttribute("roleUser", baseService.getCurrentRole());
+            model.addAttribute("pesan", "Halaman tidak dapat diakses");
             return "bimbingan/error-bimbingan";
         }
     }

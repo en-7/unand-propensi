@@ -13,4 +13,5 @@ public interface JadwalBimbinganService {
     List<JadwalBimbinganModel> findBimbinganByListAvailable(List<AvailableBimbinganModel> listAvailable);
     void save(JadwalBimbinganModel jadwalBimbingan);
     void delete(Long idJadwalBimbingan);
+    JadwalBimbinganModel update(JadwalBimbinganModel jadwalBimbingan);
 }

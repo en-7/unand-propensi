@@ -60,7 +60,7 @@
     </div>
     <div class="container-content mt-4">
         <div class="header-container-table">
-            <h5 class="table-title ml-4 mt-2" th:text="${seminarProposal?.ugb?.mahasiswa?.nama}"></h5>
+            <h5 class="table-title ml-4 mt-2" th:text="${seminarProposal?.ugb?.judulUgb}"></h5>
         </div>
         <table class="table">
             <tr>
@@ -86,7 +86,7 @@
                 <th>Nilai Sempro</th>
                 <td>
                     <span th:if="${seminarProposal?.nilai == null}">-</span>
-                    <span th:unless="${seminarProposal?.nilai == null}" th:text="${seminarProposal?.nilai}"></span>
+                    <span th:unless="${seminarProposal?.nilai == null}" th:text="${seminarProposal?.nilai} + '  (' + ${seminarProposal?.nilaiHuruf} + ')' "></span>
                 </td>
             </tr>
             <tr>

@@ -29,9 +29,13 @@ public class AvailableBimbinganModel {
     @Column(name = "booking_status")
     private String bookingStatus;
 
-    @Column(name = "available_time", nullable = false)
+    @Column(name = "start_bimbingan_time", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime availableTime;
+    private LocalDateTime startBimbinganTime;
+
+    @Column(name = "end_bimbingan_time", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime endBimbinganTime;
 
     @ManyToOne
     @JoinColumn(name = "id_pembimbing", nullable = false)
