@@ -2,6 +2,7 @@ package protensi.sita.service;
 
 import protensi.sita.model.AvailableBimbinganModel;
 import protensi.sita.model.JadwalBimbinganModel;
+import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.repository.JadwalBimbinganDb;
@@ -35,6 +36,12 @@ public class JadwalBimbinganServiceImpl implements JadwalBimbinganService {
     @Override
     public void save(JadwalBimbinganModel jadwalBimbingan) {
         jadwalBimbinganDb.save(jadwalBimbingan);
+    }
+
+    @Override
+    public JadwalBimbinganModel update(JadwalBimbinganModel jadwalBimbingan) {
+        jadwalBimbinganDb.save(jadwalBimbingan);
+        return jadwalBimbingan;
     }
 
     @Override

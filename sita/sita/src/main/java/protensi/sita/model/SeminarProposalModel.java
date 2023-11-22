@@ -64,6 +64,9 @@ public class SeminarProposalModel {
 
     @Column(name = "nilai")
     private Long nilai;
+
+    @Column(name = "nilai_huruf")
+    private String nilaiHuruf;
     
     @Column(name = "tanggal_lulus")
     private LocalDateTime tanggalLulus;
@@ -74,7 +77,7 @@ public class SeminarProposalModel {
 
 //    @OneToOne
 //    @JoinColumn(name = "id_jadwal_sidang")
-//    private JadwalSidangModel jadwalSidang;\
+//    private JadwalSidangModel jadwalSidang;
 
     @OneToOne(mappedBy = "seminarProposal")
     private JadwalSidangModel jadwalSidang;
