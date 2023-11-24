@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
     <style>
         body {
-            background-color: #ffffff;
+            background-color: #e0e0e0;
         }
         .container-content {
             width: 850px;
@@ -48,11 +48,13 @@
         }
 
         .filter-bar {
+            border-radius: 15px 15px 0 0;
+
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             width: 1100px;
             margin: 20px auto 0;
-            background-color: #2D89FF;
+            background-color: rgb(38, 63, 14);
             padding: 0 0;
         }
 
@@ -62,7 +64,7 @@
             padding: 10px 0;
             cursor: pointer;
             text-align: center;
-            background-color: #2D89FF;
+            background-color: #3c7850;
             width: 100%;
         }
 
@@ -71,11 +73,27 @@
         }
 
         .filter-bar button:hover {
-            background-color: #1E6EBC;
+            background-color:  rgb(38, 63, 14);
         }
 
         .table-row-hidden {
             display: none;
+        }
+
+        #filterDenied{
+            border-radius: 0 15px 0 0;
+        }
+
+        #filterAll{
+            border-radius: 15px 0 0 0;
+        }
+
+        .filter-bar {
+            border-radius: 15px 15px 0 0;
+        }
+
+        .table{
+            margin-top: 0px;
         }
     </style>
 </head>
@@ -84,14 +102,14 @@
 
 
 <div class="container">
-    <div class="filter-bar">
-        <button id="filterAll">ALL</button>
-        <button id="filterApprove">APPROVE</button>
-        <button id="filterApproved">APPROVED</button>
-        <button id="filterDenied">DENIED</button>
-    </div>
     <div class="d-flex justify-content-center">
         <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta Seminar Proposal</h2>
+    </div>
+    <div class="filter-bar">
+        <button id="filterAll">ALL</button>
+        <button id="filterApprove">VALIDASI</button>
+        <button id="filterApproved">PENILAIAN</button>
+        <button id="filterDenied">PENOLAKAN</button>
     </div>
     <div class="d-flex justify-content-center">
         <div class="content-container-table">
@@ -127,12 +145,12 @@
                             </ul>
                         </td>
                         <td>
-                            <span th:if="${seminarProposal.statusDokumen == 'SUBMITTED' || seminarProposal.statusDokumen == 'DENY'}">
+                            <span th:if="${seminarProposal.statusDokumen == 'TERDAFTAR' || seminarProposal.statusDokumen == 'DITOLAK'}">
                                 <div class="btn-group">
                                     <a class="btn btn-sm btn-primary" th:href="@{/seminar-proposal/detail/} + ${seminarProposal.idSeminarProposal}">Detail</a>
                                 </div>
                             </span>
-                            <span th:unless="${seminarProposal.statusDokumen == 'SUBMITTED' || seminarProposal.statusDokumen == 'DENY'}">
+                            <span th:unless="${seminarProposal.statusDokumen == 'TERDAFTAR' || seminarProposal.statusDokumen == 'DITOLAK'}">
                                 <span th:if="${seminarProposal.nilai == null}">
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-success input-button" data-toggle="modal" data-target="#inputNilaiModal"
@@ -143,8 +161,8 @@
                                 <span th:unless="${seminarProposal.nilai == null}">
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-success update-button" data-toggle="modal" data-target="#updateNilaiModal"
-                                        th:attr="data-id=${seminarProposal.idSeminarProposal}, data-nilai=${seminarProposal.nilai}, data-status=${seminarProposal.statusSeminarProposal}"
-                                        >Update Nilai</button>
+                                            th:attr="data-id=${seminarProposal.idSeminarProposal}, data-nilai=${seminarProposal.nilai}, data-status=${seminarProposal.statusSeminarProposal}"
+                                        >Ubah Nilai</button>
                                     </div>
                                 </span>
                             </span>
@@ -169,13 +187,6 @@
                     <label>Nilai:</label>
                     <input type="text" class="form-control" id="nilai" required>
                 </div>
-                <div class="form-group">
-                    <label>Status:</label>
-                    <select class="form-control" id="statusSeminarProposal" required>
-                        <option value="LULUS">LULUS</option>
-                        <option value="TIDAK LULUS">TIDAK LULUS</option>
-                    </select>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -199,18 +210,11 @@
                     <label>Nilai:</label>
                     <input type="text" class="form-control" id="updateNilai" required>
                 </div>
-                <div class="form-group">
-                    <label>Status:</label>
-                    <select class="form-control" id="updateStatusSeminarProposal" required>
-                        <option value="LULUS">LULUS</option>
-                        <option value="TIDAK LULUS">TIDAK LULUS</option>
-                    </select>
-                </div>
             </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-        <button type="button" class="btn btn-primary" id="simpanUpdateNilai">Simpan</button>
-    </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="simpanUpdateNilai">Simpan</button>
+            </div>
         </div>
     </div>
 </div>
@@ -229,7 +233,6 @@ document.querySelectorAll(".input-button").forEach(function(button) {
 document.getElementById("simpanNilai").addEventListener("click", function () {
     var seminarProposalId = this.getAttribute("data-id");
     var nilai = document.getElementById("nilai").value;
-    var statusSeminarProposal = document.getElementById("statusSeminarProposal").value;
 
     if (isNaN(parseFloat(nilai)) || nilai === "") {
         alert("Nilai harus berupa angka.");
@@ -239,7 +242,6 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
     var data = {
         idSeminarProposal: seminarProposalId,
         nilai: parseFloat(nilai),
-        statusSeminarProposal: statusSeminarProposal
     };
     fetch("/seminar-proposal/input-nilai/" + seminarProposalId, {
         method: "POST",
@@ -268,11 +270,8 @@ document.querySelectorAll(".update-button").forEach(function(button) {
     button.addEventListener("click", function() {
         var seminarProposalId = this.getAttribute("data-id");
         var nilai = this.getAttribute("data-nilai");
-        var statusSeminarProposal = this.getAttribute("data-status");
 
         document.getElementById("updateNilai").value = nilai;
-        document.getElementById("updateStatusSeminarProposal").value = statusSeminarProposal;
-
         document.getElementById("simpanUpdateNilai").setAttribute("data-id", seminarProposalId);
     });
 });
@@ -280,7 +279,6 @@ document.querySelectorAll(".update-button").forEach(function(button) {
 document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
     var seminarProposalId = this.getAttribute("data-id");
     var nilai = document.getElementById("updateNilai").value;
-    var statusSeminarProposal = document.getElementById("updateStatusSeminarProposal").value;
 
     if (isNaN(parseFloat(nilai)) || nilai === "") {
         alert("Nilai harus berupa angka.");
@@ -289,7 +287,6 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
     var data = {
         idSeminarProposal: seminarProposalId,
         nilai: parseFloat(nilai),
-        statusSeminarProposal: statusSeminarProposal
     };
 
     fetch("/seminar-proposal/update-nilai/" + seminarProposalId, {
@@ -329,18 +326,18 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
     }
 
     document.getElementById("filterApprove").addEventListener("click", function () {
-        filterDaftar("SUBMITTED");
-        window.location.href = "/seminar-proposal/filter?status=SUBMITTED";
+        filterDaftar("TERDAFTAR");
+        window.location.href = "/seminar-proposal/filter?status=TERDAFTAR";
     });
 
     document.getElementById("filterApproved").addEventListener("click", function () {
-        filterDaftar("APPROVED");
-        window.location.href = "/seminar-proposal/filter?status=APPROVED";
+        filterDaftar("DISETUJUI");
+        window.location.href = "/seminar-proposal/filter?status=DISETUJUI";
     });
 
     document.getElementById("filterDenied").addEventListener("click", function () {
-        filterDaftar("DENY");
-        window.location.href = "/seminar-proposal/filter?status=DENY";
+        filterDaftar("DITOLAK");
+        window.location.href = "/seminar-proposal/filter?status=DITOLAK";
     });
     document.getElementById("filterAll").addEventListener("click", function () {
         filterDaftar("ALL");
