@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:temporals="http://www.thymeleaf.org/extras/thymeleaf-temporals">
+<head>
+    <title>SITA</title>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <object th:include="fragments/fragment :: css" th:remove="tag"></object>
+    <object th:include="fragments/fragment :: js" th:remove="tag"></object>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
+    <style>
+        body {
+            background-color: #e0e0e0;
+        }
+        .container-content {
+            width: 850px;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 80px;
+        }
+
+        .container-table {
+            width: 900px;
+            height: auto;
+            border-radius: 10px;
+            border-style: solid;
+            border-color: #2D89FF;
+        }
+
+        .content-container-table {
+            display: flex;
+            justify-content: center;
+        }
+
+        .table {
+            margin-top: 20px;
+            width: 1200px;
+            height: auto;
+        }
+
+        th {
+            text-align: center;
+            color: #000000;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="fragments/fragment :: navbar (${'/bimbingan'})"></nav>
+
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <h2 class="mt-4" style="font-weight: bold;">Daftar Jadwal Bimbingan</h2>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="content-container-table">
+            <table class="table">
+                
+                <thead>
+                <tr>
+                    <th>Nama Mahasiswa</th>
+                    <th>Hari, Tanggal</th>
+                    <th>Waktu Bimbingan</th>
+                    <th>Catatan</th>
+                    <th>Aksi</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jadwalBimbingan, iterationStatus : ${listBimbingan}" 
+                    th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'">
+                    <td>
+                        <a th:href="@{/profile/{parameter}(parameter=${jadwalBimbingan.mahasiswa.idUser})}" th:text="${jadwalBimbingan.mahasiswa.nama}" style="text-decoration: none; color: black;"></a>
+                    </td>  
+                    <td th:text="${#temporals.format(jadwalBimbingan.availableBimbingan.startBimbinganTime, 'EEEE, dd MMMM yyyy')}"></td>
+                    <td th:text="${#temporals.format(jadwalBimbingan.availableBimbingan.startBimbinganTime, 'HH:mm')} + ' - ' + ${#temporals.format(jadwalBimbingan.availableBimbingan.endBimbinganTime, 'HH:mm')}"></td>
+
+                    <td>
+                        <span th:if="${jadwalBimbingan?.catatanBimbingan == null}">-</span>
+                        <span th:unless="${jadwalBimbingan?.catatanBimbingan == null}" th:text="${jadwalBimbingan?.catatanBimbingan}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
