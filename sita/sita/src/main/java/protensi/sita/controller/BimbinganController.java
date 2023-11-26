@@ -188,7 +188,7 @@ public class BimbinganController {
             PembimbingModel pembimbing = pembimbingService.findPembimbingById(user.getIdUser());
             List<JadwalBimbinganModel> listBimbingan = jadwalBimbinganService.findBimbinganByIdPembimbing(pembimbing.getIdUser());
             model.addAttribute("listBimbingan", listBimbingan);
-            return "bimbingan/viewall-jadwal-bimbingan";
+            return "bimbingan/viewall-jadwal-bimbingan-dosen";
 
         } else if (user.getRoles().contains(EnumRole.MAHASISWA)){
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
