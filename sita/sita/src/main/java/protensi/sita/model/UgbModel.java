@@ -30,7 +30,7 @@ public class UgbModel {
     private Long idUgb;
 
     @NotNull
-    @Length(max = 500)  
+    @Length(max = 500)
     @Column(name = "judul_ugb", nullable = false)
     private String judulUgb;
 
@@ -109,4 +109,33 @@ public class UgbModel {
     @JoinTable(name = "ugb_koordinator", joinColumns = @JoinColumn(name = "id_ugb"), inverseJoinColumns = @JoinColumn(name = "id_koordinator"))
     private Set<UserModel> koordinator;
 
+    @NotNull
+    @Length(max = 1000)
+    @Column(name = "latar_belakang", nullable = false)
+    private String latarBelakang;
+
+    @NotNull
+    @Length(max = 1000)
+    @Column(name = "tujuan_manfaat", nullable = false)
+    private String tujuanManfaat;
+
+    @NotNull
+    @Length(max = 1000)
+    @Column(name = "ruang_lingkup", nullable = false)
+    private String ruangLingkup;
+
+    @NotNull
+    @Length(max = 1000)
+    @Column(name = "ugb_keterbaruan", nullable = false)
+    private String keterbaruan;
+
+    @NotNull
+    @Length(max = 1000)
+    @Column(name = "ugb_metodologi", nullable = false)
+    private String metodologi;
+
+    @NotNull
+    @Length(max = 1000)
+    @Column(name = "catatan_judul_ugb", nullable = false)
+    private String catatanJudulUgb;
 }

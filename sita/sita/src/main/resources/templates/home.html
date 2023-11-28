@@ -12,6 +12,7 @@
             /* color: #6a5b31; */
             font-weight: bold;
         }
+
         .h5, h5{
             /* color: #6a5b31; */
             font-weight: bold;
@@ -41,6 +42,12 @@
         .f-r{
             display: inline-block; /* Display the button as an inline block */
             margin-left: 20px
+
+        }
+        
+        h2.center {
+            text-align: center;
+
         }
     </style>
 </head>
@@ -110,17 +117,48 @@
             </div>
             <!-- <h2 style="color: whitesmoke;">Welcome To SITA</h2> -->
 
-            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
+            <div sec:authorize="hasRole('KOORDINATOR')" class="my-3 d-flex justify-content-center">
                 <a th:href="@{/mahasiswa/viewall}" class="mx-2 btn btn-outline-success">List Mahasiswa</a>
             </div>
-            <!-- <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
+            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
                 <a th:href="@{/dokter/viewall}" class="mx-2 btn btn-outline-success" >List Dokter</a>
             </div>
             <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
                 <a th:href="@{/apoteker/viewall}" class="mx-2 btn btn-outline-success" >List Apoteker</a>
-            </div> -->
-            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
+            </div>
+            <div sec:authorize="hasRole('KOORDINATOR')" class="my-3 d-flex justify-content-center">
                 <a th:href="@{/whitelist/add}" class="mx-2 btn btn-outline-success" >Tambah Whitelist</a>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <h2 class="mt-4 pt-4" th:text="'Hello '+${#httpServletRequest.remoteUser}+'!'">Login as</h2>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div class="card m-4 p-4">
+            <div class="card-body">
+                <div class="m-4">
+                    <h2 class="center">Selamat datang di SITA</h2>
+                    <div th:switch="${roleUser}">
+                        <div th:case="'[ROLE_[ADMIN]]'">
+                            <div class="d-flex justify-content-center">
+                                <a th:href="@{/mahasiswa/viewall}" class="mx-2 btn btn-outline-primary">Daftar Mahasiswa</a>
+                                <a th:href="@{/mahasiswa/add}" class="mx-2 btn btn-outline-primary">Tambah Mahasiswa</a>
+                                <!-- <a th:href="@{'/mahasiswa/update/'+ ${mahasiswa.idUser}}" class="mx-2 btn btn-outline-primary">Update Mahasiswa</a> -->
+                            </div>
+                            <div class="my-3 d-flex justify-content-center">
+                                <a th:href="@{/dosen/viewall}" class="mx-2 btn btn-outline-primary">Daftar Dosen</a>
+                                <a th:href="@{/dosen/add}" class="mx-2 btn btn-outline-primary">Tambah Dosen</a>
+                                <!-- <a th:href="@{/dosen/update}" class="mx-2 btn btn-outline-primary">Update Dosen</a> -->
+                            </div>
+                            <div class="my-3 d-flex justify-content-center">
+                                <a th:href="@{/koordinator/viewall}" class="mx-2 btn btn-outline-primary">Daftar Koordinator</a>
+                                <a th:href="@{/koordinator/add}" class="mx-2 btn btn-outline-primary">Tambah Koordinator</a>
+                                <!-- <a th:href="@{/koordinator/update}" class="mx-2 btn btn-outline-primary">Update Koordinator</a> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

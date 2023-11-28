@@ -13,32 +13,37 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UgbService {
-    List<UserModel> getListPembimbing();
+        List<UserModel> getListPembimbing();
 
-    List<UserModel> getListPenguji();
 
-    String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb);
+        List<UserModel> getListPenguji();
 
-    List<UgbModel> viewAllUgb();
+        String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb);
 
-    UserModel getCurrentUser();
+        String addCatatanUgb(UgbModel ugb, String catatanJudulUgb, String latarBelakang, String tujuanManfaat,
+                        String ruangLingkup, String keterbaruan, String metodologi);
 
-    UgbModel getAddFormObjects();
+        List<UgbModel> viewAllUgb();
 
-    void updateUgbKoordinator(Long idUgb, Long idP1, Long idP2);
-    
-    void updateUgbMahasiswa(Long idUgb, String judul, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb);
+        UserModel getCurrentUser();
 
-    void downloadUgbFiles(String type, Long id, HttpServletResponse response);
-    // MahasiswaModel getMahasiswa(String username);
+        UgbModel getAddFormObjects();
 
-    UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa);
-    
-    List<UgbModel> filterUgb(String status);
+        void updateUgbKoordinator(Long idUgb, Long idP1, Long idP2);
 
-    void approveUgb(UgbModel ugb);
+        void updateUgbMahasiswa(Long idUgb, String judul, MultipartFile bukti_kp, MultipartFile transcript,
+                        MultipartFile file_khs, MultipartFile file_ugb);
 
-    void denyUgb(UgbModel ugb, String ctt);
+        void downloadUgbFiles(String type, Long id, HttpServletResponse response);
+        // MahasiswaModel getMahasiswa(String username);
 
-    UgbModel getUgbById(Long idUgb);
+        UgbModel findByIdMahasiswa(MahasiswaModel mahasiswa);
+
+        List<UgbModel> filterUgb(String status);
+
+        void approveUgb(UgbModel ugb);
+
+        void denyUgb(UgbModel ugb, String ctt);
+
+        UgbModel getUgbById(Long idUgb);
 }

@@ -8,6 +8,7 @@ import protensi.sita.repository.AvailableBimbinganDb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,4 +65,25 @@ public class AvailableBimbinganServiceImpl implements AvailableBimbinganService 
         }
         return listAvailable;
     }
+
+    @Override
+    public AvailableBimbinganModel findByStartBimbinganTime(LocalDateTime startBimbinganTime) {
+        return availableBimbinganDb.findByStartBimbinganTime(startBimbinganTime);
+    }
+
+    @Override
+    public AvailableBimbinganModel findByEndBimbinganTime(LocalDateTime endBimbinganTime) {
+        return availableBimbinganDb.findByStartBimbinganTime(endBimbinganTime);
+    }
+
+    @Override
+    public List<AvailableBimbinganModel> findByStartBimbinganTimeBetween(LocalDateTime startBimbinganTime, LocalDateTime endBimbinganTime) {
+        return availableBimbinganDb.findByStartBimbinganTimeBetween(startBimbinganTime, endBimbinganTime);
+    }
+
+    @Override
+    public List<AvailableBimbinganModel> findByEndBimbinganTimeBetween(LocalDateTime startBimbinganTime, LocalDateTime endBimbinganTime) {
+        return availableBimbinganDb.findByEndBimbinganTimeBetween(startBimbinganTime, endBimbinganTime);
+    }
+
 }

@@ -107,9 +107,9 @@
     </div>
     <div class="filter-bar">
         <button id="filterAll">ALL</button>
-        <button id="filterApprove">APPROVE</button>
-        <button id="filterApproved">APPROVED</button>
-        <button id="filterDenied">DENIED</button>
+        <button id="filterApprove">VALIDASI</button>
+        <button id="filterApproved">PENILAIAN</button>
+        <button id="filterDenied">PENOLAKAN</button>
     </div>
     <div class="d-flex justify-content-center">
         <div class="content-container-table">
@@ -145,12 +145,12 @@
                             </ul>
                         </td>
                         <td>
-                            <span th:if="${tugasAkhir.statusDokumen == 'SUBMITTED' || tugasAkhir.statusDokumen == 'DENY'}">
+                            <span th:if="${tugasAkhir.statusDokumen == 'TERDAFTAR' || tugasAkhir.statusDokumen == 'DITOLAK'}">
                                 <div class="btn-group">
                                     <a class="btn btn-sm btn-primary" th:href="@{/tugas-akhir/detail/} + ${tugasAkhir.idTugasAkhir}">Detail</a>
                                 </div>
                             </span>
-                            <span th:unless="${tugasAkhir.statusDokumen == 'SUBMITTED' || tugasAkhir.statusDokumen == 'DENY'}">
+                            <span th:unless="${tugasAkhir.statusDokumen == 'TERDAFTAR' || tugasAkhir.statusDokumen == 'DITOLAK'}">
                                 <span th:if="${tugasAkhir.nilai == null}">
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-success input-button" data-toggle="modal" data-target="#inputNilaiModal"
@@ -162,7 +162,7 @@
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-success update-button" data-toggle="modal" data-target="#updateNilaiModal"
                                         th:attr="data-id=${tugasAkhir.idTugasAkhir}, data-nilai=${tugasAkhir.nilai}, data-status=${tugasAkhir.statusTugasAkhir}"
-                                        >Update Nilai</button>
+                                        >Ubah Nilai</button>
                                     </div>
                                 </span>
                             </span>
@@ -187,13 +187,6 @@
                     <label>Nilai:</label>
                     <input type="text" class="form-control" id="nilai" required>
                 </div>
-                <div class="form-group">
-                    <label>Status:</label>
-                    <select class="form-control" id="statusTugasAkhir" required>
-                        <option value="LULUS">LULUS</option>
-                        <option value="TIDAK LULUS">TIDAK LULUS</option>
-                    </select>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -216,13 +209,6 @@
                 <div class="form-group">
                     <label>Nilai:</label>
                     <input type="text" class="form-control" id="updateNilai" required>
-                </div>
-                <div class="form-group">
-                    <label>Status:</label>
-                    <select class="form-control" id="updateStatusTugasAkhir" required>
-                        <option value="LULUS">LULUS</option>
-                        <option value="TIDAK LULUS">TIDAK LULUS</option>
-                    </select>
                 </div>
             </div>
     <div class="modal-footer">
@@ -247,7 +233,6 @@ document.querySelectorAll(".input-button").forEach(function(button) {
 document.getElementById("simpanNilai").addEventListener("click", function () {
     var tugasAkhirId = this.getAttribute("data-id");
     var nilai = document.getElementById("nilai").value;
-    var statusTugasAkhir = document.getElementById("statusTugasAkhir").value;
 
     if (isNaN(parseFloat(nilai)) || nilai === "") {
         alert("Nilai harus berupa angka.");
@@ -257,7 +242,6 @@ document.getElementById("simpanNilai").addEventListener("click", function () {
     var data = {
         idTugasAkhir: tugasAkhirId,
         nilai: parseFloat(nilai),
-        statusTugasAkhir: statusTugasAkhir
     };
     fetch("/tugas-akhir/input-nilai/" + tugasAkhirId, {
         method: "POST",
@@ -286,11 +270,8 @@ document.querySelectorAll(".update-button").forEach(function(button) {
     button.addEventListener("click", function() {
         var tugasAkhirId = this.getAttribute("data-id");
         var nilai = this.getAttribute("data-nilai");
-        var statusTugasAkhir = this.getAttribute("data-status");
 
         document.getElementById("updateNilai").value = nilai;
-        document.getElementById("updateStatusTugasAkhir").value = statusTugasAkhir;
-
         document.getElementById("simpanUpdateNilai").setAttribute("data-id", tugasAkhirId);
     });
 });
@@ -298,7 +279,6 @@ document.querySelectorAll(".update-button").forEach(function(button) {
 document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
     var tugasAkhirId = this.getAttribute("data-id");
     var nilai = document.getElementById("updateNilai").value;
-    var statusTugasAkhir = document.getElementById("updateStatusTugasAkhir").value;
 
     if (isNaN(parseFloat(nilai)) || nilai === "") {
         alert("Nilai harus berupa angka.");
@@ -307,7 +287,6 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
     var data = {
         idTugasAkhir: tugasAkhirId,
         nilai: parseFloat(nilai),
-        statusTugasAkhir: statusTugasAkhir
     };
 
     fetch("/tugas-akhir/update-nilai/" + tugasAkhirId, {
@@ -347,18 +326,18 @@ document.getElementById("simpanUpdateNilai").addEventListener("click", function 
     }
 
     document.getElementById("filterApprove").addEventListener("click", function () {
-        filterDaftar("SUBMITTED");
-        window.location.href = "/tugas-akhir/filter?status=SUBMITTED";
+        filterDaftar("TERDAFTAR");
+        window.location.href = "/tugas-akhir/filter?status=TERDAFTAR";
     });
 
     document.getElementById("filterApproved").addEventListener("click", function () {
-        filterDaftar("APPROVED");
-        window.location.href = "/tugas-akhir/filter?status=APPROVED";
+        filterDaftar("DISETUJUI");
+        window.location.href = "/tugas-akhir/filter?status=DISETUJUI";
     });
 
     document.getElementById("filterDenied").addEventListener("click", function () {
-        filterDaftar("DENY");
-        window.location.href = "/tugas-akhir/filter?status=DENY";
+        filterDaftar("DITOLAK");
+        window.location.href = "/tugas-akhir/filter?status=DITOLAK";
     });
     document.getElementById("filterAll").addEventListener("click", function () {
         filterDaftar("ALL");

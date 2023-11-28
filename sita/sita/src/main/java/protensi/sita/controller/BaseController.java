@@ -18,6 +18,7 @@ import protensi.sita.model.EnumRole;
 import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.AnnouncementService;
 import protensi.sita.service.BaseService;
+import protensi.sita.service.TimelineServiceImpl;
 
 import java.util.*;
 
@@ -31,6 +32,9 @@ public class BaseController {
 
     @Autowired
     public AnnouncementService announcementService;
+    
+    private TimelineServiceImpl tlService;
+
 
     @GetMapping("/")
     private String home(Model model) {
@@ -52,6 +56,7 @@ public class BaseController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
+
         return "redirect:/";
     }
 

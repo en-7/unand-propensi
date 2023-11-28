@@ -60,7 +60,7 @@
     </div>
     <div class="container-content mt-4">
         <div class="header-container-table">
-            <h5 class="table-title ml-4 mt-2" th:text="${seminarProposal?.ugb?.mahasiswa?.nama}"></h5>
+            <h5 class="table-title ml-4 mt-2" th:text="${seminarProposal?.ugb?.judulUgb}"></h5>
         </div>
         <table class="table">
             <tr>
@@ -86,7 +86,7 @@
                 <th>Nilai Sempro</th>
                 <td>
                     <span th:if="${seminarProposal?.nilai == null}">-</span>
-                    <span th:unless="${seminarProposal?.nilai == null}" th:text="${seminarProposal?.nilai}"></span>
+                    <span th:unless="${seminarProposal?.nilai == null}" th:text="${seminarProposal?.nilai} + '  (' + ${seminarProposal?.nilaiHuruf} + ')' "></span>
                 </td>
             </tr>
             <tr>
@@ -144,7 +144,7 @@
         </table>
         <br><br>
         <div class="pb-2 d-flex justify-content-center">
-            <a th:if="${seminarProposal?.statusDokumen == 'DENY'}" class="btn btn-primary mx-1" th:href="@{'/seminar-proposal/update/'+ ${seminarProposal?.idSeminarProposal}}">Update</a>
+            <a th:if="${seminarProposal?.statusDokumen == 'DITOLAK'}" class="btn btn-primary mx-1" th:href="@{'/seminar-proposal/update/'+ ${seminarProposal?.idSeminarProposal}}">Update</a>
         </div>
         <div class="card">
             <h5 class="card-header text-white bg-info  mb-auto">Jadwal Seminar Proposal</h5>
