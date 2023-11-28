@@ -64,16 +64,21 @@
         <div class="card m-4 p-4">
             <div class="card-body">
                 <div class="justify-content-center">
-                    <h2>Form Available Bimbingan</h2>
+                    <h2>Formulir Isi Waktu Luang Bimbingan</h2>
                     <br>
                     <form th:action="@{/bimbingan/atur-jadwal/add}" th:object="${availableBimbingan}" method="POST">
     
-                    Tanggal Bimbingan: <br>
-                    <input required class="form-control" type="datetime-local" name="availableTime" />
+                    Waktu Mulai Bimbingan: <br>
+                    <input required class="form-control" type="datetime-local" name="startBimbinganTime"/>
                     <br><br>
+                    
+                    Waktu Selesai Bimbingan: <br>
+                    <input required class="form-control" type="datetime-local" name="endBimbinganTime"/>
+                    <br><br>
+
     
                         <div class="pb-2 d-flex justify-content-center">
-                            <button class="btn btn-primary" type="submit" name="save">Save</button>
+                            <button class="btn btn-primary" type="submit" name="save">Simpan</button>
                         </div>
                     </form>
                     

@@ -8,6 +8,11 @@
     <object th:include="fragments/fragment :: js" th:remove="tag"></object>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
     <style>
+        .h2, h2{
+            color: #6a5b31;
+            font-weight: bold;
+        }
+    </style>    <style>
         h2.center {
             text-align: center;
         }
@@ -18,12 +23,12 @@
     <nav th:replace="fragments/fragment :: navbar (${'/'})"></nav>
     <!-- <div class="d-flex justify-content-center align-items-center">
         <div div class="m-4">
+            <br>
             <div class="d-flex justify-content-center">
                 <h2 th:text=" 'Hello '+${#httpServletRequest.remoteUser}+'!'">Login as</h2>
             </div>
-            <br>
-                <h2>Welcome To SITA</h2>
-            </br>
+            <h2 style="color: whitesmoke;">Welcome To SITA</h2>
+
             <div sec:authorize="hasRole('KOORDINATOR')" class="my-3 d-flex justify-content-center">
                 <a th:href="@{/mahasiswa/viewall}" class="mx-2 btn btn-outline-success">List Mahasiswa</a>
             </div>

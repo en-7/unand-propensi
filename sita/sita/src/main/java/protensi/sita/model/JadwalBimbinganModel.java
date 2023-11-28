@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,6 +30,9 @@ public class JadwalBimbinganModel {
     @Column(name = "tanggal_bimbingan", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Set<LocalDateTime> tanggalBimbingan;
+
+    @Column(name = "catatan_bimbingan")
+    private String catatanBimbingan;
 
     @ManyToOne
     @JoinColumn(name = "id_mahasiswa", nullable = false)

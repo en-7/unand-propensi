@@ -64,17 +64,23 @@
         <div class="card m-4 p-4">
             <div class="card-body">
                 <div class="justify-content-center">
-                    <h2>Form Update Available Bimbingan</h2>
+                    <h2>Formulir Ubah Waktu Luang Bimbingan</h2>
                     <br>
                     <form th:action="@{/bimbingan/atur-jadwal/update}" th:object="${availableBimbingan}" method="POST">
                     <input type="hidden" th:field="*{idAvailableBimbingan}" />
                     <input type="hidden" th:field="*{pembimbing.idUser}" />
-                    Tanggal Bimbingan: <br>
-                    <input required class="form-control" type="datetime-local" name="availableTime" th:value="*{availableTime}"/>
+                    <input type="hidden" th:field="*{bookingStatus}" />
+
+                    Waktu Mulai Bimbingan: <br>
+                    <input required id="testtest" class="form-control" type="datetime-local" name="startBimbinganTime" th:value="*{startBimbinganTime}" onchange="test()" />
+                    <br><br>
+                    
+                    Waktu Selesai Bimbingan: <br>
+                    <input required id="testtest" class="form-control" type="datetime-local" name="endBimbinganTime" th:value="*{endBimbinganTime}" onchange="test()" />
                     <br><br>
     
                         <div class="pb-2 d-flex justify-content-center">
-                            <button class="btn btn-primary" type="submit" name="save">Save</button>
+                            <button class="btn btn-primary" type="submit" name="save">Simpan</button>
                         </div>
                     </form>
                     

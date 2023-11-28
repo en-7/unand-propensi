@@ -3,18 +3,29 @@ package protensi.sita.controller;
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.TimelineModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.BaseService;
 import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.service.SeminarProposalServiceImpl;
+import protensi.sita.service.TimelineServiceImpl;
 import protensi.sita.service.UgbServiceImpl;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -27,15 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
 
 @Resource
 @Controller
@@ -44,6 +47,9 @@ public class SeminarProposalController {
     @Qualifier("seminarProposalServiceImpl")
     @Autowired
     private SeminarProposalServiceImpl seminarProposalService;
+
+    @Autowired
+    private TimelineServiceImpl tlService;
 
     @Qualifier("ugbServiceImpl")
     @Autowired
@@ -69,28 +75,33 @@ public class SeminarProposalController {
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproByUgb(ugb);
             if (ugb != null) {
-                if (ugb.getStatusDokumen().equals("EVALUATED")) {
+                if (ugb.getStatusDokumen().equals("DIEVALUASI")) {
                     if (seminarProposal != null) {
-                        model.addAttribute("roleUser", baseService.getCurrentRole());
                         model.addAttribute("seminarProposal", seminarProposal);
                         return "sempro/detail-sempro-mahasiswa";
                     } else {
-                        seminarProposal = new SeminarProposalModel();
-                        model.addAttribute("roleUser", baseService.getCurrentRole());
-                        model.addAttribute("seminarProposal", seminarProposal);
-                        return "sempro/add-sempro-form";
+                        TimelineModel tl = tlService.checkDate();
+                        LocalDate nowDate = LocalDate.now();
+
+                        if (tl.getRegSempro() != null && tl.getRegSempro().equals(nowDate)) {
+                            seminarProposal = new SeminarProposalModel();
+                            model.addAttribute("seminarProposal", seminarProposal);
+                            return "sempro/add-sempro-form";
+                        } else {
+                            return "sempro/no-access-sempro";
+                        }
                     }
                 } else {
-                    model.addAttribute("roleUser", baseService.getCurrentRole());
+                    model.addAttribute("pesan",
+                            "Tidak dapat mendaftar seminar proposal, karena UGB Anda belum dievaluasi");
                     return "sempro/error-sempro";
                 }
             } else {
-                model.addAttribute("roleUser", baseService.getCurrentRole());
+                model.addAttribute("pesan", "Tidak dapat mendaftar seminar proposal, karena Anda belum mendaftar UGB");
                 return "sempro/error-sempro";
             }
-
         } else {
-            model.addAttribute("roleUser", baseService.getCurrentRole());
+            model.addAttribute("pesan", "Tidak dapat mendaftar seminar proposal, karena Anda bukan Mahasiswa");
             return "sempro/error-sempro";
         }
 
@@ -123,13 +134,12 @@ public class SeminarProposalController {
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             seminarProposal.setUgb(ugb);
-            // Mengatur tahap mahasiswa menjadi "SEMPRO", dan statusDokumen menjadi
-            // "SUBMITTED"
+            // Mengatur tahap mahasiswa menjadi "SEMPRO", dan statusDokumen menjadI
+            // "TERDAFTAR"
             seminarProposal.getUgb().getMahasiswa().setTahap("SEMPRO");
-            seminarProposal.setStatusDokumen("SUBMITTED");
+            seminarProposal.setStatusDokumen("TERDAFTAR");
 
             seminarProposalService.addSempro(seminarProposal);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-mahasiswa";
         } catch (IOException e) {
@@ -141,7 +151,6 @@ public class SeminarProposalController {
     @GetMapping("/update/{idSeminarProposal}")
     public String updateSemproFormPage(@PathVariable Long idSeminarProposal, Model model) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         model.addAttribute("seminarProposal", seminarProposal);
         return "sempro/update-sempro-form";
     }
@@ -177,10 +186,9 @@ public class SeminarProposalController {
             }
 
             seminarProposal.setCatatan(null);
-            seminarProposal.setStatusDokumen("SUBMITTED");
+            seminarProposal.setStatusDokumen("TERDAFTAR");
             seminarProposalService.updateSempro(seminarProposal);
 
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-mahasiswa";
         } catch (IOException e) {
@@ -195,7 +203,6 @@ public class SeminarProposalController {
         UserModel user = userDetailsService.findByUsername(namaUser);
         if (user.getRoles().contains(EnumRole.KOORDINATOR)) {
             List<SeminarProposalModel> listSempro = seminarProposalService.findAllSempro();
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("listSempro", listSempro);
             return "sempro/viewall-sempro";
         } else if (user.getRoles().contains(EnumRole.PEMBIMBING) && user.getRoles().contains(EnumRole.PENGUJI)) {
@@ -205,11 +212,11 @@ public class SeminarProposalController {
             List<SeminarProposalModel> listSempro = new ArrayList<SeminarProposalModel>();
             listSempro.addAll(listSemproPembimbing);
             listSempro.addAll(listSemproPenguji);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("listSempro", listSempro);
             return "sempro/viewall-sempro-dosen";
         }
-        model.addAttribute("roleUser", baseService.getCurrentRole());
+        model.addAttribute("pesan",
+                "Tidak dapat melihat daftar peserta seminar proposal karena Anda bukan Koordinator atau Dosen");
         return "sempro/error-sempro";
     }
 
@@ -217,7 +224,6 @@ public class SeminarProposalController {
     public String filterSeminarProposals(@RequestParam String status, Model model) {
         List<SeminarProposalModel> filteredProposals = seminarProposalService.findSemproByStatusDokumen(status);
         model.addAttribute("listSempro", filteredProposals);
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "sempro/viewall-sempro";
     }
 
@@ -225,16 +231,48 @@ public class SeminarProposalController {
     public String inputNilai(@PathVariable Long idSeminarProposal, @RequestBody Map<String, Object> data, Model model) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
         Long nilai = ((Integer) data.get("nilai")).longValue();
-        String statusSempro = (String) data.get("statusSeminarProposal");
-        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal,
-                nilai, statusSempro);
-
-        LocalDateTime currentTime = LocalDateTime.now();
-        seminarProposal.setTanggalLulus(currentTime);
-        seminarProposalService.updateSempro(seminarProposal);
-
-        if (updatedSeminarProposal != null) {
-            model.addAttribute("roleUser", baseService.getCurrentRole());
+        if (nilai != null) {
+            if (nilai < 40) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("E");
+                seminarProposal.setStatusSeminarProposal("TIDAK LULUS");
+            } else if (nilai < 50) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("D");
+                seminarProposal.setStatusSeminarProposal("TIDAK LULUS");
+            } else if (nilai < 55) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("C");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 60) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("C+");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 65) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("B-");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 70) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("B");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 75) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("B+");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 80) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("A-");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai <= 100) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("A");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else {
+                throw new IllegalArgumentException("Invalid nilai: " + nilai);
+            }
+            seminarProposal.setTanggalLulus(LocalDateTime.now());
+            seminarProposalService.updateSempro(seminarProposal);
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-koordinator";
         } else {
@@ -249,14 +287,50 @@ public class SeminarProposalController {
             Model model) {
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
         Long nilai = ((Integer) data.get("nilai")).longValue();
-        String statusSempro = (String) data.get("statusSeminarProposal");
-        SeminarProposalModel updatedSeminarProposal = seminarProposalService.saveNilaiAndStatus(idSeminarProposal,
-                nilai, statusSempro);
 
-        seminarProposalService.updateSempro(seminarProposal);
-        if (updatedSeminarProposal != null) {
+        if (nilai != null) {
+            if (nilai < 40) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("E");
+                seminarProposal.setStatusSeminarProposal("TIDAK LULUS");
+            } else if (nilai < 50) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("D");
+                seminarProposal.setStatusSeminarProposal("TIDAK LULUS");
+            } else if (nilai < 55) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("C");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 60) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("C+");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 65) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("B-");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 70) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("B");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 75) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("B+");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai < 80) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("A-");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else if (nilai <= 100) {
+                seminarProposal.setNilai(nilai);
+                seminarProposal.setNilaiHuruf("A");
+                seminarProposal.setStatusSeminarProposal("LULUS");
+            } else {
+                throw new IllegalArgumentException("Invalid nilai: " + nilai);
+            }
+            seminarProposal.setTanggalLulus(LocalDateTime.now());
+            seminarProposalService.updateSempro(seminarProposal);
             model.addAttribute("seminarProposal", seminarProposal);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "sempro/detail-sempro-koordinator";
         } else {
             throw new ResponseStatusException(
@@ -271,7 +345,6 @@ public class SeminarProposalController {
         UserModel user = userDetailsService.findByUsername(namaUser);
         SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
         model.addAttribute("seminarProposal", seminarProposal);
-        model.addAttribute("roleUser", baseService.getCurrentRole());
         if (user.getRoles().contains(EnumRole.KOORDINATOR)) {
             return "sempro/detail-sempro-koordinator";
         } else if (user.getRoles().contains(EnumRole.PEMBIMBING) && user.getRoles().contains(EnumRole.PENGUJI)) {
@@ -285,9 +358,8 @@ public class SeminarProposalController {
     public String approveSeminarProposal(@PathVariable Long idSeminarProposal, Model model) {
         try {
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            seminarProposal.setStatusDokumen("APPROVED");
+            seminarProposal.setStatusDokumen("DISETUJUI");
             seminarProposalService.updateSempro(seminarProposal);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-koordinator";
         } catch (Exception e) {
@@ -301,10 +373,9 @@ public class SeminarProposalController {
             Model model) {
         try {
             SeminarProposalModel seminarProposal = seminarProposalService.findSemproById(idSeminarProposal);
-            seminarProposal.setStatusDokumen("DENY");
+            seminarProposal.setStatusDokumen("DITOLAK");
             seminarProposal.setCatatan(catatan);
             seminarProposalService.updateSempro(seminarProposal);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarProposal", seminarProposal);
             return "sempro/detail-sempro-koordinator";
         } catch (Exception e) {

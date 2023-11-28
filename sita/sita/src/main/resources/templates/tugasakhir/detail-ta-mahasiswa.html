@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
     <style>
         body {
-            background-color: #ffffff;
+            background-color: #e0e0e0;
         }
 
         .container-content {
@@ -60,7 +60,7 @@
     </div>
     <div class="container-content mt-4">
         <div class="header-container-table">
-            <h5 class="table-title ml-4 mt-2" th:text="${tugasAkhir.ugb?.mahasiswa?.nama}"></h5>
+            <h5 class="table-title ml-4 mt-2" th:text="${tugasAkhir?.ugb?.mahasiswa?.nama}"></h5>
         </div>
         <table class="table">
             <tr>
@@ -86,7 +86,7 @@
                 <th>Nilai Sidang Tugas Akhir</th>
                 <td>
                     <span th:if="${tugasAkhir?.nilai == null}">-</span>
-                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai}"></span>
+                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai} + '  (' + ${tugasAkhir.nilaiHuruf} + ')'"></span>
                 </td>
             </tr>
             <tr>
@@ -234,7 +234,7 @@
         </table>
         <br><br>
         <div class="pb-2 d-flex justify-content-center">
-            <a th:if="${tugasAkhir.statusDokumen == 'DENY'}" class="btn btn-primary mx-1" th:href="@{'/tugas-akhir/update/'+ ${tugasAkhir?.idTugasAkhir}}">Update</a>
+            <a th:if="${tugasAkhir.statusDokumen == 'DITOLAK'}" class="btn btn-primary mx-1" th:href="@{'/tugas-akhir/update/'+ ${tugasAkhir?.idTugasAkhir}}">Update</a>
         </div>
     </div>
 </div>

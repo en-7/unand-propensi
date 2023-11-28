@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
     <style>
         body {
-            background-color: #ffffff;
+            background-color: #e0e0e0;
         }
         .container-content {
             width: 850px;
@@ -47,10 +47,19 @@
             text-align: center;
         }
 
+        #filterAllocated, #filterEvaluated{
+            border-radius: 0 15px 0 0;
+        }
+
+        #filterVerify, #filterBimbingan{
+            border-radius: 15px 0 0 0;
+        }
+
         .filter-bar {
+            border-radius: 15px 15px 0 0;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            width: 1100px;
+            width: 1000px;
             margin: 20px auto 0;
             background-color: rgb(38, 63, 14);
             padding: 0 0;
@@ -79,8 +88,16 @@
             background-color:  rgb(38, 63, 14);
         }
 
+        .filter-bar button.active {
+            border-bottom: 3px solid #000000;
+        }
+
         .table-row-hidden {
             display: none; 
+        }
+
+        .table{
+            margin-top: 0px;
         }
     </style>
 </head>
@@ -90,7 +107,7 @@
 
 <div class="container">
     <div class="d-flex justify-content-center">
-        <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta UGB NEW1</h2>
+        <h2 class="mt-4" style="font-weight: bold;">Daftar Peserta UGB</h2>
     </div>
     <div th:switch="${roleUser}">
         <div class="filter-bar" th:case="'[ROLE_[KOORDINATOR]]'">
@@ -143,7 +160,7 @@
                                 </div>
                                 <div th:case="*">
                                     <div class="btn-group">
-                                        <a class="btn btn-sm btn-primary" th:href="@{/ugb/detail/} + ${ugb.idUgb}">Detail</a>
+                                        <a class="btn btn-sm btn-primary" th:href="@{/ugb/addcatatan/} + ${ugb.idUgb}">Evaluasi</a>
                                     </div>
                                 </div>
                             </div>
@@ -158,23 +175,77 @@
 </body>
 </html>
 <script>
-    document.getElementById("filterVerify").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=SUBMITTED";
-    });
-    document.getElementById("filterAllocate").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=ALLOCATE";
-    });
-    document.getElementById("filterAllocated").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=ALLOCATED";
-    });
-    document.getElementById("filterBimbingan").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=SUBMITTED";
-    });
-    document.getElementById("filterEvaluate").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=EVALUATE";
-    });
-    document.getElementById("filterEvaluated").addEventListener("click", function () {
-        window.location.href = "/ugb/filter?status=EVALUATED";
-    });
+    const btnk1 = document.getElementById("filterVerify");
+    if(btnk1){
+        btnk1.addEventListener("click", function () {
+            window.location.href = "/ugb/filter?status=SUBMITTED";
+            console.log("MASUK KOORDINATORRR");
+        });
+    }
+
+    const btnk2 = document.getElementById("filterAllocate");
+    if(btnk2){
+        btnk2.addEventListener("click", function () {
+            console.log("MASUK KOORDINATORRR");
+            window.location.href = "/ugb/filter?status=ALLOCATE";
+        });
+    }
+
+    const btnk3 = document.getElementById("filterAllocated");
+    if(btnk3){
+        btnk3.addEventListener("click", function () {
+            console.log("MASUK KOORDINATORRR");
+            window.location.href = "/ugb/filter?status=ALLOCATED";
+        });
+    }
+
+    const btnd1 = document.getElementById("filterBimbingan");
+    if(btnd1){
+        btnd1.addEventListener("click", function () {
+            console.log("MASUK");
+            window.location.href = "/ugb/filter?status=SUBMITTED";
+        });
+    }
+
+    const btnd2 = document.getElementById("filterEvaluate");
+    if(btnd2){
+        btnd2.addEventListener("click", function () {
+            console.log("MASUK");
+            window.location.href = "/ugb/filter?status=EVALUATE";
+        });
+    }
+
+    const btnd3 = document.getElementById("filterEvaluated");
+    if(btnd3){
+        btnd3.addEventListener("click", function () {
+            console.log("MASUK");
+            window.location.href = "/ugb/filter?status=EVALUATED";
+        });
+    }
+
+    // document.getElementById("filterVerify").addEventListener("click", function () {
+    //     window.location.href = "/ugb/filter?status=SUBMITTED";
+    //     console.log("MASUK KOORDINATORRR");
+    // });
+    // document.getElementById("filterAllocate").addEventListener("click", function () {
+    //     console.log("MASUK KOORDINATORRR");
+    //     window.location.href = "/ugb/filter?status=ALLOCATE";
+    // });
+    // document.getElementById("filterAllocated").addEventListener("click", function () {
+    //     console.log("MASUK KOORDINATORRR");
+    //     window.location.href = "/ugb/filter?status=ALLOCATED";
+    // });
+    // document.getElementById("filterBimbingan").addEventListener("click", function () {
+    //     console.log("MASUK");
+    //     window.location.href = "/ugb/filter?status=SUBMITTED";
+    // });
+    // document.getElementById("filterEvaluate").addEventListener("click", function () {
+    //     console.log("MASUK");
+    //     window.location.href = "/ugb/filter?status=EVALUATE";
+    // });
+    // document.getElementById("filterEvaluated").addEventListener("click", function () {
+    //     console.log("MASUK");
+    //     window.location.href = "/ugb/filter?status=EVALUATED";
+    // });
     
 </script>

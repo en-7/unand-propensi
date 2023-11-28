@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Poppins" />
     <style>
         body {
-            background-color: #ffffff;
+            background-color: #e0e0e0;
         }
         .container-content {
             width: 850px;
@@ -55,31 +55,33 @@
 
 <div class="container">
     <div class="d-flex justify-content-center">
-        <h2 class="mt-4" style="font-weight: bold;">Daftar Jadwal Bimbingan</h2>
+        <h2 class="mt-4" style="font-weight: bold;">Daftar Waktu Luang Bimbingan</h2>
     </div>
-        <a class="btn btn-sm btn-primary" th:href="@{/bimbingan/atur-jadwal/add}" style="margin: 10px;">Add</a>
+        <a class="btn btn-sm btn-primary" th:href="@{/bimbingan/atur-jadwal/add}" style="margin: 10px;">Tambah Waktu Luang</a>
     <div class="d-flex justify-content-center">
         <div class="content-container-table">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Hari</th>
-                    <th>Tanggal Bimbingan</th>
+                    <th>Hari, Tanggal</th>
+                    <th>Waktu</th>
+                    <th>Status</th>
                     <th style="text-align: center">Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
                     <tr th:each="availableBimbingan, iterationStatus : ${listAvailable}" 
                     th:style="${iterationStatus.even} ? 'background-color:#f2f2f2;' : 'background-color:#eceaea;'">
-                    <td th:text="${#temporals.format(availableBimbingan.availableTime, 'EEEE')}"></td>
-                    <td th:text="${#temporals.format(availableBimbingan.availableTime, 'dd MMMM yyyy HH:mm:ss')}"></td>
+                    <td th:text="${#temporals.format(availableBimbingan.startBimbinganTime, 'EEEE, dd MMMM yyyy')}"></td>
+                    <td th:text="${#temporals.format(availableBimbingan.startBimbinganTime, 'HH:mm')} + ' - ' + ${#temporals.format(availableBimbingan.endBimbinganTime, 'HH:mm')}"></td>
+                    <td th:text="${availableBimbingan.bookingStatus}"></td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-sm btn-primary" th:attr="href=@{/bimbingan/atur-jadwal/update/{id}(id=${availableBimbingan.idAvailableBimbingan})}">Edit</a>
+                                <a class="btn btn-sm btn-primary" th:attr="href=@{/bimbingan/atur-jadwal/update/{id}(id=${availableBimbingan.idAvailableBimbingan})}">Ubah</a>
                             </div>
                             <div class="btn-group">
-                                <button th:if="${availableBimbingan.bookingStatus == 'AVAILABLE'}" class="btn btn-sm btn-primary delete-button" data-toggle="modal" data-target="#deleteConfirmationModal"
-                                th:attr="data-id=${availableBimbingan.idAvailableBimbingan}">Hapus</button>                            
+                                <button class="btn btn-sm btn-danger delete-button" data-toggle="modal" data-target="#deleteConfirmationModal"
+                                th:attr="data-id=${availableBimbingan?.idAvailableBimbingan}">Hapus</button>                            
                             </div>
                         </td>
                     </tr>
@@ -89,41 +91,21 @@
     </div>
 </div>
 
-<div class="modal fade" id="bookingConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="bookingConfirmationModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="bookingConfirmationModalLabel">Konfirmasi Booking Jadwal Bimbingan</h5>
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Konfirmasi Penghapusan Waktu Luang Bimbingan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Apakah Anda yakin ingin booking jadwal bimbingan ini?
+                Apakah Anda yakin ingin menghapus waktu luang bimbingan ini?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-sm btn-primary" id="confirmBookingButton" >Ya</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="cancelConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="cancelConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cancelConfirmationModalLabel">Konfirmasi Pembatalan Jadwal Bimbingan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin membatalkan jadwal bimbingan ini?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-sm btn-primary" id="confirmCancelButton" >Ya</button>
+                <button type="button" class="btn btn-sm btn-primary" id="confirmDeleteButton" >Ya</button>
             </div>
         </div>
     </div>
@@ -131,50 +113,25 @@
 </body>
 </html>
 <script>
-    document.querySelectorAll(".booking-button").forEach(function(button) {
+    document.querySelectorAll(".delete-button").forEach(function(button) {
         button.addEventListener("click", function() {
             var availableBimbinganId = this.getAttribute("data-id");
-            document.getElementById("confirmBookingButton").setAttribute("data-id", availableBimbinganId);
+            document.getElementById("confirmDeleteButton").setAttribute("data-id", availableBimbinganId);
         });
     });
     
-    document.getElementById("confirmBookingButton").addEventListener("click", function() {
+    document.getElementById("confirmDeleteButton").addEventListener("click", function() {
         var availableBimbinganId = this.getAttribute("data-id");
-        fetch("/bimbingan/atur-jadwal/booking/" + availableBimbinganId, {
-            method: "POST",
-        })
-        .then(function(response) {
-            if (response.ok) {
-                $("#bookingConfirmationModal").modal("hide");
-                window.location.href = "/bimbingan/atur-jadwal";
-            } else {
-                alert("Gagal memesan jadwal bimbingan.");
-            }
-        })
-        .catch(function(error) {
-            console.error("Error:", error);
-        });
-    });
-</script>
-<script>
-    document.querySelectorAll(".cancel-button").forEach(function(button) {
-        button.addEventListener("click", function() {
-            var availableBimbinganId = this.getAttribute("data-id");
-            document.getElementById("confirmCancelButton").setAttribute("data-id", availableBimbinganId);
-        });
-    });
-    
-    document.getElementById("confirmCancelButton").addEventListener("click", function() {
-        var availableBimbinganId = this.getAttribute("data-id");
-        fetch("/bimbingan/atur-jadwal/cancel/" + availableBimbinganId, {
+        fetch("/bimbingan/atur-jadwal/delete/" + availableBimbinganId, {
             method: "GET",
         })
         .then(function(response) {
+            console.log(response);
             if (response.ok) {
-                $("#cancelConfirmationModal").modal("hide");
+                $("#deleteConfirmationModal").modal("hide");
                 window.location.href = "/bimbingan/atur-jadwal";
             } else {
-                alert("Gagal membatalkan jadwal bimbingan.");
+                alert("Waktu Luang tidak dapat dihapus karena jadwal bimbingan sudah dipesan oleh mahasiswa.");
             }
         })
         .catch(function(error) {
