@@ -2,7 +2,6 @@ package protensi.sita.controller;
 
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
-import protensi.sita.model.TimelineModel;
 import protensi.sita.model.SeminarProposalModel;
 import protensi.sita.model.TugasAkhirModel;
 import protensi.sita.model.UgbModel;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import protensi.sita.service.UgbServiceImpl;
 import protensi.sita.service.BaseService;
