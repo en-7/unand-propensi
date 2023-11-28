@@ -1,20 +1,14 @@
 package protensi.sita.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import protensi.sita.model.SeminarHasilModel;
 import protensi.sita.model.SeminarProposalModel;
-import protensi.sita.model.UgbModel;
 import protensi.sita.repository.SeminarHasilDb;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 

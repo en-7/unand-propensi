@@ -40,8 +40,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 
-
-
 @Resource
 @Controller
 @RequestMapping("/seminar-proposal")
@@ -85,16 +83,17 @@ public class SeminarProposalController {
                         TimelineModel tl = tlService.checkDate();
                         LocalDate nowDate = LocalDate.now();
 
-                        if(tl.getRegSempro() != null && tl.getRegSempro().equals(nowDate)){
+                        if (tl.getRegSempro() != null && tl.getRegSempro().equals(nowDate)) {
                             seminarProposal = new SeminarProposalModel();
                             model.addAttribute("seminarProposal", seminarProposal);
                             return "sempro/add-sempro-form";
-                        }else{
+                        } else {
                             return "sempro/no-access-sempro";
                         }
                     }
                 } else {
-                    model.addAttribute("pesan", "Tidak dapat mendaftar seminar proposal, karena UGB Anda belum dievaluasi");
+                    model.addAttribute("pesan",
+                            "Tidak dapat mendaftar seminar proposal, karena UGB Anda belum dievaluasi");
                     return "sempro/error-sempro";
                 }
             } else {
@@ -110,17 +109,18 @@ public class SeminarProposalController {
 
     @PostMapping("/add")
     public String addSemproSubmitPage(@ModelAttribute SeminarProposalModel seminarProposal,
-        @RequestParam("draftProposalTaFile") MultipartFile draftProposalTaFile,
-        @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
-        @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
-        Model model, Authentication authentication) {
+            @RequestParam("draftProposalTaFile") MultipartFile draftProposalTaFile,
+            @RequestParam("buktiKrsFile") MultipartFile buktiKrsFile,
+            @RequestParam("persetujuanPembimbingFile") MultipartFile persetujuanPembimbingFile,
+            Model model, Authentication authentication) {
         try {
             byte[] draftProposalTaBytes = draftProposalTaFile.getBytes();
             byte[] buktiKrsBytes = buktiKrsFile.getBytes();
             byte[] persetujuanPembimbingBytes = persetujuanPembimbingFile.getBytes();
             String namaFiledraftProposalTa = StringUtils.cleanPath(draftProposalTaFile.getOriginalFilename());
             String namaFileBuktiKrs = StringUtils.cleanPath(buktiKrsFile.getOriginalFilename());
-            String namaFilePersetujuanPembimbing = StringUtils.cleanPath(persetujuanPembimbingFile.getOriginalFilename());
+            String namaFilePersetujuanPembimbing = StringUtils
+                    .cleanPath(persetujuanPembimbingFile.getOriginalFilename());
 
             seminarProposal.setNameFileBuktiKrs(namaFileBuktiKrs);
             seminarProposal.setNameFilePersetujuanPembimbing(namaFilePersetujuanPembimbing);
@@ -134,7 +134,8 @@ public class SeminarProposalController {
             MahasiswaModel mahasiswa = mahasiswaService.findMahasiswaById(user.getIdUser());
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             seminarProposal.setUgb(ugb);
-            // Mengatur tahap mahasiswa menjadi "SEMPRO", dan statusDokumen menjadI "TERDAFTAR"
+            // Mengatur tahap mahasiswa menjadi "SEMPRO", dan statusDokumen menjadI
+            // "TERDAFTAR"
             seminarProposal.getUgb().getMahasiswa().setTahap("SEMPRO");
             seminarProposal.setStatusDokumen("TERDAFTAR");
 
@@ -214,7 +215,8 @@ public class SeminarProposalController {
             model.addAttribute("listSempro", listSempro);
             return "sempro/viewall-sempro-dosen";
         }
-        model.addAttribute("pesan", "Tidak dapat melihat daftar peserta seminar proposal karena Anda bukan Koordinator atau Dosen");
+        model.addAttribute("pesan",
+                "Tidak dapat melihat daftar peserta seminar proposal karena Anda bukan Koordinator atau Dosen");
         return "sempro/error-sempro";
     }
 
