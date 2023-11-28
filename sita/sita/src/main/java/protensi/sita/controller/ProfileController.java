@@ -101,7 +101,7 @@ public class ProfileController {
         model.addAttribute("ugb", thisUgb);
         return "profile/profile-mahasiswa.html";
     }
-    
+
     @GetMapping("/profile")
     public String profilePage(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
