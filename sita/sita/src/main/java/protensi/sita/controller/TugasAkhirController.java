@@ -23,6 +23,7 @@ import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.SeminarHasilModel;
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.TimelineModel;
 import protensi.sita.model.TugasAkhirModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
@@ -30,11 +31,13 @@ import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.BaseService;
 import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.service.SeminarProposalServiceImpl;
+import protensi.sita.service.TimelineServiceImpl;
 import protensi.sita.service.SeminarHasilServiceImpl;
 import protensi.sita.service.TugasAkhirServiceImpl;
 import protensi.sita.service.UgbServiceImpl;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +71,9 @@ public class TugasAkhirController {
     private MahasiswaServiceImpl mahasiswaService;
 
     @Autowired
+    private TimelineServiceImpl tlService;
+
+    @Autowired
     public BaseService baseService;
 
     @GetMapping("/tugas-akhir/add")
@@ -79,16 +85,23 @@ public class TugasAkhirController {
             UgbModel ugb = ugbService.findByIdMahasiswa(mahasiswa);
             TugasAkhirModel tugasAkhir = tugasAkhirService.findTAByUgb(ugb);
             if (ugb != null) {
-                if (ugb.getStatusDokumen().equals("EVALUATED")) {
+                if (ugb.getStatusDokumen().equals("DIEVALUASI")) {
                     if (tugasAkhir != null) {
                         model.addAttribute("roleUser", baseService.getCurrentRole());
                         model.addAttribute("tugasAkhir", tugasAkhir);
                         return "tugasakhir/detail-ta-mahasiswa";
                     } else {
-                        tugasAkhir = new TugasAkhirModel();
-                        model.addAttribute("roleUser", baseService.getCurrentRole());
-                        model.addAttribute("tugasAkhir", tugasAkhir);
-                        return "tugasakhir/add-ta-form";
+                        TimelineModel tl = tlService.checkDate();
+                        LocalDate nowDate = LocalDate.now();
+                        if(tl.getRegSidang() != null && tl.getRegSidang().equals(nowDate)){
+                            tugasAkhir = new TugasAkhirModel();
+                            model.addAttribute("roleUser", baseService.getCurrentRole());
+                            model.addAttribute("tugasAkhir", tugasAkhir);
+                            return "tugasakhir/add-ta-form";
+                        }else{
+                            return "tugasakhir/no-access-ta";
+                        }
+
                     }
                 } else {
                     model.addAttribute("roleUser", baseService.getCurrentRole());
@@ -191,7 +204,7 @@ public class TugasAkhirController {
             tugasAkhir.setSeminarHasil(semhas);
 
             tugasAkhir.getUgb().getMahasiswa().setTahap("TUGASAKHIR");
-            tugasAkhir.setStatusDokumen("SUBMITTED");
+            tugasAkhir.setStatusDokumen("TERDAFTAR");
 
             tugasAkhirService.addSidangTA(tugasAkhir);
             model.addAttribute("roleUser", baseService.getCurrentRole());
@@ -239,16 +252,49 @@ public class TugasAkhirController {
     public String inputNilai(@PathVariable Long idTugasAkhir, @RequestBody Map<String, Object> data, Model model) {
         TugasAkhirModel tugasAkhir = tugasAkhirService.findTugasAkhirById(idTugasAkhir);
         Long nilai = ((Integer) data.get("nilai")).longValue();
-        String statusTugasAkhir = (String) data.get("statusTugasAkhir");
-        TugasAkhirModel updatedTugasAkhir = tugasAkhirService.saveNilaiAndStatus(idTugasAkhir,
-                nilai, statusTugasAkhir);
+        if (nilai != null) {
+            if (nilai < 40) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("E");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
+            } else if (nilai < 50) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("D");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
+            } else if (nilai < 55) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("C");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 60) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("C+");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 65) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("B-");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 70) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("B");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 75) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("B+");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 80) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("A-");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai <= 100) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("A");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else {
+                throw new IllegalArgumentException("Invalid nilai: " + nilai);
+            }
 
-        LocalDateTime currentTime = LocalDateTime.now();
-        tugasAkhir.setTanggalLulus(currentTime);
-        tugasAkhirService.updateTugasAkhir(tugasAkhir);
-
-        if (updatedTugasAkhir != null) {
-            model.addAttribute("roleUser", baseService.getCurrentRole());
+            tugasAkhir.setTanggalLulus(LocalDateTime.now());
+            tugasAkhirService.updateTugasAkhir(tugasAkhir);
             model.addAttribute("tugasAkhir", tugasAkhir);
             return "tugasakhir/detail-ta-koordinator";
         } else {
@@ -263,14 +309,51 @@ public class TugasAkhirController {
             Model model) {
         TugasAkhirModel tugasAkhir = tugasAkhirService.findTugasAkhirById(idTugasAkhir);
         Long nilai = ((Integer) data.get("nilai")).longValue();
-        String statusTugasAkhir = (String) data.get("statusTugasAkhir");
-        TugasAkhirModel updatedTugasAkhir = tugasAkhirService.saveNilaiAndStatus(idTugasAkhir,
-                nilai, statusTugasAkhir);
 
-        tugasAkhirService.updateTugasAkhir(tugasAkhir);
-        if (updatedTugasAkhir != null) {
+        if (nilai != null) {
+            if (nilai < 40) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("E");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
+            } else if (nilai < 50) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("D");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
+            } else if (nilai < 55) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("C");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 60) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("C+");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 65) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("B-");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 70) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("B");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 75) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("B+");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai < 80) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("A-");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else if (nilai <= 100) {
+                tugasAkhir.setNilai(nilai);
+                tugasAkhir.setNilaiHuruf("A");
+                tugasAkhir.setStatusTugasAkhir("LULUS");
+            } else {
+                throw new IllegalArgumentException("Invalid nilai: " + nilai);
+            }
+
+            tugasAkhir.setTanggalLulus(LocalDateTime.now());
+            tugasAkhirService.updateTugasAkhir(tugasAkhir);
             model.addAttribute("tugasAkhir", tugasAkhir);
-            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "tugasakhir/detail-ta-koordinator";
         } else {
             throw new ResponseStatusException(
@@ -299,7 +382,7 @@ public class TugasAkhirController {
     public String approveTugasAkhir(@PathVariable Long idTugasAkhir, Model model) {
         try {
             TugasAkhirModel tugasAkhir = tugasAkhirService.findTugasAkhirById(idTugasAkhir);
-            tugasAkhir.setStatusDokumen("APPROVED");
+            tugasAkhir.setStatusDokumen("DISETUJUI");
             tugasAkhirService.updateTugasAkhir(tugasAkhir);
             model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("tugasAkhir", tugasAkhir);
@@ -315,7 +398,7 @@ public class TugasAkhirController {
             Model model) {
         try {
             TugasAkhirModel tugasAkhir = tugasAkhirService.findTugasAkhirById(idTugasAkhir);
-            tugasAkhir.setStatusDokumen("DENY");
+            tugasAkhir.setStatusDokumen("DITOLAK");
             tugasAkhir.setCatatan(catatan);
             tugasAkhirService.updateTugasAkhir(tugasAkhir);
             model.addAttribute("roleUser", baseService.getCurrentRole());
@@ -434,7 +517,7 @@ public class TugasAkhirController {
             }
 
             tugasAkhir.setCatatan(null);
-            tugasAkhir.setStatusDokumen("SUBMITTED");
+            tugasAkhir.setStatusDokumen("TERDAFTAR");
             tugasAkhirService.updateTugasAkhir(tugasAkhir);
 
             model.addAttribute("roleUser", baseService.getCurrentRole());
