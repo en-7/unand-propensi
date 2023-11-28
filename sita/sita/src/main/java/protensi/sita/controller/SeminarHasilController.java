@@ -42,9 +42,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+@Resource
 @Controller
 public class SeminarHasilController {
 
@@ -155,17 +157,20 @@ public class SeminarHasilController {
 
         if (user.getRoles().contains(EnumRole.KOORDINATOR)) {
             List<SeminarHasilModel> listSeminarHasil = seminarHasilService.findAllSeminarHasil();
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("listSeminarHasil", listSeminarHasil);
             return "viewall-semhas";
         } else if (user.getRoles().contains(EnumRole.PEMBIMBING) && user.getRoles().contains(EnumRole.PENGUJI)) {
             List<SeminarHasilModel> listSemhasPembimbing = seminarHasilService.findAllByPembimbing(user.getIdUser());
             List<SeminarHasilModel> listSemhasPenguji = seminarHasilService.findAllByPenguji(user.getIdUser());
-            List<SeminarHasilModel> listSemhas = new ArrayList<SeminarHasilModel>();
-            listSemhas.addAll(listSemhasPembimbing);
-            listSemhas.addAll(listSemhasPenguji);
-            model.addAttribute("listSemhas", listSemhas);
+            List<SeminarHasilModel> listSeminarHasil = new ArrayList<SeminarHasilModel>();
+            listSeminarHasil.addAll(listSemhasPembimbing);
+            listSeminarHasil.addAll(listSemhasPenguji);
+            model.addAttribute("roleUser", baseService.getCurrentRole());
+            model.addAttribute("listSeminarHasil", listSeminarHasil);
             return "viewall-semhas-dosen";
         } else {
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "error-semhas";
         }
     }
@@ -177,6 +182,7 @@ public class SeminarHasilController {
         UserModel user = userDetailsService.findByUsername(namaUser);
         SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
         model.addAttribute("seminarHasil", seminarHasil);
+        model.addAttribute("id", seminarHasil.getIdSeminarHasil());
         if (user.getRoles().contains(EnumRole.KOORDINATOR)) {
             return "detail-semhas-koordinator";
         } else if (user.getRoles().contains(EnumRole.PEMBIMBING) && user.getRoles().contains(EnumRole.PENGUJI)) {
@@ -193,7 +199,7 @@ public class SeminarHasilController {
         return "update-semhas-form";
     }
 
-    @PostMapping("/seminar-hasil/update")
+    @PostMapping("/seminar-hasil/update/{idSeminarHasil}")
     public String updateSeminarHasilSubmitPage(@ModelAttribute SeminarHasilModel seminarHasil,
             @PathVariable Long idSeminarHasil,
             @RequestParam("acc_pembimbing") MultipartFile acc_pembimbing,
@@ -202,7 +208,7 @@ public class SeminarHasilController {
             @RequestParam("notes_sempro") MultipartFile notes_sempro,
             @RequestParam("form_saps") MultipartFile form_saps,
             @RequestParam("draft_TA") MultipartFile draft_TA,
-            Model model, Authentication authentication) throws IOException {
+            Model model, Authentication authentication) {
         try {
             seminarHasil.setPersetujuanPembimbing(acc_pembimbing.getBytes());
             seminarHasil.setLaporanKp(bukti_kp.getBytes());
@@ -253,6 +259,7 @@ public class SeminarHasilController {
             seminarHasil.setStatusDokumen("SUBMITTED");
             seminarHasilService.updateSemhas(seminarHasil);
             model.addAttribute("seminarHasil", seminarHasil);
+            model.addAttribute("id", seminarHasil.getIdSeminarHasil());
             return "detail-semhas-mahasiswa";
         } catch (IOException e) {
             throw new ResponseStatusException(
@@ -263,38 +270,33 @@ public class SeminarHasilController {
     @GetMapping("/seminar-hasil/filter")
     public String filterSeminarHasil(@RequestParam String status, Model model) {
         List<SeminarHasilModel> filteredSemhas = seminarHasilService.findSemhasByStatusDokumen(status);
-        model.addAttribute("listSemhas", filteredSemhas);
+        model.addAttribute("listSeminarHasil", filteredSemhas);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
         return "viewall-semhas";
     }
 
     @PostMapping("/seminar-hasil/input-nilai/{idSeminarHasil}")
     public String inputNilaiSemhas(@PathVariable Long idSeminarHasil, @RequestBody Map<String, Object> data,
             Model model) {
-        System.out.println("--- nilai :" + (String) data.get("nilai"));
-
         SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
-        Long nilai = ((Integer) data.get("nilai")).longValue();
-
-        // Long nilai = ((Integer) data.get("nilai")).longValue();
-        System.out.println("--- parsed nilai :" + nilai);
-
+        Long nilai = Long.valueOf(((Integer) data.get("nilai")).longValue());
+        // Long nilai = ((Float) data.get("nilai")).longValue();
         // Long nilai = Long.parseLong((String) data.get("nilai"));
         // Long nilai = (Long) data.get("nilai");
         String statusSemhas = (String) data.get("statusSemhas");
         SeminarHasilModel updatedSeminarHasil = seminarHasilService.saveNilaiAndStatus(idSeminarHasil,
                 nilai, statusSemhas);
-
-        System.out.println("--- updated semhas :" + updatedSeminarHasil);
         LocalDateTime nowTime = LocalDateTime.now();
         seminarHasil.setTanggalLulus(nowTime);
         seminarHasilService.updateSemhas(seminarHasil);
 
         if (updatedSeminarHasil != null) {
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             model.addAttribute("seminarHasil", seminarHasil);
             return "detail-semhas-koordinator";
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika input nilai.");
         }
 
     }
@@ -303,7 +305,9 @@ public class SeminarHasilController {
     public String updateNilaiSemhas(@PathVariable Long idSeminarHasil, @RequestBody Map<String, Object> data,
             Model model) {
         SeminarHasilModel seminarHasil = seminarHasilService.findSemhasById(idSeminarHasil);
-        Long nilai = ((Integer) data.get("nilai")).longValue();
+        // Long nilai = Long.valueOf((String) data.get("nilai"));
+        // Long nilai = Long.parseLong((String) data.get("nilai"));
+        Long nilai = Long.valueOf(((Integer) data.get("nilai")).longValue());
         String statusSemhas = (String) data.get("statusSemhas");
         SeminarHasilModel updatedSeminarHasil = seminarHasilService.saveNilaiAndStatus(idSeminarHasil,
                 nilai, statusSemhas);
@@ -311,10 +315,11 @@ public class SeminarHasilController {
         seminarHasilService.updateSemhas(seminarHasil);
         if (updatedSeminarHasil != null) {
             model.addAttribute("seminarHasil", seminarHasil);
+            model.addAttribute("roleUser", baseService.getCurrentRole());
             return "detail-semhas-koordinator";
         } else {
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika input nilai.");
         }
     }
 

@@ -127,19 +127,26 @@
                             </ul>
                         </td>
                         <td>
-                            <span th:if="${seminarHasil.nilai == null}">
+                            <span th:if="${seminarHasil.statusDokumen == 'SUBMITTED' || seminarHasil.statusDokumen == 'DENY'}">
                                 <div class="btn-group">
-                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#inputNilaiModal"
-                                        th:attr="data-id=${seminarHasil.idSeminarHasil}"
-                                    >Input Nilai</button>
+                                    <a class="btn btn-sm btn-primary" th:href="@{/seminar-hasil/detail/} + ${seminarHasil.idSeminarHasil}">Detail</a>
                                 </div>
                             </span>
-                            <span th:unless="${seminarHasil.nilai == null}">
-                                <div class="btn-group">
-                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateNilaiModal"
-                                        th:attr="data-id=${seminarHasil.idSeminarHasil}"
-                                    >Update Nilai</button>
-                                </div>
+                            <span th:unless="${seminarHasil.statusDokumen == 'SUBMITTED' || seminarHasil.statusDokumen == 'DENY'}">
+                                <span th:if="${seminarHasil.nilai == null}">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-success input-button" data-toggle="modal" data-target="#inputNilaiModal"
+                                            th:attr="data-id=${seminarHasil.idSeminarHasil}"
+                                        >Input Nilai</button>
+                                    </div>
+                                </span>
+                                <span th:unless="${seminarHasil.nilai == null}">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-success update-button" data-toggle="modal" data-target="#updateNilaiModal"
+                                        th:attr="data-id=${seminarHasil.idSeminarHasil}, data-nilai=${seminarHasil.nilai}, data-status=${seminarHasil.statusSemhas}"
+                                        >Update Nilai</button>
+                                    </div>
+                                </span>
                             </span>
                         </td>
                     </tr>
@@ -216,7 +223,7 @@
 
 <script>
     // Logic Tombol Input Nilai
-    document.querySelectorAll(".btn-success").forEach(function(button) {
+    document.querySelectorAll(".input-button").forEach(function(button) {
         button.addEventListener("click", function() {
             var seminarHasilId = this.getAttribute("data-id");
             document.getElementById("simpanNilai").setAttribute("data-id", seminarHasilId); // Memasukkan data-id ke tombol "Simpan"
@@ -258,7 +265,7 @@
                 // Jika telah berhasil, form dapat ditutup
                 $("#inputNilaiModal").modal("hide");
                 // Atau dapat melakukan tindakan bersesuaian yang lain
-                window.location.href = "/seminar-hasil/viewall";
+                window.location.href = "/seminar-hasil/detail/" + seminarHasilId;
             } else {
                 alert("Gagal menyimpan nilai.");
             }
@@ -272,53 +279,34 @@
 </script>
 
 <script>
-    // Logic Tombol Update Nilai
-    document.querySelectorAll(".btn-success").forEach(function(button) {
+    document.querySelectorAll(".update-button").forEach(function(button) {
         button.addEventListener("click", function() {
             var seminarHasilId = this.getAttribute("data-id");
+            var nilai = this.getAttribute("data-nilai");
+            var statusSemhas = this.getAttribute("data-status");
     
-            // Retrieve nilai dan status dari listSeminarHasil berdasarkan seminarHasilId
-            var semhasData = listSeminarHasil.find(function(item) {
-                return item.idSeminarHasil === seminarHasilId;
-            });
+            document.getElementById("updateNilai").value = nilai;
+            document.getElementById("updateStatusSemhas").value = statusSemhas;
     
-            // Mengecek apakah nilai dan status ditemukan di database
-            if (semhasData) {
-                var nilaiDatabase = semhasData.nilai;
-                var statusDatabase = semhasData.statusSemhas;
-    
-                // Melakukan update nilai dan status di database
-                document.getElementById("updateNilai").value = nilaiDatabase;
-                document.getElementById("updateStatusSemhas").value = statusDatabase;
-    
-                // Set seminarHasilId ke tombol "Simpan" pada form update
-                document.getElementById("simpanUpdateNilai").setAttribute("data-id", seminarHasilId);
-            } else {
-                alert("Data seminar hasil tidak ditemukan.");
-            }
+            document.getElementById("simpanUpdateNilai").setAttribute("data-id", seminarHasilId);
         });
     });
     
-    // Logic Tombol Simpan pada Form Update Nilai
     document.getElementById("simpanUpdateNilai").addEventListener("click", function () {
         var seminarHasilId = this.getAttribute("data-id");
-        var updateNilai = document.getElementById("updateNilai").value;
-        var updateStatusSemhas = document.getElementById("updateStatusSemhas").value;
+        var nilai = document.getElementById("updateNilai").value;
+        var statusSemhas = document.getElementById("updateStatusSemhas").value;
     
-        // Mengecek updateNilai harus angka dan tidak kosong
-        if (isNaN(parseFloat(updateNilai)) || updateNilai === "") {
-            alert("Update Nilai harus berupa angka.");
+        if (isNaN(parseFloat(nilai)) || nilai === "") {
+            alert("Nilai harus berupa angka.");
             return;
         }
-    
-        // Setting objek data yang akan dikirim
         var data = {
             idSeminarHasil: seminarHasilId,
-            nilai: parseFloat(updateNilai),
-            statusSemhas: updateStatusSemhas
+            nilai: parseFloat(nilai),
+            statusSemhas: statusSemhas
         };
     
-        // AJAX Request untuk menyimpan nilai yang telah di update
         fetch("/seminar-hasil/update-nilai/" + seminarHasilId, {
             method: "POST",
             headers: {
@@ -328,12 +316,8 @@
         })
         .then(function (response) {
             if (response.ok) {
-                // Jika telah berhasil, form dapat ditutup
                 $("#updateNilaiModal").modal("hide");
-                // Atau dapat melakukan tindakan bersesuaian yang lain
                 window.location.href = "/seminar-hasil/detail/" + seminarHasilId;
-            } else {
-                alert("Gagal menyimpan nilai yang telah di update.");
             }
         })
         .catch(function (error) {
@@ -341,4 +325,42 @@
         });
     });
     
+</script>
+
+<script>
+    function filterDaftar(status) {
+        var rows = document.querySelectorAll('.table tbody tr');
+
+        rows.forEach(function (row) {
+            var statusDokumen = row.getAttribute('data-status');
+
+            if (status === 'ALL') {
+                row.style.display = '';
+            } else if(status === statusDokumen) {
+                row.style.display = '';
+            } else{
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    document.getElementById("filterApprove").addEventListener("click", function () {
+        filterDaftar("SUBMITTED");
+        window.location.href = "/seminar-hasil/filter?status=SUBMITTED";
+    });
+
+    document.getElementById("filterApproved").addEventListener("click", function () {
+        filterDaftar("APPROVED");
+        window.location.href = "/seminar-hasil/filter?status=APPROVED";
+    });
+
+    document.getElementById("filterDenied").addEventListener("click", function () {
+        filterDaftar("DENY");
+        window.location.href = "/seminar-hasil/filter?status=DENY";
+    });
+    document.getElementById("filterAll").addEventListener("click", function () {
+        filterDaftar("ALL");
+        window.location.href = "/seminar-hasil/viewall";
+    });
+
 </script>

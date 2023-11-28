@@ -70,27 +70,27 @@
                 <form th:action="@{/seminar-hasil/add}" th:object="${seminarHasil}" method="POST" enctype="multipart/form-data">
 
                     File Persetujuan Pembimbing (PDF):
-                    <input required class="form-control" type="file" id="persetujuanPembimbingFile" name="acc_pembimbing" accept=".pdf" onchange="validateFile()"/>
+                    <input required class="form-control" type="file" id="acc_pembimbing" name="acc_pembimbing" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Tanda Terima Laporan KP (PDF):
-                    <input required class="form-control" type="file" id="buktiKpFile" name="bukti_kp" accept=".pdf" onchange="validateFile()"/>
+                    <input required class="form-control" type="file" id="bukti_kp" name="bukti_kp" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Risalah Seminar Proposal (PDF):
-                    <input required class="form-control" type="file" id="risalahSemproFile" name="risalah_sempro" accept=".pdf" onchange="validateFile()"/>
+                    <input required class="form-control" type="file" id="risalah_sempro" name="risalah_sempro" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Catatan setelah Seminar Proposal (PDF)
-                    <input required class="form-control" type="file" id="notesSemproFile" name="notes_sempro" accept=".pdf" onchange="validateFile()"/>
+                    <input required class="form-control" type="file" id="notes_sempro" name="notes_sempro" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
                     
                     Form SAPS (PDF):
-                    <input required class="form-control" type="file" id="formSapsFile" name="form_saps" accept=".pdf" onchange="validateFile()"/>
+                    <input required class="form-control" type="file" id="form_saps" name="form_saps" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     Draft Proposal TA (PDF):
-                    <input required class="form-control" type="file" id="draftTAFile" name="draft_TA" accept=".pdf" onchange="validateFile()"/>
+                    <input required class="form-control" type="file" id="draft_TA" name="draft_TA" accept=".pdf" onchange="validateFile()"/>
                     <br><br>
 
                     <div class="pb-2 d-flex justify-content-center">
@@ -108,12 +108,12 @@
 
 <script>
     function validateFile() {
-        var persetujuanPembimbing = document.getElementById("persetujuanPembimbingFile");
-        var buktiKp = document.getElementById("buktiKpFile");
-        var risalahSempro = document.getElementById("risalahSemproFile");
-        var notesSempro = document.getElementById("notesSemproFile");
-        var formSaps = document.getElementById("formSapsFile");
-        var draftTA = document.getElementById("draftTAFile");
+        var persetujuanPembimbing = document.getElementById("acc_pembimbing");
+        var buktiKp = document.getElementById("bukti_kp");
+        var risalahSempro = document.getElementById("risalah_sempro");
+        var notesSempro = document.getElementById("notes_sempro");
+        var formSaps = document.getElementById("form_saps");
+        var draftTA = document.getElementById("draft_TA");
 
         var isValid = true;
 
