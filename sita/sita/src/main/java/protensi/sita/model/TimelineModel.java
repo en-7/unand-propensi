@@ -53,14 +53,6 @@ public class TimelineModel {
     @Column(name = "reg_ugb")
     private LocalDate regUGB;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "mulai_ugb")
-    private LocalDate startUGB;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "akhir_ugb")
-    private LocalDate endUGB;
-
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Column(name = "pengumuman_ugb")
     private LocalDateTime pengumumanUGB;
