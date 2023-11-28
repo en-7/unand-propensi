@@ -51,9 +51,9 @@ public class ProfileController {
     @Autowired
     MahasiswaDb mahasiswaDb;
 
-    @GetMapping("/profile/{id}")
-    public String profileIdPage(@PathVariable Long idUsr, Model model){
-        UserModel thisUser = userDb.findByIdUser(idUsr);
+    @GetMapping("/profile/{parameter}")
+    public String profileIdPage(@PathVariable Long parameter, Model model){
+        UserModel thisUser = userDb.findByIdUser(parameter);
         MahasiswaModel mahasiswa = mahasiswaDb.findByIdUser(thisUser.getIdUser());
         UgbModel thisUgb = ugbService.findByIdMahasiswa(mahasiswa);
 
