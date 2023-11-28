@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import protensi.sita.model.EnumRole;
 import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.BaseService;
+import protensi.sita.service.TimelineServiceImpl;
 
 import java.util.*;
 
@@ -26,6 +27,9 @@ public class BaseController {
 
     @Autowired
     public BaseService baseService;
+
+    @Autowired
+    private TimelineServiceImpl tlService;
 
     @GetMapping("/")
     private String home(Model model) {
@@ -44,6 +48,7 @@ public class BaseController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
+
         return "redirect:/";
     }
 

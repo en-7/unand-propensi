@@ -3,12 +3,14 @@ package protensi.sita.controller;
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.TimelineModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.BaseService;
 import protensi.sita.service.MahasiswaServiceImpl;
 import protensi.sita.service.SeminarProposalServiceImpl;
+import protensi.sita.service.TimelineServiceImpl;
 import protensi.sita.service.UgbServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,9 @@ public class SeminarProposalController {
     @Qualifier("seminarProposalServiceImpl")
     @Autowired
     private SeminarProposalServiceImpl seminarProposalService;
+
+    @Autowired
+    private TimelineServiceImpl tlService;
 
     @Qualifier("ugbServiceImpl")
     @Autowired
@@ -74,9 +80,16 @@ public class SeminarProposalController {
                         model.addAttribute("seminarProposal", seminarProposal);
                         return "sempro/detail-sempro-mahasiswa";
                     } else {
-                        seminarProposal = new SeminarProposalModel();
-                        model.addAttribute("seminarProposal", seminarProposal);
-                        return "sempro/add-sempro-form";
+                        TimelineModel tl = tlService.checkDate();
+                        LocalDate nowDate = LocalDate.now();
+
+                        if(tl.getRegSempro() != null && tl.getRegSempro().equals(nowDate)){
+                            seminarProposal = new SeminarProposalModel();
+                            model.addAttribute("seminarProposal", seminarProposal);
+                            return "sempro/add-sempro-form";
+                        }else{
+                            return "sempro/no-access-sempro";
+                        }
                     }
                 } else {
                     return "sempro/error-sempro";
