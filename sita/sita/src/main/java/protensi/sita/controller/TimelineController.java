@@ -190,9 +190,8 @@ public class TimelineController {
             model.addAttribute("peng_ta", peng_ta);
             return "timeline/read-tl";
         }else{
-            return "timeline/no-tl-error";
+            return "timeline/read-tl";
         }
-
         
     }
 
