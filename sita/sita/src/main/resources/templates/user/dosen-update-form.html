@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
-    <title>Add Mahasiswa</title>
+    <title>Update Dosen</title>
     <object th:include="fragments/fragment :: css" th:remove="tag"></object>
     <object th:include="fragments/fragment :: js" th:remove="tag"></object>
 </head>
@@ -12,26 +12,20 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2>Tambah Mahasiswa</h2>
+                <h2>Update Dosen</h2>
                 <br>
-                <form th:action="@{/mahasiswa/add}" th:object="${mahasiswa}" method="POST">
+                <form th:action="@{'/dosen/update/' + ${dosen.idUser}}" th:object="${dosen}" method="POST">
                     <label>Username</label>
-                    <input class="form-control" type="text" name="username" required/>
+                    <input class="form-control" type="text" name="username" required onchange="update()"/>
                     <br>
                     <label>Nama</label>
-                    <input class="form-control" type="text" name="nama" required/>
+                    <input class="form-control" type="text" name="nama" required onchange="update()"/>
                     <br>
                     <label>Email</label>
-                    <input class="form-control" type="text" name="email" required/>
+                    <input class="form-control" type="text" name="email" required onchange="update()"/>
                     <br>
                     <label>Password</label>
-                    <input class="form-control" type="password" name="password" required/>
-                    <br>
-                    <label>NIM</label>
-                    <input class="form-control" type="number" name="nim" required/>
-                    <br>
-                    <label>Tahap</label>
-                    <input class="form-control" type="text" name="tahap" required/>
+                    <input class="form-control" type="password" name="password" required onchange="update()"/>
                     <br>
                     <button class="btn btn-primary" type="submit" name="save">Submit</button>
                     <a class="btn btn-primary" href="/">Home</a>
@@ -43,3 +37,12 @@
  
 </body>
 </html>
+
+<script>
+    function update() {
+        var username = document.getElementById("username");
+        var nama = document.getElementById("nama");
+        var email = document.getElementById("email");
+        var password = document.getElementById("password");
+    }
+</script>

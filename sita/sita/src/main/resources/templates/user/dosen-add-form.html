@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
-    <title>Add Mahasiswa</title>
+    <title>Add Dosen</title>
     <object th:include="fragments/fragment :: css" th:remove="tag"></object>
     <object th:include="fragments/fragment :: js" th:remove="tag"></object>
 </head>
@@ -12,9 +12,9 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2>Tambah Mahasiswa</h2>
+                <h2>Tambah Dosen</h2>
                 <br>
-                <form th:action="@{/mahasiswa/add}" th:object="${mahasiswa}" method="POST">
+                <form th:action="@{/dosen/add}" th:object="${dosen}" method="POST">
                     <label>Username</label>
                     <input class="form-control" type="text" name="username" required/>
                     <br>
@@ -26,12 +26,6 @@
                     <br>
                     <label>Password</label>
                     <input class="form-control" type="password" name="password" required/>
-                    <br>
-                    <label>NIM</label>
-                    <input class="form-control" type="number" name="nim" required/>
-                    <br>
-                    <label>Tahap</label>
-                    <input class="form-control" type="text" name="tahap" required/>
                     <br>
                     <button class="btn btn-primary" type="submit" name="save">Submit</button>
                     <a class="btn btn-primary" href="/">Home</a>
