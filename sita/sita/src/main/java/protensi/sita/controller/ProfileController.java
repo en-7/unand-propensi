@@ -51,6 +51,57 @@ public class ProfileController {
     @Autowired
     MahasiswaDb mahasiswaDb;
 
+    @GetMapping("/profile/{id}")
+    public String profileIdPage(@PathVariable Long idUsr, Model model){
+        UserModel thisUser = userDb.findByIdUser(idUsr);
+        MahasiswaModel mahasiswa = mahasiswaDb.findByIdUser(thisUser.getIdUser());
+        UgbModel thisUgb = ugbService.findByIdMahasiswa(mahasiswa);
+
+        if(!mahasiswa.getTahap().equals("NEW")){
+            Set<UserModel> setPembimbing = thisUgb.getPembimbing();
+            Iterator iterator = setPembimbing.iterator();
+            UserModel pembimbing1 = (UserModel) iterator.next();
+            UserModel pembimbing2 = (UserModel) iterator.next();
+            model.addAttribute("pembimbing2", pembimbing2);
+            model.addAttribute("pembimbing1", pembimbing1);
+
+            if(mahasiswa.getTahap().equals("SEMPRO") || mahasiswa.getTahap().equals("SEMHAS") || mahasiswa.getTahap().equals("SIDANG") || mahasiswa.getTahap().equals("EVAL_UGB")){
+                Set<UserModel> setPenguji = thisUgb.getPenguji();
+
+                iterator = setPenguji.iterator();
+                UserModel penguji1 = (UserModel) iterator.next();
+                UserModel penguji2 = (UserModel) iterator.next();
+                model.addAttribute("penguji2", penguji2);
+                model.addAttribute("penguji1", penguji1);
+            }
+            
+            if(mahasiswa.getTahap().equals("SEMPRO") || mahasiswa.getTahap().equals("SEMHAS") || mahasiswa.getTahap().equals("SIDANG")){
+                SeminarProposalModel sempro = semproService.findSemproByUgb(thisUgb);
+                model.addAttribute("sempro", sempro);
+
+                if(mahasiswa.getTahap().equals("SEMHAS") || mahasiswa.getTahap().equals("SIDANG")){
+                    SeminarHasilModel semhas = semhasService.findSemhasBySempro(sempro);
+                    model.addAttribute("semhas", semhas);
+
+                }
+            }
+
+
+
+            if(mahasiswa.getTahap().equals("SIDANG")){
+                TugasAkhirModel ta = taService.findTAByUgb(thisUgb);
+                model.addAttribute("tugas_akhir", ta);
+
+            }
+
+        }
+
+        model.addAttribute("pengguna", thisUser);
+        model.addAttribute("mahasiswa", mahasiswa);
+        model.addAttribute("ugb", thisUgb);
+        return "profile/profile-mahasiswa.html";
+    }
+    
     @GetMapping("/profile")
     public String profilePage(Model model){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
