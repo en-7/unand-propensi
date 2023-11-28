@@ -86,7 +86,7 @@
                 <th>Nilai Sidang Tugas Akhir</th>
                 <td>
                     <span th:if="${tugasAkhir?.nilai == null}">-</span>
-                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai}"></span>
+                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai} + '  (' + ${tugasAkhir.nilaiHuruf} + ')'"></span>
                 </td>
             </tr>
             <tr>

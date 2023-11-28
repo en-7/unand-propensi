@@ -26,7 +26,10 @@ public class TimelineServiceImpl {
         TimelineModel theTl = new TimelineModel();
         for(TimelineModel tl : listTl){
             if(tl.getRegSidang().getMonth().equals(month)){
-                System.out.println("the month: "+ tl.getRegSidang().getMonth().toString());
+                System.out.println("the date: "+ tl.getRegUGB());
+                System.out.println("the id: "+ tl.getIdTimeline());
+
+
                 return tl;
             }
         }

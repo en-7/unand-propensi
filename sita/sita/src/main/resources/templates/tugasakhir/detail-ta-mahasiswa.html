@@ -86,7 +86,7 @@
                 <th>Nilai Sidang Tugas Akhir</th>
                 <td>
                     <span th:if="${tugasAkhir?.nilai == null}">-</span>
-                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai}"></span>
+                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai} + '  (' + ${tugasAkhir.nilaiHuruf} + ')'"></span>
                 </td>
             </tr>
             <tr>
@@ -234,7 +234,7 @@
         </table>
         <br><br>
         <div class="pb-2 d-flex justify-content-center">
-            <a th:if="${tugasAkhir.statusDokumen == 'DENY'}" class="btn btn-primary mx-1" th:href="@{'/tugas-akhir/update/'+ ${tugasAkhir?.idTugasAkhir}}">Update</a>
+            <a th:if="${tugasAkhir.statusDokumen == 'DITOLAK'}" class="btn btn-primary mx-1" th:href="@{'/tugas-akhir/update/'+ ${tugasAkhir?.idTugasAkhir}}">Update</a>
         </div>
     </div>
 </div>
