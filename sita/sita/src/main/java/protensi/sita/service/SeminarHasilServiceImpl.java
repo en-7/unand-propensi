@@ -84,7 +84,7 @@ public class SeminarHasilServiceImpl implements SeminarHasilService {
         }
         return null;
     }
-    
+
     @Override
     public SeminarHasilModel findSemhasBySempro(SeminarProposalModel sempro) {
         Optional<SeminarHasilModel> seminarHasil = seminarHasilDb.findBySeminarProposal(sempro);

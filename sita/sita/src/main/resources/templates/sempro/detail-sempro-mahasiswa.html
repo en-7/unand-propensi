@@ -143,6 +143,9 @@
             </tr>              
         </table>
         <br><br>
+        <div class="pb-2 d-flex justify-content-center">
+            <a th:if="${seminarProposal?.statusDokumen == 'DENY'}" class="btn btn-primary mx-1" th:href="@{'/seminar-proposal/update/'+ ${seminarProposal?.idSeminarProposal}}">Update</a>
+        </div>
         <div class="card">
             <h5 class="card-header text-white bg-info  mb-auto">Jadwal Seminar Proposal</h5>
             <div class="card-body">
