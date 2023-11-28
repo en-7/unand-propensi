@@ -80,7 +80,7 @@
                             <div class="btn-group" th:if="${available?.bookingStatus == 'BOOKED'}">
                                 <button th:each="jadwal, iterationStatus : ${listBimbingan}"
                                     th:if="${(jadwal?.availableBimbingan?.idAvailableBimbingan == available?.idAvailableBimbingan) && (jadwal?.mahasiswa?.idUser == user?.idUser)}" 
-                                    class="btn btn-sm btn-primary cancel-button" data-toggle="modal" data-target="#cancelConfirmationModal"
+                                    class="btn btn-sm btn-danger cancel-button" data-toggle="modal" data-target="#cancelConfirmationModal"
                                     th:attr="data-id=${available?.idAvailableBimbingan}">Batal</button>
                             </div>
                         </td>
