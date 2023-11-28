@@ -1,6 +1,9 @@
 package protensi.sita.controller;
 
+import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
+import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.TugasAkhirModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
 import protensi.sita.repository.MahasiswaDb;
@@ -13,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import protensi.sita.service.UgbServiceImpl;
 import protensi.sita.service.BaseService;
@@ -79,6 +84,40 @@ public class UGBController {
         String result = ugbService.addUgb(ugb, bukti_kp, transcript, file_khs, file_ugb);
         String idUgb = ugb.getIdUgb().toString();
         return "redirect:/ugb/detail/" + idUgb;
+    }
+
+    @GetMapping("/ugb/addcatatan/{idUgb}")
+    public String addCatatanUgbFormPage(Model model, String catatanJudulUgb, String latarBelakang, String tujuanManfaat,
+            String ruangLingkup, String keterbaruan, String metodologi) {
+        return "ugb/add-ugb-catatan";
+    }
+
+    @PostMapping("/ugb/addcatatan/{idUgb}")
+    public String addCatatanUgbSubmitPage(@ModelAttribute UgbModel ugb, String catatanJudulUgb, String latarBelakang,
+            String tujuanManfaat, String ruangLingkup, String keterbaruan, String metodologi) {
+
+        String result = ugbService.addCatatanUgb(ugb, catatanJudulUgb, latarBelakang, tujuanManfaat, ruangLingkup,
+                keterbaruan, metodologi);
+        String idUgb = ugb.getIdUgb().toString();
+        return "redirect:/ugb/catatan/" + idUgb;
+    }
+
+    @GetMapping("/ugb/catatan/{idUgb}")
+    public String viewCatatanUgb(@PathVariable Long idUgb, Model model) {
+        UgbModel retrievedUgb = ugbService.getUgbById(idUgb);
+        model.addAttribute("ugb", retrievedUgb);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
+        return "ugb/detail-catatan-ugb";
+    }
+
+    @PostMapping("/ugb/catatan/{idUgb}")
+    public String viewSubbmittedCatatanUgb(@ModelAttribute UgbModel ugb, String catatanJudulUgb, String latarBelakang,
+            String tujuanManfaat, String ruangLingkup, String keterbaruan, String metodologi) {
+
+        String result = ugbService.addCatatanUgb(ugb, catatanJudulUgb, latarBelakang, tujuanManfaat, ruangLingkup,
+                keterbaruan, metodologi);
+        String idUgb = ugb.getIdUgb().toString();
+        return "ugb/detail-catatan-ugb" + idUgb;
     }
 
     @GetMapping("/ugb/update/{idUgb}")

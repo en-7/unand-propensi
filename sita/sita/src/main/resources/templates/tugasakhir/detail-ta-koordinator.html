@@ -86,7 +86,7 @@
                 <th>Nilai Sidang Tugas Akhir</th>
                 <td>
                     <span th:if="${tugasAkhir?.nilai == null}">-</span>
-                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai}"></span>
+                    <span th:unless="${tugasAkhir?.nilai == null}" th:text="${tugasAkhir?.nilai} + '  (' + ${tugasAkhir.nilaiHuruf} + ')'"></span>
                 </td>
             </tr>
             <tr>
@@ -234,9 +234,9 @@
         </table>
         <br><br>
         <div class="pb-2 d-flex justify-content-center">
-            <span th:if="${tugasAkhir?.statusDokumen == 'SUBMITTED'}">
-                <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Approve</a>
-                <a class="btn btn-primary" data-toggle="modal" data-target="#denyModal">Deny</a>
+            <span th:if="${tugasAkhir?.statusDokumen == 'TERDAFTAR'}">
+                <a class="btn btn-danger" data-toggle="modal" data-target="#denyModal">Tolak</a>
+                <a class="btn btn-primary mx-1" data-toggle="modal" data-target="#approveModal">Setujui</a>
             </span>
         </div>
     </div>
