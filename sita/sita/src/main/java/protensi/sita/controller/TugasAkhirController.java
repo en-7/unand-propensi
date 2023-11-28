@@ -251,15 +251,15 @@ public class TugasAkhirController {
             } else if (nilai < 55) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("C");
-                tugasAkhir.setStatusTugasAkhir("LULUS");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
             } else if (nilai < 60) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("C+");
-                tugasAkhir.setStatusTugasAkhir("LULUS");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
             } else if (nilai < 65) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("B-");
-                tugasAkhir.setStatusTugasAkhir("LULUS");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
             } else if (nilai < 70) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("B");
@@ -309,15 +309,15 @@ public class TugasAkhirController {
             } else if (nilai < 55) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("C");
-                tugasAkhir.setStatusTugasAkhir("LULUS");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
             } else if (nilai < 60) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("C+");
-                tugasAkhir.setStatusTugasAkhir("LULUS");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
             } else if (nilai < 65) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("B-");
-                tugasAkhir.setStatusTugasAkhir("LULUS");
+                tugasAkhir.setStatusTugasAkhir("TIDAK LULUS");
             } else if (nilai < 70) {
                 tugasAkhir.setNilai(nilai);
                 tugasAkhir.setNilaiHuruf("B");
