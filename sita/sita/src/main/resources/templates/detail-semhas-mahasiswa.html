@@ -174,7 +174,7 @@
         </table>
         <br><br>
         <div class="pb-2 d-flex justify-content-center">
-            <a th:if="${seminarHasil?.statusDokumen == 'DENY'}" class="btn btn-primary mx-1" th:href="@{'/seminar-hasil/update/'+ ${seminarHasil?.idSeminarHasil}}">Update</a>
+            <a th:if="${seminarHasil?.statusDokumen == 'DITOLAK'}" class="btn btn-primary mx-1" th:href="@{'/seminar-hasil/update/'+ ${seminarHasil?.idSeminarHasil}}">Update</a>
         </div>
     </div>
 </div>
