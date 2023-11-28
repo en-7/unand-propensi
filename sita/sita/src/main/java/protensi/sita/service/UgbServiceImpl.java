@@ -156,6 +156,7 @@ public class UgbServiceImpl {
             ugb.setMahasiswa(mahasiswa);
 
             Set<UserModel> set_pembimbing = new HashSet<>();
+            mahasiswa.setTahap("UGB");
             set_pembimbing.add(userDb.findByIdUser(ugb.getIdPembimbing1()));
             set_pembimbing.add(userDb.findByIdUser(ugb.getIdPembimbing2()));
             ugb.setPembimbing(set_pembimbing);
