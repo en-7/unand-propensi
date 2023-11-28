@@ -380,6 +380,7 @@ public class TimelineController {
         String year = Integer.toString(dateNow.getYear());
         String periodeNow = year+"-"+month;
         System.out.println("nowPeriode: "+periodeNow);
+        // TimelineModel time
 
         for(int i = 0; i < listTl.size(); i++){
             System.out.println("periode_in_list: "+listTl.get(i).getPeriode());
@@ -388,7 +389,15 @@ public class TimelineController {
             }
         }
 
-        model.addAttribute("timeline", listTl.get(indexNow));
+
+        if(!listTl.isEmpty()){
+            model.addAttribute("timeline", listTl.get(indexNow));
+        }else{
+            TimelineModel newTl = new TimelineModel();
+
+            model.addAttribute("timeline", newTl);
+        }
+
 
         model.addAttribute("listTimeline", listTl);
 
