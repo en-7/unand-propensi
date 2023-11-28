@@ -104,23 +104,23 @@ public class BimbinganController {
                             model.addAttribute("listAvailable", listAvailable);
                             return "redirect:/bimbingan/atur-jadwal/";
                         } else {
-                            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
                             return "bimbingan/error-bimbingan";
                         }
                     } else {
-                        model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                        model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
                         return "bimbingan/error-bimbingan";
                     } 
                 } else {
-                    model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                    model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
                     return "bimbingan/error-bimbingan";
                 }
             } else {
-                model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
                 return "bimbingan/error-bimbingan";
         }
         } else {
-            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
             return "bimbingan/error-bimbingan";
         }
     }
@@ -163,19 +163,19 @@ public class BimbinganController {
                             return "bimbingan/error-bimbingan";
                         }
                     } else {
-                        model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                        model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
                         return "bimbingan/error-bimbingan";
                     } 
                 } else {
-                    model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                    model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
                     return "bimbingan/error-bimbingan";
                 }
             } else {
-                model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+                model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
                 return "bimbingan/error-bimbingan";
         }
         } else {
-            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan sudah bertabrakan ");
+            model.addAttribute("pesan", "Waktu mulai bimbingan atau waktu selesai bimbingan bertabrakan ");
             return "bimbingan/error-bimbingan";
         }
     }
