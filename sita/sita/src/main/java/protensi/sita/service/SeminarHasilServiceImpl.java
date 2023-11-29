@@ -35,6 +35,15 @@ public class SeminarHasilServiceImpl implements SeminarHasilService {
     }
 
     @Override
+    public SeminarHasilModel findSemhasById(Long idSeminarHasil){
+        Optional<SeminarHasilModel> semhas = seminarHasilDb.findById(idSeminarHasil);
+        if(semhas.isPresent()){
+            return semhas.get();
+        }
+        else return null;
+    }
+
+    @Override
     public List<SeminarHasilModel> findAllByPembimbing(Long pembimbingId) {
         return seminarHasilDb.findAllByPembimbing(pembimbingId);
     }
@@ -44,14 +53,14 @@ public class SeminarHasilServiceImpl implements SeminarHasilService {
         return seminarHasilDb.findAllByPenguji(pengujiId);
     }
 
-    @Override
-    public SeminarHasilModel findSemhasById(Long idSeminarHasil) {
-        Optional<SeminarHasilModel> semhas = seminarHasilDb.findByIdSeminarHasil(idSeminarHasil);
-        if (semhas.isPresent()) {
-            return semhas.get();
-        } else
-            return null;
-    }
+//    @Override
+//    public SeminarHasilModel findSemhasById(Long idSeminarHasil) {
+//        Optional<SeminarHasilModel> semhas = seminarHasilDb.findByIdSeminarHasil(idSeminarHasil);
+//        if (semhas.isPresent()) {
+//            return semhas.get();
+//        } else
+//            return null;
+//    }
 
     @Override
     public List<SeminarHasilModel> findSemhasByStatusDokumen(String statusDokumen) {
