@@ -52,6 +52,19 @@ public class UgbServiceImpl {
         return listPembimbing;
     }
 
+    public List<UserModel> getListPenguji(){
+        List<UserModel> listPenguji = new ArrayList<>();
+        List<UserModel> listUser = userDb.findAll();
+        
+        for(UserModel i : listUser){
+            Set<EnumRole> roles = i.getRoles();
+            if(roles.contains(EnumRole.PENGUJI) == true){
+                listPenguji.add(i);
+            }
+        }
+        return listPenguji;
+    }
+
     public UserModel getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -89,8 +102,23 @@ public class UgbServiceImpl {
         ugbDb.save(ugb);
     }
 
+    public void updateUGBKoordinatorforPenguji(Long idUgb, Long idPJ1, Long idPJ2){
+        UgbModel ugb = getUgbById(idUgb);
+        Set<UserModel> set_penguji = new HashSet<>();
+        UserModel penguji1 = userDb.findByIdUser(idPJ1);
+        UserModel penguji2 = userDb.findByIdUser(idPJ2);
+
+        set_penguji.add(penguji1);
+        set_penguji.add(penguji2);
+
+        ugb.setPenguji(set_penguji);
+        ugb.setStatusUgb("ALLOCATED");
+        ugbDb.save(ugb);
+    }
+    
     public void updateUgbMahasiswa(Long idUgb, String judul, MultipartFile bukti_kp, MultipartFile transcript,
             MultipartFile file_khs, MultipartFile file_ugb) {
+
         UgbModel ugb = getUgbById(idUgb);
         try {
             // System.out.println("kp: "+bukti_kp);

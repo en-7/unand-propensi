@@ -15,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UgbService {
         List<UserModel> getListPembimbing();
 
-        String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs,
-                        MultipartFile file_ugb);
+
+        List<UserModel> getListPenguji();
+
+        String addUgb(UgbModel ugb, MultipartFile bukti_kp, MultipartFile transcript, MultipartFile file_khs, MultipartFile file_ugb);
 
         String addCatatanUgb(UgbModel ugb, String catatanJudulUgb, String latarBelakang, String tujuanManfaat,
                         String ruangLingkup, String keterbaruan, String metodologi);
