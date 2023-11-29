@@ -40,6 +40,12 @@ public class UgbModel {
     @Transient
     private Long idPembimbing2;
 
+    // @Transient
+    // private Long idPenguji1;
+
+    // @Transient
+    // private Long idPenguji2;
+    
     @Lob
     @Column(name = "bukti_kp", nullable = false)
     private byte[] buktiKp;
