@@ -17,6 +17,7 @@ import protensi.sita.model.AnnouncementModel;
 import protensi.sita.model.EnumRole;
 import protensi.sita.security.UserDetailsServiceImpl;
 import protensi.sita.service.AnnouncementService;
+import protensi.sita.service.AnnouncementServiceImpl;
 import protensi.sita.service.BaseService;
 import protensi.sita.service.TimelineServiceImpl;
 
