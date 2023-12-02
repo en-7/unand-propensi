@@ -2,8 +2,8 @@ package protensi.sita.controller;
 
 import protensi.sita.model.EnumRole;
 import protensi.sita.model.MahasiswaModel;
-import protensi.sita.model.TimelineModel;
 import protensi.sita.model.SeminarProposalModel;
+import protensi.sita.model.TimelineModel;
 import protensi.sita.model.TugasAkhirModel;
 import protensi.sita.model.UgbModel;
 import protensi.sita.model.UserModel;
@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import protensi.sita.service.UgbServiceImpl;
 import protensi.sita.service.BaseService;
@@ -238,4 +240,24 @@ public class UGBController {
             HttpServletResponse response) {
         ugbService.downloadUgbFiles(type, id, response);
     }
+
+    @GetMapping("/ugb/allocate/{idUgb}")
+    public String allocateUgb(@PathVariable Long idUgb, Model model){
+        UgbModel getUgbUser = ugbService.getUgbById(idUgb);
+        model.addAttribute("ugbUser", getUgbUser);
+        model.addAttribute("listPenguji", ugbService.getListPenguji());
+        return "ugb/allocate-ugb";
+    }
+
+    @PostMapping("/ugb/allocate/{idUgb}")
+    public String allocateUgbSubmitPage(@PathVariable Long idUgb, 
+                                        @RequestParam("id_pj1") Long idPJ1, 
+                                        @RequestParam("id_pj2") Long idPJ2,
+                                        Model model ) {
+        ugbService.updateUGBKoordinatorforPenguji(idUgb, idPJ1, idPJ2);
+        model.addAttribute("roleUser", baseService.getCurrentRole());
+        // String idUgb = ugb.getIdUgb().toString();
+        return "ugb/viewall-ugb";
+    }
 }
+
