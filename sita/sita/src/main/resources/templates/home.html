@@ -17,6 +17,16 @@
             /* color: #6a5b31; */
             font-weight: bold;
         }
+
+        h2.center {
+            text-align: center;
+        }
+
+        .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+            background-color: #3c7850 !important;
+            border-color:#3c7850 !important;
+        }
+        
         .container-content {
             max-width: 850px;
             margin: 0 auto;
@@ -116,19 +126,6 @@
                 </div>
             </div>
             <!-- <h2 style="color: whitesmoke;">Welcome To SITA</h2> -->
-
-            <div sec:authorize="hasRole('KOORDINATOR')" class="my-3 d-flex justify-content-center">
-                <a th:href="@{/mahasiswa/viewall}" class="mx-2 btn btn-outline-success">List Mahasiswa</a>
-            </div>
-            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
-                <a th:href="@{/dokter/viewall}" class="mx-2 btn btn-outline-success" >List Dokter</a>
-            </div>
-            <div sec:authorize="hasRole('ADMIN')" class="my-3 d-flex justify-content-center">
-                <a th:href="@{/apoteker/viewall}" class="mx-2 btn btn-outline-success" >List Apoteker</a>
-            </div>
-            <div sec:authorize="hasRole('KOORDINATOR')" class="my-3 d-flex justify-content-center">
-                <a th:href="@{/whitelist/add}" class="mx-2 btn btn-outline-success" >Tambah Whitelist</a>
-            </div>
         </div>
     </div>
     <div class="d-flex justify-content-center">
@@ -142,18 +139,18 @@
                     <div th:switch="${roleUser}">
                         <div th:case="'[ROLE_[ADMIN]]'">
                             <div class="d-flex justify-content-center">
-                                <a th:href="@{/mahasiswa/viewall}" class="mx-2 btn btn-outline-primary">Daftar Mahasiswa</a>
-                                <a th:href="@{/mahasiswa/add}" class="mx-2 btn btn-outline-primary">Tambah Mahasiswa</a>
+                                <a th:href="@{/mahasiswa/viewall}" class="mx-2 btn btn-primary">Daftar Mahasiswa</a>
+                                <a th:href="@{/mahasiswa/add}" class="mx-2 btn btn-primary">Tambah Mahasiswa</a>
                                 <!-- <a th:href="@{'/mahasiswa/update/'+ ${mahasiswa.idUser}}" class="mx-2 btn btn-outline-primary">Update Mahasiswa</a> -->
                             </div>
                             <div class="my-3 d-flex justify-content-center">
-                                <a th:href="@{/dosen/viewall}" class="mx-2 btn btn-outline-primary">Daftar Dosen</a>
-                                <a th:href="@{/dosen/add}" class="mx-2 btn btn-outline-primary">Tambah Dosen</a>
+                                <a th:href="@{/dosen/viewall}" class="mx-2 btn btn-primary">Daftar Dosen</a>
+                                <a th:href="@{/dosen/add}" class="mx-2 btn btn-primary">Tambah Dosen</a>
                                 <!-- <a th:href="@{/dosen/update}" class="mx-2 btn btn-outline-primary">Update Dosen</a> -->
                             </div>
                             <div class="my-3 d-flex justify-content-center">
-                                <a th:href="@{/koordinator/viewall}" class="mx-2 btn btn-outline-primary">Daftar Koordinator</a>
-                                <a th:href="@{/koordinator/add}" class="mx-2 btn btn-outline-primary">Tambah Koordinator</a>
+                                <a th:href="@{/koordinator/viewall}" class="mx-2 btn btn-primary">Daftar Koordinator</a>
+                                <a th:href="@{/koordinator/add}" class="mx-2 btn btn-primary">Tambah Koordinator</a>
                                 <!-- <a th:href="@{/koordinator/update}" class="mx-2 btn btn-outline-primary">Update Koordinator</a> -->
                             </div>
                         </div>
