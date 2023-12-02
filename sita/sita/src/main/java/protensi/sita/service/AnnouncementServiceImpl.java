@@ -27,7 +27,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public List<AnnouncementModel> getListAnnounce() {
-        return announcementDb.findAll();
+        return announcementDb.findAllAnnounceByIdDesc();
     }
 
     @Override
