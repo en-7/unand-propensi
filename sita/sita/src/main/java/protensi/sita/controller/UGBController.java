@@ -254,9 +254,24 @@ public class UGBController {
                                         @RequestParam("id_pj1") Long idPJ1, 
                                         @RequestParam("id_pj2") Long idPJ2,
                                         Model model ) {
+        
+        UgbModel getUgb = ugbService.getUgbById(idUgb);
+        System.out.println(getUgb.getPembimbing());
+        System.out.println("---------------");
+        System.out.println(getUgb.getIdPembimbing1());
+        System.out.println(getUgb.getIdPembimbing2());
+        System.out.println("------------");
+        System.out.println(idPJ1);
+        System.out.println(idPJ2);
+        System.out.println("--- dibawah flow---------");
+        for(UserModel i : getUgb.getPembimbing()){
+            if(i.getIdUser().equals(idPJ1) || i.getIdUser().equals(idPJ2)){
+                System.out.println(i.getIdUser());
+                return "ugb/error-pembimbing-penguji";
+            }
+        }
         ugbService.updateUGBKoordinatorforPenguji(idUgb, idPJ1, idPJ2);
         model.addAttribute("roleUser", baseService.getCurrentRole());
-        // String idUgb = ugb.getIdUgb().toString();
         return "ugb/viewall-ugb";
     }
 }
