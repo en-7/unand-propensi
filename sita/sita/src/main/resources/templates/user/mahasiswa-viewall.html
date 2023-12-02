@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
 
+
 <head>
     <title>Daftar Mahasiswa</title>
     <meta charset="UTF-8">
@@ -17,6 +18,7 @@
 </head>
 
 <body>
+  <nav th:replace="fragments/fragment :: navbar('/')"></nav>
   <nav th:replace="fragments/fragment :: navbar('/')"></nav>
 <div class="container">
     <div class="card m-4 p-4">
@@ -55,5 +57,6 @@
     </div>
 </div>
 </body>
+
 
 </html>

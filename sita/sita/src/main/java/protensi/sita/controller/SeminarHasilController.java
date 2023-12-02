@@ -70,6 +70,7 @@ public class SeminarHasilController {
             SeminarHasilModel seminarHasil = seminarHasilService.findSemhasBySempro(sempro);
             if (sempro != null) {
                 if (sempro.getStatusDokumen().equals("DISETUJUI")) {
+                if (sempro.getStatusDokumen().equals("DISETUJUI")) {
                     if (seminarHasil != null) {
                         model.addAttribute("roleUser", baseService.getCurrentRole());
                         model.addAttribute("seminarHasil", seminarHasil);
@@ -326,7 +327,7 @@ public class SeminarHasilController {
 
         else {
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Terjadi error ketika save file.");
         }
 
     }

@@ -68,11 +68,11 @@
                                 <div th:if="${mahasiswa.tahap} != 'NEW' AND ${mahasiswa.tahap} != 'UGB'">
                                     <tr>
                                         <th class="card-text judul">Dosen Penguji 1</th>
-                                        <td class="card-text" th:text="${penguji1}"></td>
+                                        <td class="card-text" th:text="${penguji1.nama}"></td>
                                     </tr>
                                     <tr>
                                         <th class="card-text judul">Dosen Penguji 2</th>
-                                        <td class="card-text" th:text="${penguji2}"></td>
+                                        <td class="card-text" th:text="${penguji2.nama}"></td>
                                     </tr>
                                 </div>
                                 <div th:if="${mahasiswa.tahap} != 'NEW'">
