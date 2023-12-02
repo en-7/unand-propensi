@@ -66,7 +66,9 @@ public class UGBController {
 
         TimelineModel tl = tlService.checkDate();
         LocalDate nowDate = LocalDate.now();
-
+        System.out.println("**** retrieved tl ugb reg date: " + tl.getRegUGB());
+        System.out.println("**** nowdate: "+ nowDate);
+        
         if (retrievedUgb != null) {
             String idUgb = retrievedUgb.getIdUgb().toString();
             return "redirect:/ugb/detail/" + idUgb;
