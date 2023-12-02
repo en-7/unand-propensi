@@ -40,11 +40,7 @@ public class MahasiswaController {
     }
 
     @PostMapping("/mahasiswa/add")
-    @PostMapping("/mahasiswa/add")
     public String addMahasiswaSubmitPage(@ModelAttribute MahasiswaModel mahasiswa, Model model) {
-        Set<EnumRole> roleMahasiswa = new HashSet<EnumRole>();
-        roleMahasiswa.add(EnumRole.MAHASISWA);
-        mahasiswa.setRoles(roleMahasiswa);
         Set<EnumRole> roleMahasiswa = new HashSet<EnumRole>();
         roleMahasiswa.add(EnumRole.MAHASISWA);
         mahasiswa.setRoles(roleMahasiswa);
