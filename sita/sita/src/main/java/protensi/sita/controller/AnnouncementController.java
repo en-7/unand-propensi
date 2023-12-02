@@ -46,25 +46,35 @@ public class AnnouncementController {
         return "Announcement/form-add-announcement";
         
     }
-    // @PostMapping("/announce/create")
-    // public String createAnnouhncementSubmit(@ModelAttribute AnnouncementModel announce,
-    //                                         Model model, 
-    //                                         Authentication auth){
 
+    @PostMapping("/announce/create")
+    public String createAnnouhncementSubmit(@ModelAttribute AnnouncementModel newAnnouncement,
+                                            Model model, 
+                                            Authentication auth,
+                                            @RequestParam("ancFile") MultipartFile ancFile){
 
-    //     Set<UserModel> setAuthor = new HashSet<>();
-    //     String namaUser = auth.getName();
-    //     UserModel getUser = userDetailsService.findByUsername(namaUser);
+        try{
+            byte[] fileAnnounce = ancFile.getBytes();
+            String namaFile = StringUtils.cleanPath(ancFile.getOriginalFilename());
 
-    //     setAuthor.add(getUser);
-    //     announce.setAuthor(setAuthor);
-        
-    //     announcementService.addAnnouncement(announce);
+            newAnnouncement.setNamaFile(namaFile);
+            newAnnouncement.setFile(fileAnnounce);
+            Set<UserModel> setAuthor = new HashSet<>();
+            String namaUser = auth.getName();
+            UserModel getUser = userDetailsService.findByUsername(namaUser);
 
-    //     System.out.println(announce.getAuthor());
-    //     return "redirect:/";
-   
-    // }
+            setAuthor.add(getUser);
+            newAnnouncement.setAuthor(setAuthor);
+            announcementService.addAnnouncement(newAnnouncement);
+            return "redirect:/";
+        }
+        catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
+    
+        }
+    }
+
 
     @GetMapping("/announce/view")
     public String viewDetailAnnouncement (@RequestParam(value = "id") Long id, Model model ){
@@ -111,39 +121,7 @@ public class AnnouncementController {
     
         }
     }
-
-
-
-
-    @PostMapping("/announce/create")
-    public String createAnnouhncementSubmit(@ModelAttribute AnnouncementModel newAnnouncement,
-                                            Model model, 
-                                            Authentication auth,
-                                            @RequestParam("ancFile") MultipartFile ancFile){
-
-        try{
-            byte[] fileAnnounce = ancFile.getBytes();
-            String namaFile = StringUtils.cleanPath(ancFile.getOriginalFilename());
-
-            newAnnouncement.setNamaFile(namaFile);
-            newAnnouncement.setFile(fileAnnounce);
-            Set<UserModel> setAuthor = new HashSet<>();
-            String namaUser = auth.getName();
-            UserModel getUser = userDetailsService.findByUsername(namaUser);
-
-            setAuthor.add(getUser);
-            newAnnouncement.setAuthor(setAuthor);
-            announcementService.addAnnouncement(newAnnouncement);
-            return "redirect:/";
-        }
-        catch (IOException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Error while saving the file.");
-    
-        }
-    }
-
-
+   
     @GetMapping("/downloadFile")
     public void downloadFile(@RequestParam("type") String type,
             @RequestParam("id") Long id,

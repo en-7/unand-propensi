@@ -254,7 +254,6 @@ public class UGBController {
                                         @RequestParam("id_pj1") Long idPJ1, 
                                         @RequestParam("id_pj2") Long idPJ2,
                                         Model model ) {
-        
         UgbModel getUgb = ugbService.getUgbById(idUgb);
         System.out.println(getUgb.getPembimbing());
         System.out.println("---------------");
