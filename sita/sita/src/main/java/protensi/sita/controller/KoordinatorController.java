@@ -47,7 +47,7 @@ public class KoordinatorController {
         koordinator.setRoles(roleKoordinator);
         koordinatorService.addKoordinator(koordinator);
         model.addAttribute("koordinator", koordinator);
-        return "user/koordinator-add-form";
+        return "user/koordinator-viewall";
     }
 
     @GetMapping("/koordinator/update/{idUser}")

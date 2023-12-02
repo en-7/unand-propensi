@@ -77,7 +77,7 @@ public class DosenController {
         dosen.setRoles(roleDosen);
         manageUserService.addUser(dosen);
         model.addAttribute("dosen", dosen);
-        return "user/dosen-add-form";
+        return "user/dosen-viewall";
     }
 
     @GetMapping("/dosen/update/{idUser}")
